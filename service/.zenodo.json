@@ -1,0 +1,46 @@
+{
+  "creators": [
+    {
+      "affiliation": "Project Drawdown",
+      "name": "Gentry, Denton",
+      "orcid": "0000-0003-2567-6245"
+    },
+    {
+      "affiliation": "The Climate Foundation",
+      "name": "Bienz, Beni"
+    },
+    {
+      "name": "Liu, Stephanie"
+    },
+    {
+      "affiliation": "Civic Actions",
+      "name": "Barton, Owen"
+    },
+    {
+      "name": "Read, Robert"
+    },
+    {
+      "name": "Jones, Marc"
+    },
+    {
+      "name": "Lemagnen, Kevin"
+    }
+  ],
+  "keywords": [
+    "climate",
+    "solution"
+  ],
+  "recid": 1, 
+  "resource_type": 
+  {
+    "type": "software"
+  },
+  "publication_date": "March 10, 2020",
+  "title": "Drawdown Solutions Online",
+  "description": "The mission of Project Drawdown is to help the world reach 'Drawdown'— the point in the future when levels of greenhouse gases in the atmosphere stop climbing and start to steadily decline, thereby stopping catastrophic climate change — as quickly, safely, and equitably as possible.",
+  "access_right": "open",
+  "license": 
+  {
+    "id": "AGPL-3.0"
+  }
+}
