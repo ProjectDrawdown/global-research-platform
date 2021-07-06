@@ -70,16 +70,18 @@ Note that develop has deviated considerably from master, and we haven't yet merg
 
 1. Get a copy of this source code:
 ```sh
-$ git clone https://github.com/ProjectDrawdown/solutions.git
-$ cd solutions
+$ git clone https://github.com/ProjectDrawdown/global-research-platform
+$ cd global-research-platform
 $ git checkout develop
 ```
 
 ## Environment Variables
 
+### API Environment
+
 1. Copy the example
 ```
-$ cp api/env-example api/.env
+$ cp service/api/env-example service/api/.env
 ```
 
 2. Valid OAuth keys will be necessary. See [Github](https://docs.github.com/en/free-pro-team@latest/developers/apps/authorizing-oauth-apps) and [Google](https://developers.google.com/identity/protocols/oauth2/openid-connect) instructions for how to obtain these client ID and client secret keys. Update the .env file.
@@ -95,32 +97,62 @@ GOOGLE_CLIENT_SECRET=somegoogleclientsecret
 JWT_SECRET_KEY=somejwtsecretkey
 ```
 
+### Web Environment
+No Environment configuration is needed for web
+
 ## Getting started with Docker
 
 If you have docker and docker-compose installed, you should be able to get started fairly quickly, following these steps:
 
 ```sh
 $ cp docker-compose.yml.local.example docker-compose.yml
+# When using Docker, the environment variable that was previously configured will need to be copied over to the `docker-compose.yaml` file.
 
-$ docker-compose up --build
+$ docker-compose up
 # our project is mounted to the container, so changes will automatically be reflected after saving. We would only need to restart the container when introducing a new external dependency. 
 ```
-to build the docker containers.
+to build the docker containers. 
 
 _NOTE: For windows machine using WSL (Windows Subsystem for Linux), we will need to enable 'WSL Integration' for required distro in Windows Docker Desktop (Settings -> Resources-> WSL Integration -> Enable integration with required distros)._
 
 
+Once docker has finished building, 2 applications will be built and run under
+
+```
+web:  localhost:3000
+API:  localhost:8000
+```
+
+The `web` application may take some time to load as it is being built post Docker. Check your container logs for status.
+
+_DEVELOPER NOTE:_ If you choose to run via Docker, any changes to the library dependencies (`pip install` or `npm install`) will mean you will have to rebuild your container by restarting docker and running:
+
+```sh
+$ docker-compose up --build
+```
+
 ## Getting started without Docker
+
+### Building the API Service
 
 You will need [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Python 3](https://docs.python.org/3/using/index.html) (>= 3.8) installed. You will need [Postgres](https://www.postgresql.org/) and [Redis](https://redis.io/) running.
 
 Python 3.8
 ```sh
+$ cd service
+
 $ pipenv shell
 # Or assuming you have multiple versions installed use the following 
 $ pipenv --python /Users/sam/.pyenv/versions/3.8.6/bin/python shell
 # Now inside the virtual env install tools
 $ pip install -r requirements.txt
+```
+### Building the Web Service
+You will need [Node >= v.14](https://nodejs.org/en/) installed
+```sh
+$ cd web
+
+$ npm install
 ```
 
 ## Database Creation
@@ -137,18 +169,26 @@ postgres=# CREATE DATABASE drawdown;
 
 ### Without docker, you will need to do a database setup
 
-You will need to have postgres running. You will want a valid connection string contained in `api/.env` for `DATABASE_URL`. Using `pipenv shell` run the following to apply existing migrations:
+You will need to have postgres running. You will want a valid connection string contained in `service/api/.env` for `DATABASE_URL`. Using `pipenv shell` run the following to apply existing migrations:
 ```sh
 $ alembic upgrade head
 ```
 
-And finally, to run the API:
+to run the API:
 ```sh
+$ cd service
+
 $ uvicorn api.service:app --reload
+```
+And finally, to run the web:
+```sh
+$ cd web
+
+$ npm run start
 ```
 
 ## Schema Updates
-When changing models in `api/db/models.py` run the following to create migrations:
+When changing models in `service/api/db/models.py` run the following to create migrations:
 ```sh
 $ alembic revision -m "add provider column" --autogenerate
 ```
@@ -161,9 +201,9 @@ $ alembic upgrade head
 
 ### Initializing the data
 
-To create the default workbooks, use the `GET /initialize` endpoint. This will generate a variety of data, including the 3 Drawdown canonical workbooks. This will also load some CSVs into the database for easy retrieval, and provide the data for the `/resource/{path}` endpoints.
+To create the default workbooks, use the `GET localhost:8000/initialize` endpoint. This will generate a variety of data, including the 3 Drawdown canonical workbooks. This will also load some CSVs into the database for easy retrieval, and provide the data for the `localhost:8000/resource/{path}` endpoints.
 
-To improve performance for the app, it is recommended you run the `GET /calculate` endpoint for the 3 canonical workbooks as a first step, as this will cache results for all the technologies for the workbooks. Any variation updates, when calculated, will take advantage of this initial cache as much as possible.
+To improve performance for the app, it is recommended you run the `GET localhost:8000/calculate` endpoint for the 3 canonical workbooks as a first step, as this will cache results for all the technologies for the workbooks. Any variation updates, when calculated, will take advantage of this initial cache as much as possible.
 
 ### Some gotchas
 

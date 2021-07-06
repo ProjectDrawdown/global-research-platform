@@ -47,8 +47,12 @@ services:
       context: ./web
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./web:/app
+      - /app/node_modules
     depends_on:
       - service
 
