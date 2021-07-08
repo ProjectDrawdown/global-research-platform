@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { QuestionBox } from './QuestionBox'
+import { QuestionBox } from './'
 
 export default {
   component: QuestionBox,
-  title: 'Question Box with Tooltip popup'
+  title: 'Components/Question Box with Tooltip popup'
 }
 
 const Template = args => <QuestionBox {...args}/>

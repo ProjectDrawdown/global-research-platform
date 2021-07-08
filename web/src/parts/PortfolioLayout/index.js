@@ -1,15 +1,12 @@
 import React from "react";
 import { Flex, Container } from "@chakra-ui/react";
-import { PageFooter } from "components/PageFooter";
-import PortfolioHeader from "components/PortfolioHeader";
+import { PageFooter } from "parts/PageFooter";
+import PortfolioHeader from "parts/PortfolioHeader";
 
 const PortfolioLayout = ({
-  title,
   navMargin = true,
-  headerMargin = true,
   maxW = "100%",
   showFooter = true,
-  fixedHeight = true,
   children
 }) => {
   return (

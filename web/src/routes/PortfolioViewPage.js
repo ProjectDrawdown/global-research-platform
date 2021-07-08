@@ -1,16 +1,14 @@
-import React, { useEffect, useContext, useState } from "react";
-import { useParams, useLocation, useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice";
-import { useConfigContext } from "contexts/ConfigContext";
-import { Stack, Box } from "@chakra-ui/react";
-import PortfolioLayout from "components/PortfolioLayout";
-import { Navigation } from "components/Navigation";
+import React, { useEffect, useContext, useState } from "react"
+import { useParams, useLocation, useHistory } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice"
+import { useConfigContext } from "contexts/ConfigContext"
+import { Stack, Box } from "@chakra-ui/react"
+import PortfolioLayout from "parts/PortfolioLayout"
+import { Navigation } from "components/Navigation"
 import {
-  TechnologyPane,
   ViewPortfolioPane,
-  EditPortfolioPane
-} from "components/TechnologyCardPanes";
+} from "components/TechnologyCardPanes"
 import {
   Modal,
   ModalOverlay,
@@ -18,14 +16,12 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
   useDisclosure,
   Button,
-  Lorem,
-} from "@chakra-ui/react";
-import { Image } from "@chakra-ui/react";
+} from "@chakra-ui/react"
+import { Image } from "@chakra-ui/react"
 import tour from "../tour.png"
-import { UserContext } from "services/user";
+import { UserContext } from "services/user"
 
 const ViewPortfolioPage = () => {
   const params = useParams();

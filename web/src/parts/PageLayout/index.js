@@ -1,15 +1,12 @@
 import React from "react";
 import { Flex, Container } from "@chakra-ui/react";
-import { PageHeader } from "components/PageHeader";
-import { PageFooter } from "components/PageFooter";
+import { PageHeader } from "parts/PageHeader";
+import { PageFooter } from "parts/PageFooter";
 
 const PageLayout = ({
-  title,
   navMargin = false,
-  headerMargin = true,
   maxW = "100%",
   showFooter = true,
-  fixedHeight = true,
   children
 }) => {
   return (

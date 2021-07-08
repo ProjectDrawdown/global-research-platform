@@ -1,14 +1,24 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext } from "react";
+import { Box, Heading, Flex, Spacer, HStack, Grid, Link, GridItem, Center, Button, Text } from "@chakra-ui/react";
+import { Link as DomLink, useParams } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import { Image } from "@chakra-ui/react";
+import { RunButton } from "../theme/icons";
 import styled from "styled-components";
-import logo from "../projectdrawdown_logo.png";
-import { Box, Flex, Text, Link, Image } from "@chakra-ui/react";
+import store from "../redux/store";
+import { calculateThunk } from "../redux/reducers/workbook/workbookSlice";
 import { UserContext } from "services/user";
-import { Link as DomLink } from "react-router-dom";
 import Logo from "./Logo.js";
+import {
+  useWorkbookIDSelector,
+  useWorkbookHasAuthorSelector
+} from "redux/selectors.js";
 
 const Item = styled(Text)`
   margin-right: 1.5rem;
 `;
+
 
 const MenuItem = ({ children, isLast, to }) => {
   return (
@@ -27,10 +37,12 @@ const MenuItem = ({ children, isLast, to }) => {
   );
 };
 
-export const PageHeader = ({ logoWidth = 150 }) => {
-  // TODO how to test if we are logged in or not? This is not working.
+
+
+export const Menu = () => {
   const { user } = useContext(UserContext);
   const loggedIn = user && typeof user === "object" && user.id;
+
   const menuItems =
     loggedIn
       ? [
@@ -42,30 +54,14 @@ export const PageHeader = ({ logoWidth = 150 }) => {
   const logoLink = loggedIn ? "/workbooks" : "/";
 
   return (
-    <Flex
-      as="nav"
-      align="center"
-      wrap="wrap"
-      pos="sticky"
-      width="100%"
-      top={0}
-      left={0}
-      mb={4}
-      p={4}
-      zIndex={1000}
-      bg="white"
-      shadow="sm"
-    >
-      <Item flex="1" as="div">
-        <Flex align="bottom" wrap="wrap">
-          <Logo />
-        </Flex>
-      </Item>
-      {menuItems.map(({ title, to }, index) => (
-        <MenuItem fontSize="md" key={index} to={to}>
-          {title}
-        </MenuItem>
-      ))}
+    <Flex>
+    {menuItems.map(({ title, to }, index) => (
+      <MenuItem fontSize="md" key={index} to={to}>
+        {title}
+      </MenuItem>
+    ))}
     </Flex>
   );
-};
+}
+
+export default Menu;

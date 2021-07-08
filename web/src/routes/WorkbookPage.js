@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import store from "redux/store";
 import { fetchWorkbooksThunk } from "redux/reducers/workbook/workbookListSlice";
 import { unsetWorkbookThunk } from "redux/reducers/workbook/workbookSlice";
 import { Link } from "react-router-dom";
-import PageLayout from "components/PageLayout";
+import PageLayout from "parts/PageLayout";
 import { WorkbookCard, WorkbookCardWrapper } from "components/WorkbookCard";
 import WorkbookCardGrid from "components/WorkbookCardGrid";
 import { Icon, Input, InputGroup, InputRightAddon, Text, Heading, VStack, Box } from "@chakra-ui/react";

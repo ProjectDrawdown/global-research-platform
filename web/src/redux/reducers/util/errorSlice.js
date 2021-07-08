@@ -11,7 +11,9 @@ const errorSlice = createSlice({
     errorAdded(state, action) {
       return {
         ...state,
-        detail: action.payload
+        detail: action.payload.message,
+        type: action.payload.type,
+        title: action.payload.title
       };
     },
     clearError(state, action) {

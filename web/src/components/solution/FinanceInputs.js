@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Input from "../Input";
 import { useResizeDetector } from "react-resize-detector";
 import { GridItem, Grid, Flex, Text } from "@chakra-ui/react";
+import { Row } from './row';
 
 import { useMultipleStringVarpathsSelector } from "redux/selectors.js";
 
@@ -83,18 +84,16 @@ const FinanceInputs = ({ color, technologyId }) => {
       <GridItem px={cols.xPadding} colSpan={cols.rightCol}>
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.fixedCosts ? (
-            <Input
-              mr="0"
-              px="2"
-              size="md"
-              autoFocus
-              overflow="hidden"
-              leftAddon={"$"}
-              color={`brand.${color}.900`}
-              onFocus={e => e.currentTarget.select()}
-              storeValue={values[map.fixedCosts]}
-              onKeyDown={event => onKeyDown(event, map.fixedCosts)}
-              onBlur={event => onBlur(event, map.fixedCosts)}
+            <Row
+              varpath="start_year_cost.value"
+              dataType="numeric"
+              leftAddon="$"
+              color={color}
+              chart={false}
+              helper={false}
+              question={false}
+              colSpanLeft={0}
+              colSpanRight={10}
             />
           ) : (
             <StyledText fontSize="2xl" onClick={() => onClick(map.fixedCosts)}>
@@ -113,18 +112,16 @@ const FinanceInputs = ({ color, technologyId }) => {
       <GridItem px={cols.xPadding} colSpan={cols.rightCol}>
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.fixedOperatingCost ? (
-            <Input
-              mr="0"
-              px="2"
-              size="md"
-              autoFocus
-              overflow="hidden"
-              leftAddon={"$"}
-              color={`brand.${color}.900`}
-              onFocus={e => e.currentTarget.select()}
-              storeValue={values[map.fixedOperatingCost]}
-              onKeyDown={event => onKeyDown(event, map.fixedOperatingCost)}
-              onBlur={event => onBlur(event, map.fixedOperatingCost)}
+            <Row
+              varpath="fixed_oper_cost_per_iunit.value"
+              dataType="numeric"
+              rightAddon="%"
+              color={color}
+              chart={false}
+              helper={false}
+              question={false}
+              colSpanLeft={0}
+              colSpanRight={10}
             />
           ) : (
             <StyledText
@@ -147,22 +144,16 @@ const FinanceInputs = ({ color, technologyId }) => {
       <GridItem px={cols.xPadding} colSpan={cols.rightCol}>
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.firstCostLearningRatet ? (
-            <Input
-              mr="0"
-              px="2"
-              size="md"
-              autoFocus
-              overflow="hidden"
-              rightAddon={"%"}
-              color={`brand.${color}.900`}
-              onFocus={e => e.currentTarget.select()}
-              storeValue={values[map.firstCostLearningRatet]}
-              onKeyDown={event => onKeyDown(event, map.firstCostLearningRatet)}
-              onBlur={event => onBlurPercentage(event, map.firstCostLearningRatet)}
-              defaultIsFocused={true}
-              formatInputValueFn= { x => (x.substr && x.substr(-1) === ".") ? x : (x * 100) }
-              // This isn't currently called, but would be preferable to using onBlurPercentage:
-              parseInputValueFn = { x => (x.substr && x.substr(-1) === ".") ? x : (x / 100) }
+            <Row
+              varpath="first_cost_efficiency_rate.value"
+              dataType="numeric"
+              rightAddon="%"
+              color={color}
+              chart={false}
+              helper={false}
+              question={false}
+              colSpanLeft={0}
+              colSpanRight={10}
             />
           ) : (
             <StyledText
@@ -185,18 +176,16 @@ const FinanceInputs = ({ color, technologyId }) => {
       <GridItem px={cols.xPadding} colSpan={cols.rightCol}>
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.variableOperatingCost ? (
-            <Input
-              mr="0"
-              px="2"
-              size="md"
-              autoFocus
-              overflow="hidden"
-              leftAddon={"$"}
-              color={`brand.${color}.900`}
-              onFocus={e => e.currentTarget.select()}
-              storeValue={values[map.variableOperatingCost]}
-              onKeyDown={event => onKeyDown(event, map.variableOperatingCost)}
-              onBlur={event => onBlur(event, map.variableOperatingCost)}
+            <Row
+              varpath="var_oper_cost_per_funit.value"
+              dataType="numeric"
+              leftAddon="$"
+              color={color}
+              chart={false}
+              helper={false}
+              question={false}
+              colSpanLeft={0}
+              colSpanRight={10}
             />
           ) : (
             <StyledText
@@ -219,18 +208,16 @@ const FinanceInputs = ({ color, technologyId }) => {
       <GridItem px={cols.xPadding} colSpan={cols.rightCol}>
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.fuelOperatingCost ? (
-            <Input
-              mr="0"
-              px="2"
-              size="md"
-              autoFocus
-              overflow="hidden"
-              leftAddon={"$"}
-              color={`brand.${color}.900`}
-              onFocus={e => e.currentTarget.select()}
-              storeValue={values[map.fuelOperatingCost]}
-              onKeyDown={event => onKeyDown(event, map.fuelOperatingCost)}
-              onBlur={event => onBlur(event, map.fuelOperatingCost)}
+            <Row
+              varpath="fuel_cost_per_funit.value"
+              dataType="numeric"
+              leftAddon="$"
+              color={color}
+              chart={false}
+              helper={false}
+              question={false}
+              colSpanLeft={0}
+              colSpanRight={10}
             />
           ) : (
             <StyledText

@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from "react";
 import { Box, Heading, Flex, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Image } from "@chakra-ui/react";
 import { RunButton, PlayButton } from "../theme/icons";
 import styled, { css, keyframes } from "styled-components";
 import store from "../redux/store";
@@ -14,6 +13,7 @@ import {
 } from "redux/selectors.js";
 import { prettyFormatBigNumber } from "util/number-utils.js";
 import Logo from "./Logo.js";
+import { errorAdded } from "../redux/reducers/util/errorSlice";
 
 const rotate = keyframes`
   from {
@@ -57,6 +57,14 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const { user } = useContext(UserContext);
   const loggedIn = user && typeof user === "object" && user.id
   const logoLink = loggedIn ? "/workbooks" : "/";
+
+  useEffect(() => {
+    !workbookHasAuthor && store.dispatch(errorAdded({
+      title: "Information",
+      message: "This is a featured workbook. If you'd like to change things you need to copy it.",
+      type: "info"
+   }));
+  }, [workbookHasAuthor])
 
   return (
     <Box

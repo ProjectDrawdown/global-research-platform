@@ -1,21 +1,15 @@
 import React, { useEffect, useContext } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import store from "redux/store";
 import {
   doFetchWorkbookThunk,
   doCloneAndPatchWorkbookThunk,
-  fetchWorkbookThunk,
-  clonepatchWorkbookThunk,
-  cloneWorkbookThunk,
-  patchWorkbookThunk
 } from "redux/reducers/workbook/workbookSlice";
 import { useHistory, useParams } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
-import PageLayout from "components/PageLayout";
+import PageLayout from "parts/PageLayout";
 import { ProgressBar } from "components/ProgressBar";
 import {
-  Heading,
-  Text,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -32,11 +26,8 @@ const CloneWorkbookPage = () => {
   const { user } = useContext(UserContext);
   const params = useParams();
   const history = useHistory();
-  let lastWorkbookID;
 
-  const workbooks = useSelector(state => state.workbooks);
   const loadingStatus = useSelector(state => state.workbook.status);
-  const currentWorkbook = useSelector(state => state.workbook);
 
   useEffect(() => {
     store.dispatch(doFetchWorkbookThunk({ id: parseInt(params.id) }));
