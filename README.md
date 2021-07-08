@@ -128,7 +128,9 @@ The `web` application may take some time to load as it is being built post Docke
 _DEVELOPER NOTE:_ If you choose to run via Docker, any changes to the library dependencies (`pip install` or `npm install`) will mean you will have to rebuild your container by restarting docker and running:
 
 ```sh
-$ docker-compose up --build
+$ docker-compose build --no-cache
+
+$ docker-compose up
 ```
 
 ## Getting started without Docker
