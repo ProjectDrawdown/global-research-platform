@@ -2,7 +2,6 @@ from typing import Optional, Dict, Any, List
 import importlib
 import asyncio
 import json
-import re
 import hashlib
 import logging
 from logging.config import dictConfig
@@ -18,10 +17,6 @@ from api.config import AioWrap, LogSettings, get_projection_path, get_settings
 from api.queries.workbook_queries import workbook_by_id
 from api.transform import rehydrate_legacy_json
 from api.db.models import Workbook
-
-import cProfile
-import pstats
-import io
 
 import ntpath
 import pathlib

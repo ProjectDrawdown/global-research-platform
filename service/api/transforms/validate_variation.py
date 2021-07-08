@@ -3,7 +3,7 @@ import re
 import pickle
 from api.transforms.variable_paths import varProjectionNamesPaths
 from api.transforms.reference_variable_paths import varRefNamesPaths
-from api.transform import legacyDataFiles, get_value_at, set_value_at
+from api.transform import legacyDataFiles, get_value_at, set_value_at, get_path_from_library
 from api.transforms.ref_var_schema import ref_var_schema
 from api.transforms.scenario_var_schema import scenario_var_schema
 from api.calculate import fetch_data, build_json
@@ -23,7 +23,8 @@ def drill(d: dict) -> str:
 def build_schema():
   schema = {}
   for [technology, filepath] in legacyDataFiles['drawdown-2020']:
-    with open(filepath) as f:
+    libraryFilenameData = get_path_from_library(filepath)
+    with open(libraryFilenameData) as f:
       scenarioData = json.load(f)
       for [existing_name, path, converted_name, label, unit] in varRefNamesPaths:#varProjectionNamesPaths
         technologyPath = path.replace('solarpvutil', technology)

@@ -2,6 +2,7 @@ import json
 import csv
 import os
 import importlib
+import pkg_resources
 from typing import List
 from os import listdir
 from os.path import isfile, join
@@ -196,7 +197,8 @@ def transform():
   jsonRefData = {}
 
   for [technology, filenameData] in legacyDataFiles['drawdown-2020']:
-    with open(filenameData) as f:
+    libraryFilenameData = get_path_from_library(filenameData)
+    with open(libraryFilenameData) as f:
       sampleScenarioData = json.load(f)
       for [existing_name, path, converted_name, label, unit] in varProjectionNamesPaths:
         technologyPath = path.replace('solarpvutil', technology)
@@ -371,3 +373,12 @@ def flatten_variation(obj):
   for path in transformed:
     result = {**result, **path}
   return result
+
+def get_path_from_library(path):
+  """
+    replaces the orinal relative path to the path of file stored from the library
+  """
+  shortened = path.replace('solution/', '/')
+  DATA_PATH = pkg_resources.resource_filename("solution", shortened)
+  return DATA_PATH
+  
