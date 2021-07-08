@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import PageLayout from "components/PageLayout";
+import PageLayout from "parts/PageLayout";
 import { VStack, Box } from "@chakra-ui/react";
 import { UserContext } from "services/user";
 

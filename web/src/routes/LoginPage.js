@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import PageLayout from "components/PageLayout";
+import PageLayout from "parts/PageLayout";
 import { VStack, Box, Heading, Button } from "@chakra-ui/react";
 import { LogoGoogle } from "react-ionicons";
 import { UserContext } from "services/user";

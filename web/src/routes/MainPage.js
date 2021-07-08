@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import PageLayout from "components/PageLayout";
+import PageLayout from "parts/PageLayout";
 import { VStack, Heading } from "@chakra-ui/react";
 import queryString from "query-string";
 import { authenticate } from "api/api";

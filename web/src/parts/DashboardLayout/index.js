@@ -1,14 +1,11 @@
 import React from "react";
 import { Flex, Container } from "@chakra-ui/react";
-import { PageFooter } from "components/PageFooter";
+import { PageFooter } from "parts/PageFooter";
 
 const DashboardLayout = ({
-  title,
   navMargin = true,
-  headerMargin = true,
   maxW = "100%",
   showFooter = true,
-  fixedHeight = true,
   children
 }) => {
   return (

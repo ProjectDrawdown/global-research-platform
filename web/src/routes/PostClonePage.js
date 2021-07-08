@@ -1,19 +1,15 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice";
-import { useConfigContext } from "contexts/ConfigContext";
-import { Stack, Box } from "@chakra-ui/react";
-import PageLayout from "components/PageLayout";
-import WorkbookHeader from "components/WorkbookHeader";
-import { Navigation } from "components/Navigation";
-import { ProgressBar } from "components/ProgressBar";
-import { Flex } from "@chakra-ui/react";
+import React, { useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice"
+import { useConfigContext } from "contexts/ConfigContext"
+import { Stack, Box } from "@chakra-ui/react"
+import PageLayout from "parts/PageLayout"
+import { Navigation } from "components/Navigation"
+import { ProgressBar } from "components/ProgressBar"
 import {
-  TechnologyPane,
-  ViewPortfolioPane,
   EditPortfolioPane
-} from "components/TechnologyCardPanes";
+} from "components/TechnologyCardPanes"
 
 const PostClonePage = () => {
   const params = useParams();

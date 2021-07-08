@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Stack, Box, Heading, Text, Button, Image } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import PageLayout from "components/PageLayout";
+import PageLayout from "parts/PageLayout";
 import imgHomepageAppScreenshot from "images/screenshots/homepage_app_screenshot.jpg";
 import imgVisualizationsScreenshot from "images/screenshots/visualizations_screenshot.jpg";
 import imgPortfolioCardsScreenshot from "images/screenshots/portfolio_cards_screenshot.jpg";

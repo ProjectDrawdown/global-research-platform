@@ -1,19 +1,17 @@
-import React, { useEffect, useContext } from "react";
-import { Box, Heading, Flex, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
-import { Link as DomLink, useParams } from "react-router-dom";
-import { useToast } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
-import { Image } from "@chakra-ui/react";
-import { RunButton } from "../theme/icons";
-import styled from "styled-components";
-import store from "../redux/store";
-import { calculateThunk } from "../redux/reducers/workbook/workbookSlice";
-import { UserContext } from "services/user";
-import Logo from "./Logo.js";
+import React from "react"
+import { Box, Heading, Spacer, HStack, Grid, GridItem, Button, Text } from "@chakra-ui/react"
+import { Link as DomLink, useParams } from "react-router-dom"
+import { useSelector } from "react-redux"
+import styled from "styled-components"
+import { RunButton } from "../../theme/icons"
+import store from "../../redux/store"
+import { calculateThunk } from "../../redux/reducers/workbook/workbookSlice"
+import Logo from "../../components/Logo.js"
+import Menu from "../../components/Menu.js"
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector
-} from "redux/selectors.js";
+} from "redux/selectors.js"
 
 export const StyledRunWrapper = styled.div`
   position: absolute;
@@ -25,7 +23,8 @@ export const StyledRunWrapper = styled.div`
   margin-left: auto;
 `;
 
-export default function PortfolioHeader({ logoWidth = 105, technologyId }) {
+
+export default function PortfolioHeader({ technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
   const calculate = () => {
@@ -36,8 +35,6 @@ export default function PortfolioHeader({ logoWidth = 105, technologyId }) {
   const workbookHasAuthor = useWorkbookHasAuthorSelector();
   const showCopyButton = !workbookHasAuthor;
 
-  const { user } = useContext(UserContext);
-  const loggedIn = user && typeof user === "object" && user.id;
   return (
     <Box
       top={0}
@@ -47,7 +44,7 @@ export default function PortfolioHeader({ logoWidth = 105, technologyId }) {
     >
       <Grid bg="white" templateColumns="repeat(6, 1fr)" gap={1} w="100%" margin={0} p={2}>
         <GridItem colSpan={1} textAlign="center" mr="2rem" mt="0.25rem">
-          <Logo />
+        <Logo />
         </GridItem>
         <GridItem colSpan={5} textAlign="left" mr="2rem" mt="0.25rem">
           <HStack>
@@ -62,6 +59,7 @@ export default function PortfolioHeader({ logoWidth = 105, technologyId }) {
                 workbookState.workbook.name) ||
                "\u00A0"}
             </Heading>
+            <Menu />
             { showCopyButton &&
               <Button
                 as={DomLink}
@@ -102,6 +100,7 @@ export default function PortfolioHeader({ logoWidth = 105, technologyId }) {
             {'WORKBOOK OVERVIEW'}
           </Heading>
         </GridItem>
+        <Spacer />
         {workbookState.workbook?.author && (
           <>
             <GridItem h="100%" pt="18px" colSpan="1">

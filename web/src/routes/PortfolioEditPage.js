@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice";
-import { useConfigContext } from "contexts/ConfigContext";
-import { Stack, Box } from "@chakra-ui/react";
-import PortfolioLayout from "components/PortfolioLayout";
-import { Navigation } from "components/Navigation";
-import { ProgressBar } from "components/ProgressBar";
+import React, { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice"
+import { useConfigContext } from "contexts/ConfigContext"
+import { Stack, Box } from "@chakra-ui/react"
+import PortfolioLayout from "parts/PortfolioLayout"
+import { Navigation } from "components/Navigation"
 import {
-  TechnologyPane,
-  ViewPortfolioPane,
   EditPortfolioPane
-} from "components/TechnologyCardPanes";
+} from "components/TechnologyCardPanes"
 
 const EditPortfolioPage = () => {
   const params = useParams();

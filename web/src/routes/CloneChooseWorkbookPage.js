@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react"
+import { useSelector } from "react-redux"
 // import { unwrapResult } from '@reduxjs/toolkit'
-import store from "redux/store";
-import { unsetWorkbookThunk } from "redux/reducers/workbook/workbookSlice";
-import { fetchWorkbooksThunk } from "redux/reducers/workbook/workbookListSlice";
-import { Link } from "react-router-dom";
-import { Text, Heading, VStack, Box, Icon } from "@chakra-ui/react";
-import PageLayout from "components/PageLayout";
-import { ProgressBar } from "components/ProgressBar";
-import { WorkbookCard, WorkbookCardWrapper } from "components/WorkbookCard";
-import WorkbookCardGrid from "components/WorkbookCardGrid";
-import { IoIosAddCircleOutline as PlusIcon } from "react-icons/io";
-import LoadingSpinner from "components/LoadingSpinner";
+import store from "redux/store"
+import { unsetWorkbookThunk } from "redux/reducers/workbook/workbookSlice"
+import { fetchWorkbooksThunk } from "redux/reducers/workbook/workbookListSlice"
+import { Heading, VStack, Box } from "@chakra-ui/react"
+import PageLayout from "parts/PageLayout"
+import { ProgressBar } from "components/ProgressBar"
+import { WorkbookCard } from "components/WorkbookCard"
+import WorkbookCardGrid from "components/WorkbookCardGrid"
+import LoadingSpinner from "components/LoadingSpinner"
 
 export const CloneChooseWorkbookPage = () => {
   const workbooks = useSelector(state => state.workbooks);

@@ -21,7 +21,7 @@ function EmissionsChart({ techData }) {
 
   return (
     <>
-      <VictoryChart padding={{ left: 25, right: 25, bottom: 30, top: 10 }}>
+      <VictoryChart padding={{ left: 80, right: 25, bottom: 30, top: 10 }}>
         <VictoryAxis
           tickFormat={(v) => v.toString()}
           style={{
@@ -38,6 +38,26 @@ function EmissionsChart({ techData }) {
               paddingLeft: -10
             }
           }}
+        />
+        <VictoryAxis
+          dependentAxis
+          tickFormat={(v) => v.toString()}
+          style={{
+            axisLabel: {fontSize: 20, padding: 60, fill: "#bababa"},
+            axis: { stroke: "#f2f2f2" },
+            tickLabels: {
+              stroke: "#bababa",
+              fontSize: "20",
+              fill: "#b0b0b0"
+            },
+            ticks: {
+              stroke: "#bababa",
+              size: 2,
+              verticalAnchor: "middle",
+              paddingLeft: -10
+            }
+          }}
+          label="Gt CO2-eq"
         />
         <VictoryStack>
           <VictoryArea
