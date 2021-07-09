@@ -1,37 +1,29 @@
 import React from 'react'
-import { Menu } from '../../components/Menu'
+import { PageHeader } from './'
 import { UserContext } from "services/user";
 
-
-// const LoggedInContext = ({
-//   children
-// }) => {
-//   const [user, setUser] = React.useState(null);
-
-//   return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider> 
-// }
-// const context = {
-//     user: {}
-// }
-// const useAppContext = () => {
-//   // const onAddItem = product => {...}
-//   return {
-//     user: {}
-// }
-
 export default {
-  component: Menu,
+  component: PageHeader,
   title: 'Layouts/Header',
-  decorators: [(storyFn) => {
-    return (
-      <UserContext.Provider value={{}}>
-        {storyFn({})}
-      </UserContext.Provider>
-    )
-  }],
 }
 
-const Template = args => <Menu {...args}/>
+const Template = args => (
+  <UserContext.Provider value={{}}>
+    <PageHeader {...args}/>
+  </UserContext.Provider>
+)
 
-export const Default = Template.bind({})
-Default.args = {}
+const user = {
+  id: "some_id"
+}
+const TemplateLoggedIn = args => (
+  <UserContext.Provider value={{ user }}>
+    <PageHeader {...args}/>
+  </UserContext.Provider>
+)
+
+export const NonLoggedIn = Template.bind({})
+NonLoggedIn.args = {}
+
+export const LoggedIn = TemplateLoggedIn.bind({})
+LoggedIn.args = {}

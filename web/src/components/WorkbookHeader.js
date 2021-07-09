@@ -12,7 +12,7 @@ import {
   useWorkbookHasAuthorSelector
 } from "redux/selectors.js";
 import { prettyFormatBigNumber } from "util/number-utils.js";
-import Logo from "./Logo.js";
+import Logo from "../parts/Logo";
 import { errorAdded } from "../redux/reducers/util/errorSlice";
 
 const rotate = keyframes`

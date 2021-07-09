@@ -1,7 +1,8 @@
-import React from "react";
-import { Flex, Container } from "@chakra-ui/react";
-import { PageFooter } from "parts/PageFooter";
-import PortfolioHeader from "parts/PortfolioHeader";
+import React from "react"
+import PropTypes from "prop-types"
+import { Flex, Container } from "@chakra-ui/react"
+import { PageFooter } from "parts/PageFooter"
+import PortfolioHeader from "parts/PortfolioHeader"
 
 const PortfolioLayout = ({
   navMargin = true,
@@ -31,5 +32,19 @@ const PortfolioLayout = ({
     </Flex>
   );
 };
+
+
+PortfolioLayout.propTypes = {
+  /** Enables margin */
+  navMargin: PropTypes.bool,
+
+  /** Max width of layout */
+  maxW: PropTypes.string,
+
+  /** enable/disable footer */
+  showFooter: PropTypes.bool,
+
+  children: PropTypes.elementType
+}
 
 export default PortfolioLayout;
