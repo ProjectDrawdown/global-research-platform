@@ -22,3 +22,17 @@ API Documentation could be found by running the application and accessing the `G
 
 * Python 3.8
 * Postgres
+
+## Code Standard
+
+We rely on `pylint` to maintain code standard. Run it by:
+```sh
+$ pylint service
+```
+
+However to make it easier, we added a pre-commit hook that would only run it againts the changes that you made. To do that, simply go to the `root` directory and run
+```sh
+$ pre-commit install
+```
+
+Now `pylint` will run when you create a commit.
