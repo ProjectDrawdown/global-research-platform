@@ -1,23 +1,35 @@
+"""
+  Query set for the User object
+"""
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.query import Query
-
 from api.db import models
-from api.routers import schemas
 
-def get_user(db: Session, user: models.User):
-    return db.query(models.User).filter(models.User.login == user.login).first()
+def get_user(database: Session, user: models.User):
+	"""
+		Get user object from database based on currently logged in user
+  """
+	return database.query(models.User).filter(models.User.login == user.login).first()
 
-def create_user(db: Session, user: models.User):
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+def create_user(database: Session, user: models.User):
+	"""
+    Create new User in the database
+  """
+	database.add(user)
+	database.commit()
+	database.refresh(user)
+	return user
 
-def all_users(db: Session):
-    return db.query(models.User).all()
+def all_users(database: Session):
+	"""
+    Get all user from database
+  """
+	return database.query(models.User).all()
 
-def save_user(db: Session, user: models.User):
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+def save_user(database: Session, user: models.User):
+	"""
+    Save User object to database
+  """
+	database.add(user)
+	database.commit()
+	database.refresh(user)
+	return user

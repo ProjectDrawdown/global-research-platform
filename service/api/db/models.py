@@ -1,20 +1,28 @@
+"""
+	Models objects for Postgres database
+"""
+import json
+import enum
+from datetime import datetime
+from jsonschema import validate
 from sqlalchemy import DateTime, Boolean, Column, ForeignKey, Integer, String, Enum, LargeBinary
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.ext.hybrid import hybrid_property
-import json
-from jsonschema import validate
-import enum
 from api.config import get_resource_path, get_path
-from datetime import datetime
-
 from .database import Base
 from .json_schemas import workbook_schema
 
 class UserRole(enum.Enum):
-	default = 1
+	"""
+		Base enum for User Role
+	"""
+	DEFAULT = 1
 
 class User(Base):
+	"""
+		Represent the User Table
+	"""
 	__tablename__ = "user"
 
 	id = Column(Integer, primary_key=True, index=True)
@@ -26,12 +34,15 @@ class User(Base):
 	location = Column(String)
 	picture = Column(String)
 	is_active = Column(Boolean, default=True)
-	role = Column(Enum(UserRole), default=UserRole.default)
+	role = Column(Enum(UserRole), default=UserRole.DEFAULT)
 	meta = Column(JSONB)
 	workbooks = relationship("Workbook", back_populates="author")
 	vma_csvs = relationship("VMA_CSV", back_populates="author")
 
 class Workbook(Base):
+	"""
+		Represent the Workbook Table
+	"""
 	__tablename__ = 'workbook'
 
 	id = Column(Integer, primary_key=True, index=True)
@@ -50,13 +61,19 @@ class Workbook(Base):
 	updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
 
 	@validates('data')
-	def validate_data(self, key, value):
+	def validate_data(self, _, value):
+		"""
+			Validate input value with schema
+		"""
 		my_json = json.loads(value)
 		# Validate will raise exception if given json is not
 		# what is described in schema.
 		validate(instance=my_json, schema=workbook_schema)
 
 class Resource(object):
+	"""
+		Represent the Resource Table
+	"""
 	__tablename__ = 'resource'
 
 	id = Column(Integer, primary_key=True)
@@ -65,18 +82,33 @@ class Resource(object):
 
 	@hybrid_property
 	def path(self):
+		"""
+			return resource path
+		"""
 		return get_resource_path(self.__tablename__, self.id)
 
 class Scenario(Resource, Base):
+	"""
+		Represent the Scenario Table
+	"""
 	__tablename__ = 'scenario'
 
 class Reference(Resource, Base):
+	"""
+		Represent the Reference Table
+	"""
 	__tablename__ = 'reference'
 
 class Variation(Resource, Base):
+	"""
+		Represent the Variation Table
+	"""
 	__tablename__ = 'variation'
 
-class VMA_CSV(Base):
+class VMA_CSV(Base): # pylint: disable=invalid-name
+	"""
+		Represent the VMA_CVS Table
+	"""
 	__tablename__ = 'vma_csv'
 	id = Column(Integer, primary_key=True)
 	name = Column(String, index=True)
@@ -90,19 +122,37 @@ class VMA_CSV(Base):
 
 	@hybrid_property
 	def path(self):
+		"""
+			Get the path of VMA
+		"""
 		return get_path(self.__tablename__, self.id)
 
 class TAM(Resource, Base):
+	"""
+		Represent the TAM Table
+	"""
 	__tablename__ = 'tam'
 
 class VMA(Resource, Base):
+	"""
+		Represent the VMA Table
+	"""
 	__tablename__ = 'vma'
 
 class AdoptionData(Resource, Base):
+	"""
+		Represent the Adoption Data Table
+	"""
 	__tablename__ = 'adoption_data'
 
 class CustomAdoptionPDS(Resource, Base):
+	"""
+		Represent the Custom Adoption PDS Table
+	"""
 	__tablename__ = 'ca_pds'
 
 class CustomAdoptionRef(Resource, Base):
+	"""
+		Represent the Custom Adoption Reference Table
+	"""
 	__tablename__ = 'ca_ref'

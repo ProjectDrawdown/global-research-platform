@@ -1,81 +1,128 @@
-import json
-
+"""
+    Query Set for Resource Object
+"""
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.query import Query
 
 from api.db import models
-from api.db.models import Scenario, Reference, Variation, Workbook
+from api.db.models import Variation, Workbook
 from api.db.helpers import clone
-from api.routers import schemas
 
 def row2dict(row):
-    d = {}
-    for column in row.__table__.columns:
-        d[column.name] = str(getattr(row, column.name))
-    return d
+	"""
+		Convert object row from database into python dict
 
-def get_entity(db: Session, id: int, table):
-    return db.query(table).filter(table.id == id).first()
+		parameters:
+		----
+			row: row of query result
+	"""
+	data = {}
+	for column in row.__table__.columns:
+		data[column.name] = str(getattr(row, column.name))
+	return data
 
-def get_entities_by_name(db: Session, name: str, table):
-    return db.query(table).filter(table.name.like(name)).all()
+def get_entity(database: Session, input_id: int, table):
+	"""
+		Get Resource from table by ID
+	"""
+	return database.query(table).filter(table.id == input_id).first()
 
-def get_entity_by_name(db: Session, name: str, table):
-    return db.query(table).filter(table.name.like(name)).first()
+def get_entities_by_name(database: Session, name: str, table):
+	"""
+		Get multiple Resource from table by name
+	"""
+	return database.query(table).filter(table.name.like(name)).all()
 
-def all_entities(db: Session, table):
-    return db.query(table).all()
+def get_entity_by_name(database: Session, name: str, table):
+	"""
+		Get first object from table by name
+	"""
+	return database.query(table).filter(table.name.like(name)).first()
 
-def all_entity_paths(db: Session, entity, table):
-    return list(map(lambda r: r.path, db.query(table).all()))
+def all_entities(database: Session, table):
+	"""
+		Get all object from table
+	"""
+	return database.query(table).all()
 
-def clone_variation(db: Session, id: int):
-    cloned = clone(db, db.query(Variation).filter(Variation.id==id))
-    return cloned
+def all_entity_paths(database: Session, _, table):
+	"""
+		Get all objects path from table
+	"""
+	return list(map(lambda r: r.path, database.query(table).all()))
 
-def save_variation(db: Session, variation: Variation):
-    db.add(variation)
-    db.commit()
-    db.refresh(variation)
-    return variation
+def clone_variation(database: Session, input_id: int):
+	"""
+		Get Variation object from database and create local clone
+	"""
+	cloned = clone(database, database.query(Variation).filter(Variation.id == input_id))
+	return cloned
 
-def save_entity(db: Session, name: str, obj, table):
-    db_obj = table(
-        name = name,
-        data = obj)
+def save_variation(database: Session, variation: Variation):
+	"""
+		Save Variation object to database
+	"""
+	database.add(variation)
+	database.commit()
+	database.refresh(variation)
+	return variation
 
-    db.add(db_obj)
-    db.commit()
-    db.refresh(db_obj)
-    return db_obj
+def save_entity(database: Session, name: str, obj, table):
+	"""
+		Save object to database
 
-def delete_unused_variations(db: Session):
-    # would be nice to do in the db but this doesn't work because path is a hybrid property
-    # unused_vars = db.query(Variation).join(Workbook, Workbook.variations.contains([Variation.path])).all()
+		parameters:
+		---
+			database: Session
+				database session
+			name: str
+				primary name key
+			obj: dict
+				modified data
+			table: Models
+				object model
+	"""
+	db_obj = table(
+			name=name,
+			data=obj)
 
-    all_workbooks = db.query(Workbook).all()
-    all_variations = db.query(Variation).all()
-    for variation in all_variations:
-        found = False
-        for workbook in all_workbooks:
-            if variation.path in workbook.variations:
-                found = True
-        if not found:
-            db.delete(variation)
-    db.commit()
+	database.add(db_obj)
+	database.commit()
+	database.refresh(db_obj)
+	return db_obj
 
-def clear_all_tables(db: Session):
-    for model in [
-        models.VMA,
-        models.TAM,
-        models.AdoptionData,
-        models.CustomAdoptionPDS,
-        models.CustomAdoptionRef,
-        models.Scenario,
-        models.Reference,
-        models.Variation,
-        models.Workbook,
-        models.VMA_CSV
-        ]:
-            db.query(model).delete()
-    db.commit()
+def delete_unused_variations(database: Session):
+	"""
+		Delete unused Variation objects (NOT FUNCTIONAL)
+	"""
+	# would be nice to do in the db but this doesn't work because path is a hybrid property
+	# unused_vars = db.query(Variation).join(Workbook, Workbook.variations.contains([Variation.path])).all()
+
+	all_workbooks = database.query(Workbook).all()
+	all_variations = database.query(Variation).all()
+	for variation in all_variations:
+		found = False
+		for workbook in all_workbooks:
+			if variation.path in workbook.variations:
+				found = True
+				if not found:
+					database.delete(variation)
+	database.commit()
+
+def clear_all_tables(database: Session):
+	"""
+		clear all data in the database
+	"""
+	for model in [
+			models.VMA,
+			models.TAM,
+			models.AdoptionData,
+			models.CustomAdoptionPDS,
+			models.CustomAdoptionRef,
+			models.Scenario,
+			models.Reference,
+			models.Variation,
+			models.Workbook,
+			models.VMA_CSV
+		]:
+		database.query(model).delete()
+	database.commit()
