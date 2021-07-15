@@ -7,8 +7,8 @@ import { fetchWorkbooksThunk } from "redux/reducers/workbook/workbookListSlice"
 import { Heading, VStack, Box } from "@chakra-ui/react"
 import PageLayout from "parts/PageLayout"
 import { ProgressBar } from "components/ProgressBar"
-import { WorkbookCard } from "components/WorkbookCard"
-import WorkbookCardGrid from "components/WorkbookCardGrid"
+import { WorkbookCard } from "components/workbook/card"
+import WorkbookCardGrid from "components/workbook/cardGrid"
 import LoadingSpinner from "components/LoadingSpinner"
 
 export const CloneChooseWorkbookPage = () => {

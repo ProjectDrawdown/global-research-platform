@@ -1,20 +1,22 @@
-import React, { useEffect, useContext } from "react";
-import { Box, Heading, Flex, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import { Box, Heading, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RunButton, PlayButton } from "../theme/icons";
+import { RunButton, PlayButton } from "theme/icons";
 import styled, { css, keyframes } from "styled-components";
-import store from "../redux/store";
-import { calculateThunk } from "../redux/reducers/workbook/workbookSlice";
-import { UserContext } from "services/user";
+import store from "redux/store";
+import { calculateThunk } from "redux/reducers/workbook/workbookSlice";
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector
 } from "redux/selectors.js";
 import { prettyFormatBigNumber } from "util/number-utils.js";
-import Logo from "./Logo.js";
-import { errorAdded } from "../redux/reducers/util/errorSlice";
+import Logo from "components/Logo.js";
+import { errorAdded } from "redux/reducers/util/errorSlice";
 
+/**
+ * keyframe DOM
+ */
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -25,7 +27,10 @@ const rotate = keyframes`
   }
 `;
 
-export const StyledRunWrapper = styled.div`
+/**
+ * Wrapper DOM
+ */
+const StyledRunWrapper = styled.div`
   position: absolute;
   top: 0px;
   right: 0;
@@ -34,10 +39,22 @@ export const StyledRunWrapper = styled.div`
   cursor: pointer;
 `;
 
-export const StyledButton = styled.div`
+/**
+ * Button with Loading animation
+ */
+const StyledButton = styled.div`
   animation: ${props => (props.loading ? css`${rotate} 2s linear infinite` : 'none')};
 `
 
+/**
+ * Renders the Header of an opened workbook.
+ * Additional Header feature:
+ * * A floating button to use for Workbook recalculation.
+ * * A Toast for when a feature notebook is opened
+ * 
+ * @param {*} param0 
+ * @returns components
+ */
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
@@ -53,10 +70,6 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookID = useWorkbookIDSelector();
   const workbookHasAuthor = useWorkbookHasAuthorSelector();
   const showCopyButton = !workbookHasAuthor;
-
-  const { user } = useContext(UserContext);
-  const loggedIn = user && typeof user === "object" && user.id
-  const logoLink = loggedIn ? "/workbooks" : "/";
 
   useEffect(() => {
     !workbookHasAuthor && store.dispatch(errorAdded({

@@ -1,6 +1,11 @@
 import React from "react";
 import { Box } from "@chakra-ui/react";
 
+/**
+ * Renders an an empty footer for the wokbook page
+ * 
+ * @returns Component
+ */
 export default function WorkbookFooter() {
   // const ConfigContext = useConfigContext()
   return (

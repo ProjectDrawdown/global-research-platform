@@ -1,10 +1,17 @@
-import React from "react";
-import { Grid, GridItem, Box, Heading, Flex, Text, Image } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { getLastUpdated } from '../util/date-utilities';
-import thumb from "../thumbnail.svg"
+import React from "react"
+import { Grid, GridItem, Box, Heading, Flex, Text, Image } from "@chakra-ui/react"
+import { Link } from "react-router-dom"
+import PropTypes from "prop-types"
+import { getLastUpdated } from 'util/date-utilities'
+import thumb from "thumbnail.svg"
 
-export const WorkbookCardWrapper = props => (
+/**
+ * Flex Wrapper for the Workbook Card component
+ * 
+ * @param {*} props 
+ * @returns Component
+ */
+const WorkbookCardWrapper = props => (
   <Flex
     w="28vw"
     h="2xs"
@@ -23,7 +30,13 @@ export const WorkbookCardWrapper = props => (
   />
 );
 
-export const WorkbookCard = ({ workbook, to }) => {
+/**
+ * Display the created workbook as a card that shows the date of creation, notes, author.
+ * 
+ * @param {*} params0
+ * @returns 
+ */
+const WorkbookCard = ({ workbook, to }) => {
   return (
     <WorkbookCardWrapper bg="white" rounded="sm" role="group" as={Link} to={to}>
       <Box w="100%" d="flex">
@@ -84,3 +97,27 @@ export const WorkbookCard = ({ workbook, to }) => {
     </WorkbookCardWrapper>
   );
 };
+
+WorkbookCardWrapper.propTypes = {
+  /**
+   * Pass thorugh all props downstreams
+   */
+  props: PropTypes.shape()
+}
+
+WorkbookCardWrapper.propTypes = {
+  /**
+   * Workbook object
+   */
+  workbook: PropTypes.shape(),
+
+  /**
+   * URL string for link
+   */
+  to: PropTypes.string
+}
+
+export {
+  WorkbookCardWrapper,
+  WorkbookCard
+}
