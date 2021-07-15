@@ -58,16 +58,29 @@ const PDS_BASIS_OPTIONS = {
   None: "None"
 }
 
+/**
+ * Adoption Header is shown at the top of the slide-out drawer that is revealed when clicking the "expand" icon on the Adoption (Global) card.
+ */
 export const AdoptionHeader = () => (
   <span>Solution Adoption (advanced)</span>
 );
 
+/**
+ * This is the prototype of the tooltip for Base Adoption
+ */
 const BaseAdoptionTooltip = () => (
   <>
     <StyledParagraph><strong>Hello World</strong></StyledParagraph>
   </>
 )
 
+/**
+ * The Adoption Form is the content of the drawer that is revealed when clicking the "expand" icon on the Adoption (Global) card. The `techData` data property is required which contains the adoption data retrieved from the API server.
+ *
+ * This form contains a variety of controls for adjusting input values concerning adoption rates for the Drawdown model. Adjusting any input value here should save the values on the server. Note that this does not re-compute the model until the user clicks the "compute" circle.
+ *
+ * TODO: explain useParams()
+ */
 const AdoptionForm = (props) => {
   const params = useParams();
   const activeTechnology = params.technologyId;
