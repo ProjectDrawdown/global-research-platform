@@ -115,6 +115,8 @@ $ pipenv shell
 $ pipenv --python /Users/sam/.pyenv/versions/3.8.6/bin/python shell
 # Now inside the virtual env install tools
 $ pip install -r requirements.txt
+# install dev dependencies
+$ pip install -r requirements-dev.txt
 ```
 ### Building the Web Service
 You will need [Node >= v.14](https://nodejs.org/en/) installed
