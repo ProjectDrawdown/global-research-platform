@@ -9,7 +9,6 @@ import styled from "styled-components";
 import store from "../redux/store";
 import { calculateThunk } from "../redux/reducers/workbook/workbookSlice";
 import { UserContext } from "services/user";
-import Logo from "./Logo.js";
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector

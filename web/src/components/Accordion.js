@@ -8,6 +8,9 @@ import {
   AccordionIcon
 } from "@chakra-ui/react";
 
+/**
+ * An accordion layout utility. It doesn't appear to be used anywhere.
+ */
 export const Item = ({ title, children, color }) => {
   return (
     <AccordionItem>
