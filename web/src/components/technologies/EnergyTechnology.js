@@ -20,7 +20,7 @@ import DrawerLinkCard from "components/cards/DrawerLinkCard";
 import MarketChartCard from "components/cards/MarketChartCard";
 
 import SolutionHeader from "components/solution/SolutionHeader";
-import WorkbookHeader from "components/WorkbookHeader";
+import WorkbookHeader from "components/workbook/header";
 import { useParams } from "react-router-dom";
 import store from "../../redux/store";
 
