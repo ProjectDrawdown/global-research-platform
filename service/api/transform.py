@@ -303,7 +303,7 @@ def populate(resource: str):
   # resource can be one of the following:
   #   vma_data, tam, ca_pds_data, ca_ref_data
 
-  directory = 'solution'
+  directory = get_path_from_library('')
   converted_list = []
 
   for subdir, _, _ in os.walk(directory):
@@ -327,13 +327,13 @@ def convert_to_new_path(legacy_name: str, technology: str) -> str:
       return technologyPath
 
 def convert_vmas_to_binary() -> List[dict]:
-  directory = 'solution'
+  directory = get_path_from_library('')
   converted_list = []
   get_param_for_vma_name('s')
   for subdir, _, _ in os.walk(directory):
 
     for subdir_vma, _, files in os.walk(f'{subdir}/vma_data'):
-      technology = subdir.split('/')[1]
+      technology = subdir.split('/')[-1]
       importname = 'solution.' + technology
       m = importlib.import_module(importname)
       for file in files:
