@@ -246,6 +246,7 @@ async def setup_calculations(jsons, regions, prev_data, cache, websocket: WebSoc
     hashed_json_input = hashlib.md5(json.dumps(copied_json_input).encode('utf-8')).hexdigest()
 
     cached_result = await cache.get(hashed_json_input)
+    # TODO: load the VMA/resource/etc from database
     if cached_result is None:
       tasks.append((
         name,

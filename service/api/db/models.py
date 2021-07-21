@@ -17,7 +17,7 @@ class UserRole(enum.Enum):
 	"""
 		Base enum for User Role
 	"""
-	DEFAULT = 1
+	default = 1
 
 class User(Base):
 	"""
@@ -34,7 +34,7 @@ class User(Base):
 	location = Column(String)
 	picture = Column(String)
 	is_active = Column(Boolean, default=True)
-	role = Column(Enum(UserRole), default=UserRole.DEFAULT)
+	role = Column(Enum(UserRole), default=UserRole.default)
 	meta = Column(JSONB)
 	workbooks = relationship("Workbook", back_populates="author")
 	vma_csvs = relationship("VMA_CSV", back_populates="author")
@@ -79,6 +79,8 @@ class Resource(object):
 	id = Column(Integer, primary_key=True)
 	name = Column(String, index=True)
 	data = Column(JSONB)
+	# author_id = Column(Integer, ForeignKey('user.id'))
+	# author = relationship("User")
 
 	@hybrid_property
 	def path(self):
