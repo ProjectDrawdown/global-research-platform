@@ -4,6 +4,7 @@
 from enum import Enum
 from typing import List
 import pathlib
+import hashlib
 from fastapi import APIRouter, Depends, File, UploadFile, Form
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
@@ -197,7 +198,7 @@ async def post_resource_data(
     raise HTTPException(status_code=400, detail="Invalid document type")
 
   resource_obj = validate_and_convert_resource(entity, file)
-  save_entity(database, name, resource_obj, entity)
+  save_entity(database, name, resource_obj, entity, )
 
 @router.post('/variation/fork/{input_id}', response_model=schemas.VariationOut,
 	summary="Fork a variation with given id",
