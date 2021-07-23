@@ -79,10 +79,10 @@ class Resource(object):
 	id = Column(Integer, primary_key=True)
 	name = Column(String, index=True)
 	# uniqe name to prevent duplication on fetch
-	# ref_name = Column(String, index=True)
-	# data = Column(JSONB)
-	# author_id = Column(Integer, ForeignKey('user.id'))
-	# author = relationship("User")
+	ref_name = Column(String, index=True)
+	data = Column(JSONB)
+	author_id = Column(Integer, ForeignKey('user.id'))
+	author = relationship("User")
 
 	@hybrid_property
 	def path(self):
