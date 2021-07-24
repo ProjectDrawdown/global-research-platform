@@ -372,18 +372,17 @@ export const TechnologyPane = ({
           </Box>
         )
       )}
-      {sectorEdit && (
-        <TechnologyCardGrid
-          technologyIDs={technologyCardIDsNotInPortfolio}
-          keyString="technology-soln-"
-          sectorName={sectorName}
-          makeOnClickFn={technologyID => () => sectorEdit ?
-            handleNonportfolioTechnologyClick(technologyID) :
-            gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
-          isSelectedFn={() => false}
-          isFeaturedFn={() => true}>
-        </TechnologyCardGrid>
-      )}
+
+      <TechnologyCardGrid
+        technologyIDs={technologyCardIDsNotInPortfolio}
+        keyString="technology-soln-"
+        sectorName={sectorName}
+        makeOnClickFn={technologyID => () => sectorEdit ?
+          handleNonportfolioTechnologyClick(technologyID) :
+          gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
+        isSelectedFn={() => false}
+        isFeaturedFn={() => true}>
+      </TechnologyCardGrid>
     </TechnologyCardPaneWrapper>
   );
 };
