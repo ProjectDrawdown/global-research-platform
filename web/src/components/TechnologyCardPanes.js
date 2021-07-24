@@ -275,7 +275,7 @@ export const TechnologyPane = ({
       Object.keys(technologyMetadata).filter(
         (techID) => technologyMetadata[techID].sector === sectorName
       ),
-    [technologyMetadata]
+    [technologyMetadata, sectorName]
   );
 
   useEffect(() => {
@@ -339,7 +339,7 @@ export const TechnologyPane = ({
           isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
           isFeaturedFn={() => true}
         >
-          // add conventional electricity always - it can't be de-selected
+          {/* add conventional electricity always - it can't be de-selected */}
           {currentSector === "electricity" && (
             <TechnologyCard
               conventional={true}
