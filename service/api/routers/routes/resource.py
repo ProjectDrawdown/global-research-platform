@@ -1,10 +1,8 @@
 """
 	Route mapping for the Resource API
 """
-from enum import Enum
 from typing import List
 import pathlib
-import hashlib
 from fastapi import APIRouter, Depends, File, UploadFile, Form
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
@@ -45,19 +43,6 @@ entity_mapping = {
   'ca_pds': models.CustomAdoptionPDS,
   'ca_ref': models.CustomAdoptionRef
 }
-
-class EntityName(str, Enum):
-	"""
-		Maps input to a string name
-	"""
-	scenario = "scenario"
-	reference = "reference"
-	variation = "variation"
-	vma = "vma"
-	ad = "adoption_data"
-	tam = "tam"
-	ca_pds = "ca_pds"
-	ca_ref = "ca_ref"
 
 @router.get('/resource/vma/info/{technology}',
 	summary="Get the VMA info for a given technology",
@@ -100,7 +85,7 @@ async def get_vma_all(technology: str, database: Session = Depends(get_db)):
 @router.get('/resource/{entity}/{input_id}', response_model=schemas.ResourceOut,
 	summary="Get resource entity by id"
 	)
-async def get_by_id(entity: EntityName, input_id: int, database: Session = Depends(get_db)):
+async def get_by_id(entity: models.EntityName, input_id: int, database: Session = Depends(get_db)):
   """
     Get resource entity by id
 
@@ -119,7 +104,7 @@ async def get_by_id(entity: EntityName, input_id: int, database: Session = Depen
 @router.get('/resource/{entity}', response_model=List[schemas.ResourceOut],
 	summary="Get resource entity by name"
 	)
-async def get_by_name(entity: EntityName, name: str, database: Session = Depends(get_db)):
+async def get_by_name(entity: models.EntityName, name: str, database: Session = Depends(get_db)):
   """
     Get resource entity by name
 
@@ -138,7 +123,7 @@ async def get_by_name(entity: EntityName, name: str, database: Session = Depends
 @router.get('/resource/{entity}s/full', response_model=List[schemas.ResourceOut],
 	summary="Get the full resource (all data) of an entity by name"
 	)
-async def get_all(entity: EntityName, database: Session = Depends(get_db)):
+async def get_all(entity: models.EntityName, database: Session = Depends(get_db)):
   """
     Get the full resource (all data) of an entity by name
 
@@ -155,7 +140,7 @@ async def get_all(entity: EntityName, database: Session = Depends(get_db)):
 @router.get('/resource/{entity}s/paths', response_model=List[str],
 	summary="Get the resource paths (no data) of an entity by name"
 	)
-async def get_all_paths(entity: EntityName, database: Session = Depends(get_db)):
+async def get_all_paths(entity: models.EntityName, database: Session = Depends(get_db)):
   """
     Get the resource paths (no data) of an entity by name
 
@@ -175,11 +160,10 @@ async def get_all_paths(entity: EntityName, database: Session = Depends(get_db))
     "with a valid format"
 	)
 async def post_resource_data(
-	entity: EntityName, file: UploadFile = File(...),
+	entity: models.EntityName, file: UploadFile = File(...),
 	name: str = Form(...), database: Session = Depends(get_db)):
   """
-    Uploads a new resource data of an entity by name. Accepts an Excel file
-    with a valid format
+    Uploads a new resource data of an entity by name. Accepts Excel, CSV and Json object
 
     Parameters:
     ----
@@ -194,7 +178,10 @@ async def post_resource_data(
   """
 	# Assume we are only uploading Excel files right now
   if file.content_type not in ["application/vnd.ms-excel",
-		"application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]:
+		"application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "text/comma-separated-values", "text/csv", "application/csv",
+    "application/excel", "application/vnd.ms-excel", "application/vnd.msexcel",
+    "application/json"]:
     raise HTTPException(status_code=400, detail="Invalid document type")
 
   resource_obj = validate_and_convert_resource(entity, file)

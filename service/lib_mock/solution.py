@@ -2,12 +2,23 @@
   This file serves as a mock functionality of the solutions library
   untuil it is fully implemented
 """
+import json
 from fastapi import UploadFile
+from api.db import models
 
-def validate_and_convert_resource(entity: str, file: UploadFile):
+from api.transform import (
+  csv_to_json
+)
+
+def validate_and_convert_resource(entity: models.EntityName, file: UploadFile):
   """
     Mock function of processing the file
     TODO: Discuss with Denise on potential implementation
   """
-  print(f"Mock Processing {entity} Resource with {file.filename}")
-  return dict()
+  if (entity in ["scenario", "reference"]):
+    return json.loads(file.file.read())
+
+  data = csv_to_json(file.file.read())
+
+  return {'rows':data}
+

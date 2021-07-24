@@ -2,6 +2,7 @@
     Query Set for Resource Object
 """
 import hashlib
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from api.routers.auth import get_current_active_user
 from api.db import models
@@ -86,17 +87,18 @@ def save_entity(database: Session, name: str, obj, table):
 				randomized name for reference to prevent multiple result
 				when querying resource
 	"""
-	# try:
-	# 	user = get_current_active_user()
-	# 	ref_name = hashlib.md5(user.id + name).hexdigest()
-	# except:
-	# 	ref_name = None
-	
+	try:
+		user = get_current_active_user()
+		ref_name = hashlib.md5(user.id + name).hexdigest()
+	except HTTPException:
+		ref_name = None
+		user = None
+
 	db_obj = table(
-			name=name,
-			# ref_name=ref_name,
-			# author=user,
-			data=obj)
+		name=name,
+		ref_name=ref_name,
+		author=user,
+		data=obj)
 
 	database.add(db_obj)
 	database.commit()
