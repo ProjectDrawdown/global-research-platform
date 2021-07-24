@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { Link as DomLink, useParams } from "react-router-dom";
+import { Link as DomLink, useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RunButton } from "../../theme/icons";
@@ -45,6 +45,7 @@ const StyledButton = styled(Button)`
 `;
 
 export default function PortfolioHeader({ technologyId }) {
+  const history = useHistory();
   const workbookState = useSelector((state) => state.workbook);
   const params = useParams();
   const calculate = () => {
@@ -192,21 +193,21 @@ export default function PortfolioHeader({ technologyId }) {
             </GridItem>
           </>
         )}
-        <>
-          <GridItem>
-            <Heading>
+        {workbookState.workbook?.author && (
+          <>
+            <GridItem>
               <StyledButton
                 size="sm"
                 variant="ghost"
                 onClick={() => {
-                  console.log("clicked");
+                  history.push(`${workbookID}/edit`);
                 }}
               >
                 <AddIcon />
               </StyledButton>
-            </Heading>
-          </GridItem>
-        </>
+            </GridItem>
+          </>
+        )}
       </Grid>
     </Box>
   );
