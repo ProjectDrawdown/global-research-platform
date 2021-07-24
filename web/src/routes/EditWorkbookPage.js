@@ -124,11 +124,21 @@ const EditWorkbookPage = () => {
               <Box>
 
                 <Button
+                  m={2}
                   colorScheme="brand.blue"
                   isLoading={props.isSubmitting}
                   type="submit"
                 >
                   Save
+                </Button>
+                <Button
+                  m={2}
+                  colorScheme="red"
+                  onClick={() => {
+                    history.push(`/workbook/${params.id}`);
+                  }}
+                  >
+                  Cancel
                 </Button>
               </Box>
             </VStack>
