@@ -195,7 +195,7 @@ export default function PortfolioHeader({ technologyId }) {
         )}
         {workbookState.workbook?.author && (
           <>
-            <GridItem>
+            <GridItem h="100%" pt="18px" colSpan="1">
               <StyledButton
                 size="sm"
                 variant="ghost"
