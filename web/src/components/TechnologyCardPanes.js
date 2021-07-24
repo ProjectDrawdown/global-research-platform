@@ -254,6 +254,8 @@ export const TechnologyPane = ({
   const dispatch = useDispatch();
   const workbookState = useSelector(state => state.workbook);
 
+  // add these to state since changes in these variables
+  // will force the component to be re-rendered with updates
   const [portfolioSolutions, setPortfolioSolutions] = useState([]);
   const [technologyCardIDsInPortfolio, setTechnologyCardIDsInPortfolio] =
     useState([]);
@@ -337,6 +339,7 @@ export const TechnologyPane = ({
           isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
           isFeaturedFn={() => true}
         >
+          // add conventional electricity always - it can't be de-selected
           {currentSector === "electricity" && (
             <TechnologyCard
               conventional={true}
@@ -352,21 +355,22 @@ export const TechnologyPane = ({
             />
           )}
         </TechnologyCardGrid>
-      ) : (
-        <Box>
-          <Text>The portfolio for this workbook is currently empty.</Text>
-          <Text>
-            <Link
-              textDecoration="underline"
-              textColor="brand.blue.700"
-              as={DomLink}
-              to={editLocation}
-            >
-              Add technologies to the portfolio
-            </Link>{" "}
-            to access them quickly.
-          </Text>
-        </Box>
+      ) : (!sectorEdit && (
+            <Box>
+              <Text>The portfolio for this workbook is currently empty.</Text>
+              <Text>
+                <Link
+                  textDecoration="underline"
+                  textColor="brand.blue.700"
+                  as={DomLink}
+                  to={editLocation}
+                >
+                  Add technologies to the portfolio
+                </Link>{" "}
+                to access them quickly.
+              </Text>
+          </Box>
+        )
       )}
       {sectorEdit && (
         <TechnologyCardGrid
@@ -380,30 +384,6 @@ export const TechnologyPane = ({
           isFeaturedFn={() => true}>
         </TechnologyCardGrid>
       )}
-      {/*<TechnologyCardGrid
-        technologyIDs={technologyCardIDsNotInPortfolio}
-        cols={sidebar ? 3 : 4}
-        keyString="technology-soln-"
-        makeOnClickFn={technologyID => () =>
-          gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
-        isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
-        isFeaturedFn={() => false}
-      >
-        {currentSector === "electricity" && (
-          <TechnologyCard
-            conventional={true}
-            color={"grey"}
-            techID={"conventional"}
-            featured={false}
-            title={"Conventional Technologies"}
-            technologyImage={""}
-            onClick={() =>
-              gotoAndClose(`/workbook/${params.id}/technologies/conventional`)
-            }
-            selected={activeTechnology === "conventional"}
-          />
-        )}
-      </TechnologyCardGrid>*/}
     </TechnologyCardPaneWrapper>
   );
 };
