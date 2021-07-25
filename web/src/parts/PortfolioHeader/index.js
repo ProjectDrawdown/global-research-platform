@@ -50,8 +50,6 @@ export default function PortfolioHeader({ technologyId }) {
   const workbookHasAuthor = useWorkbookHasAuthorSelector();
   const showCopyButton = !workbookHasAuthor;
 
-  console.log(workbookState)
-
   return (
     <Box
       top={0}
