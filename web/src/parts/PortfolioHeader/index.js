@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Heading, Spacer, HStack, Grid, GridItem, Button, Text } from "@chakra-ui/react"
+import { Box, Heading, Center, HStack, Grid, GridItem, Button, Text } from "@chakra-ui/react"
 import { Link as DomLink, useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
 import styled from "styled-components"
@@ -8,6 +8,7 @@ import store from "../../redux/store"
 import { calculateThunk } from "../../redux/reducers/workbook/workbookSlice"
 import Logo from "../../components/Logo.js"
 import Menu from "../../components/Menu.js"
+import { prettyFormatBigNumber } from "util/number-utils.js"
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector
@@ -19,21 +20,37 @@ export const StyledRunWrapper = styled.div`
   right: 20px;
   height: 200px;
   width: auto;
-  cursor: pointer;
   margin-left: auto;
 `;
 
+const SmallText = styled.small`
+  font-size: 50%;
+`
+
+const calculateMmtReduced = (workbookState) => {
+  let value = 0
+  for (const [_, data] of Object.entries(workbookState.summaryData)) {
+    if (data && data.co2_mmt_reduced) {
+      value += data.co2_mmt_reduced['World'].reduce((acc, item) => acc + item.value, 0)
+    }
+  }
+
+  return prettyFormatBigNumber(value, 3, ['Mt', 'Gt']);
+};
 
 export default function PortfolioHeader({ technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
-  const calculate = () => {
-    store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
-  };
+  // Disable  calculate when in portfolio, since we don't have techID
+  // const calculate = () => {
+  //   store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
+  // };
 
   const workbookID = useWorkbookIDSelector();
   const workbookHasAuthor = useWorkbookHasAuthorSelector();
   const showCopyButton = !workbookHasAuthor;
+
+  console.log(workbookState)
 
   return (
     <Box
@@ -72,38 +89,55 @@ export default function PortfolioHeader({ technologyId }) {
             }
           </HStack>
         </GridItem>
-        {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
-          <StyledRunWrapper onClick={calculate}>
-            <RunButton />
+        {/* TODO: investirage for websocket */}
+        {/* {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? ( */}
+        { workbookState.summaryData ? (
+          <StyledRunWrapper>
+            <> 
+              <RunButton /> 
+            </>
+            <Center
+              position="absolute" 
+              left="0" 
+              right="0"
+              top="0"
+              bottom="0"
+              fontSize="1.5rem"
+              fontWeight="bold"
+              textAlign="center"
+            > 
+              <Text flex="1 1 160px">{calculateMmtReduced(workbookState)} <br /><SmallText>CO2 Reduced</SmallText></Text>
+            </Center>
           </StyledRunWrapper>
         ) : null}
       </Grid>
       <Grid
         templateColumns="repeat(12, 1fr)"
+        templateRows="repeat(3, 1fr)"
         gap={2}
         w="100%"
         margin={0}
         px={8}
-        pt={8}
+        // pt={8}
         my="10px"
         h="128px"
         bg="#00416F"
         alignItems="center"
         boxShadow="2px 4px 4px rgba(0, 0, 0, 0.25)">
-        <GridItem h="100%" colSpan="4">
+        <GridItem h="100%" colSpan="4" rowSpan="3" colEnd="4" pt={8}>
           <Heading
+            isTruncated
             lineHeight="90px"
-            fontSize="64px"
+            size="3xl"
             fontFamily="Bebas Neue"
             letterSpacing="0.02em"
             color="white">
             {'WORKBOOK OVERVIEW'}
           </Heading>
         </GridItem>
-        <Spacer />
         {workbookState.workbook?.author && (
           <>
-            <GridItem h="100%" pt="18px" colSpan="1">
+            <GridItem colSpan="1" colStart="4" rowStart="2">
               <Heading
                 lineHeight="27px"
                 fontSize="18px"
@@ -113,7 +147,7 @@ export default function PortfolioHeader({ technologyId }) {
                 color="white">
                 {'AUTHOR'}
               </Heading>
-              {workbookState.workbook?.created && (
+              {workbookState.workbook?.created_at && (
                 <Heading
                   lineHeight="27px"
                   fontSize="18px"
@@ -125,19 +159,19 @@ export default function PortfolioHeader({ technologyId }) {
                 </Heading>
               )}
             </GridItem>
-            <GridItem h="100%" pt="18px" colSpan="1">
+            <GridItem colSpan="1" colStart="5" rowStart="2">
               <Text
                 lineHeight="27px"
                 fontSize="16px"
                 color="white">
                 {workbookState.workbook.author.email}
               </Text>
-              {workbookState.workbook?.created && (
+              {workbookState.workbook?.created_at && (
                 <Text
                   lineHeight="27px"
                   fontSize="16px"
                   color="white">
-                  {workbookState.workbook.created}
+                  {workbookState.workbook.created_at}
                 </Text>
               )}
             </GridItem>
@@ -145,7 +179,7 @@ export default function PortfolioHeader({ technologyId }) {
         )}
         {workbookState.workbook?.description && (
           <>
-            <GridItem h="100%" pt="18px" colSpan="1">
+            <GridItem h="100%" colStart="6" rowStart="2">
               <Heading
                 lineHeight="27px"
                 fontSize="18px"
@@ -156,7 +190,7 @@ export default function PortfolioHeader({ technologyId }) {
                 {'ABOUT'}
               </Heading>
             </GridItem>
-            <GridItem h="100%" pt="18px" colSpan="3">
+            <GridItem h="100%" colStart="7" colSpan="4" rowStart="2" rowSpan="2">
               <Text
                 lineHeight="27px"
                 fontSize="16px"
