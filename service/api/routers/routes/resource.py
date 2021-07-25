@@ -11,7 +11,7 @@ from api.db import models
 from api.routers import schemas
 from api.routers.auth import get_current_active_user
 from api.routers.helpers import (
-  validate_and_convert_resource_file
+  convert_resource_file
 )
 from api.queries.resource_queries import (
 	get_entity,
@@ -167,7 +167,7 @@ async def post_resource_data(
 	name: str = Form(...), database: Session = Depends(get_db),
   db_active_user: models.User = Depends(get_current_active_user)):
   """
-    Uploads a new resource data of an entity by name. Accepts Excel, CSV and Json object
+    Uploads a new resource data of an entity by name. Accepts CSV and Json object
 
     Parameters:
     ----
@@ -180,16 +180,15 @@ async def post_resource_data(
     database: Session
       database session, defaults to initialize session
   """
-	# Assume we are only uploading Excel files right now
-  if file.content_type not in ["application/vnd.ms-excel",
-		"application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  if file.content_type not in [
     "text/comma-separated-values", "text/csv", "application/csv",
     "application/excel", "application/vnd.ms-excel", "application/vnd.msexcel",
     "application/json"]:
     raise HTTPException(status_code=400, detail="Invalid document type")
 
-  resource_obj = validate_and_convert_resource_file(entity, file)
+  resource_obj = convert_resource_file(file)
 
+  # TODO: object validation when saved to DB
   return save_entity(database, name, resource_obj, entity_mapping[entity], db_active_user)
 
 @router.post('/variation/fork/{input_id}', response_model=schemas.VariationOut,

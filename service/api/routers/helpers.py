@@ -87,11 +87,9 @@ def decode_google_id_token(id_token):
     decoded_token = jwt.decode(id_token, verify=False)
     return decoded_token
 
-def validate_and_convert_resource_file(entity: models.EntityName, file: UploadFile):
-  """
+def convert_resource_file(file: UploadFile):
+	"""
     process input file and convert them into data to be saved to the database
-    TODO: Discuss with Denise on potential implementation
-    TODO: How should we validate the data format?
 
     Parameters:
     ----
@@ -100,9 +98,10 @@ def validate_and_convert_resource_file(entity: models.EntityName, file: UploadFi
     file: UploadFile
         the uploaded file streamed from the API
   """
-  if (entity in ["scenario", "reference"]):
-    return json.loads(file.file.read())
+	if file.content_type in ["text/comma-separated-values", "text/csv", "application/csv",
+	"application/excel", "application/vnd.ms-excel", "application/vnd.msexcel"]:
+		data = csv_to_json(file.file.read().decode('utf-8').splitlines())
+		return {'rows':data}
 
-  data = csv_to_json(file.file.read().decode('utf-8').splitlines())
-
-  return {'rows':data}
+	# default to json file if not CSV
+	return json.loads(file.file.read())

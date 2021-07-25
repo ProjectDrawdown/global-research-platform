@@ -247,6 +247,7 @@ async def setup_calculations(jsons, regions, prev_data, cache, websocket: WebSoc
 
     cached_result = await cache.get(hashed_json_input)
     # TODO: load the VMA/resource/etc from database
+    # https://github.com/ProjectDrawdown/global-research-platform/issues/56
     if cached_result is None:
       tasks.append((
         name,
