@@ -192,7 +192,7 @@ export default function PortfolioHeader({ technologyId }) {
               colSpan="1"
               opacity="0.00"
               visibility="hidden"
-              transition="0.25s all ease-in-out"
+              transition="0.15s all ease-in-out"
               _groupHover={{ visibility: "visible", opacity: "1.00" }}
             >
               <IconButton
