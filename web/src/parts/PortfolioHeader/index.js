@@ -3,11 +3,10 @@ import { Box, Heading, Center, HStack, Grid, GridItem, Button, Text } from "@cha
 import { Link as DomLink, useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
 import styled from "styled-components"
-import { RunButton } from "../../theme/icons"
-import store from "../../redux/store"
-import { calculateThunk } from "../../redux/reducers/workbook/workbookSlice"
-import Logo from "../../components/Logo.js"
-import Menu from "../../components/Menu.js"
+import { format, parseISO } from 'date-fns'
+import { RunButton } from "theme/icons"
+import Logo from "components/Logo.js"
+import Menu from "components/Menu.js"
 import { prettyFormatBigNumber } from "util/number-utils.js"
 import {
   useWorkbookIDSelector,
@@ -116,7 +115,6 @@ export default function PortfolioHeader({ technologyId }) {
         w="100%"
         margin={0}
         px={8}
-        // pt={8}
         my="10px"
         h="128px"
         bg="#00416F"
@@ -126,7 +124,7 @@ export default function PortfolioHeader({ technologyId }) {
           <Heading
             isTruncated
             lineHeight="90px"
-            size="3xl"
+            size="2xl"
             fontFamily="Bebas Neue"
             letterSpacing="0.02em"
             color="white">
@@ -169,7 +167,7 @@ export default function PortfolioHeader({ technologyId }) {
                   lineHeight="27px"
                   fontSize="16px"
                   color="white">
-                  {workbookState.workbook.created_at}
+                  {format(parseISO(workbookState.workbook.created_at), 'dd MMMM yyyy')}
                 </Text>
               )}
             </GridItem>
