@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Heading, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RunButton, PlayButton } from "theme/icons";
+import { RunButton, PlayButton, LoadButton } from "theme/icons";
 import styled, { css, keyframes } from "styled-components";
 import store from "redux/store";
 import { calculateThunk } from "redux/reducers/workbook/workbookSlice";
@@ -58,6 +58,7 @@ const StyledButton = styled.div`
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
+  const [calculated, setCalculated] = useState(true);
   const calculate = () => {
     store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
   };
@@ -136,7 +137,10 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
                 fontWeight="bold"
                 textAlign="center"
               > 
-                <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>
+              { calculated? 
+                <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>:
+                <LoadButton />
+              }
               </Center> : 
               <PlayButton position="absolute" top="0" /> 
             }

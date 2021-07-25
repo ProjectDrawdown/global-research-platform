@@ -9,6 +9,10 @@ import {
   Select as ChakraSelect
 } from "@chakra-ui/react";
 
+import WorkbookHeader from "./workbook/header"; 
+import props from 'prop-types';
+
+
 const noop = () => null;
 
 // FIXME use Formik to handle change events and such
@@ -61,6 +65,7 @@ export const InputWithAddons = ({
   const handleChange = (e) => {
     const newValue = parseInputValueFn(e.target.value);
     if (newValue != value) {
+      props.setCalculated(false);
       setValue(parseInputValueFn(e.target.value));
     }
   }
