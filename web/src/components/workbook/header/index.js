@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RunButton, PlayButton, LoadButton } from "theme/icons";
 import styled, { css, keyframes } from "styled-components";
 import store from "redux/store";
-import { calculateThunk } from "redux/reducers/workbook/workbookSlice";
+import { calculateThunk, setCalculated } from "redux/reducers/workbook/workbookSlice";
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector
@@ -70,6 +70,10 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
     const value = workbookState.techData.data.co2_mmt_reduced['World'].reduce((acc, item) => acc + item.value, 0);
     return prettyFormatBigNumber(value, 3, ['Mt', 'Gt']);
   };
+
+  const handleClick = () => {
+    store.dispatch(setCalculated);
+  }
 
   const workbookID = useWorkbookIDSelector();
   const workbookHasAuthor = useWorkbookHasAuthorSelector();
@@ -144,7 +148,9 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
 
               { isCalculated?
                 <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>:
-                <LoadButton />
+                <div onClick={handleClick}>
+                  <LoadButton/>
+                </div>
               }
 
               </Center> :
