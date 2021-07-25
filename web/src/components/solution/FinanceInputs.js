@@ -5,6 +5,8 @@ import Input from "../Input";
 import { useResizeDetector } from "react-resize-detector";
 import { GridItem, Grid, Flex, Text } from "@chakra-ui/react";
 import { Row } from './row';
+import {useDispatch} from "react-redux";
+import {setCalculatedOff} from "../../redux/reducers/workbook/workbookSlice.js"
 
 import { useMultipleStringVarpathsSelector } from "redux/selectors.js";
 
@@ -46,6 +48,8 @@ const FinanceInputs = ({ color, technologyId }) => {
   const [inputState, setInputState] = useState(false);
   const [cols, setCols] = useState(inputsPaneResizeSettings(400));
   const values = useMultipleStringVarpathsSelector(Object.values(map));
+  const dispatch = useDispatch();
+
 
   const onBlur = revealInputBlurEventFactory(
     setInputState,
@@ -68,6 +72,10 @@ const FinanceInputs = ({ color, technologyId }) => {
     onBlur,
     values
   );
+
+  const handleChange = () =>{
+    dispatch(setCalculatedOff());
+  }
   const onClick = revealInputClickEventFactory(setInputState);
 
   useEffect(() => setCols(inputsPaneResizeSettings(width)), [width]);
@@ -85,6 +93,7 @@ const FinanceInputs = ({ color, technologyId }) => {
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.fixedCosts ? (
             <Row
+              onChange={handleChange}
               varpath="start_year_cost.value"
               dataType="numeric"
               leftAddon="$"

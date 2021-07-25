@@ -53,15 +53,15 @@ const StyledButton = styled.div`
  * Additional Header feature:
  * * A floating button to use for Workbook recalculation.
  * * A Toast for when a feature notebook is opened
- * 
- * @param {*} param0 
+ *
+ * @param {*} param0
  * @returns components
  */
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
+  const { isCalculated } = workbookState;
   const params = useParams();
-  const [calculated, setCalculated] = useState(true);
-  
+
   const calculate = () => {
     store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
   };
@@ -94,7 +94,6 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
       boxShadow="base"
       whiteSpace="nowrap"
     >
-      <InputWithAddons setCalculated={setCalculated} test = "testing prop"/>
       <Grid templateColumns="repeat(6, 1fr)" gap={1} w="100%" margin={0} p={2}>
         <GridItem colSpan={1} textAlign="center" mr="2rem" mt="0.25rem">
           <Logo />
@@ -126,14 +125,14 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
           <StyledRunWrapper onClick={calculate} >
-            <StyledButton loading={workbookState?.calculationLoading}> 
-              <RunButton /> 
-              
+            <StyledButton loading={workbookState?.calculationLoading}>
+              <RunButton />
+
             </StyledButton>
-            { workbookState?.techData ? 
+            { workbookState?.techData ?
               <Center
-                position="absolute" 
-                left="0" 
+                position="absolute"
+                left="0"
                 right="0"
                 top="0"
                 bottom="0"
@@ -141,15 +140,15 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
                 marginTop="19%"
                 fontWeight="bold"
                 textAlign="center"
-              > 
-              
-              { calculated? 
+              >
+
+              { isCalculated?
                 <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>:
                 <LoadButton />
               }
-                
-              </Center> : 
-              <PlayButton position="absolute" top="0" /> 
+
+              </Center> :
+              <PlayButton position="absolute" top="0" />
             }
           </StyledRunWrapper>
         ) : null}
