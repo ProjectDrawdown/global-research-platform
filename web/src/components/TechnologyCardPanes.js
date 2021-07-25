@@ -23,6 +23,7 @@ import {
   TechnologyCardGrid,
   SortedTechnologyCardGrid
 } from "components/cards/TechnologyCards";
+import { usePortfolioSolutions } from "helpers";
 
 import styled from "styled-components";
 
@@ -253,10 +254,6 @@ export const TechnologyPane = ({
   const params = useParams();
   const dispatch = useDispatch();
   const workbookState = useSelector(state => state.workbook);
-  const portfolioSolutions =
-    workbookState.workbook && workbookState.workbook.ui
-      ? workbookState.workbook.ui.portfolioSolutions || []
-      : [];
   const gotoAndClose = to => {
     history.push(to);
     return onClose();
@@ -268,15 +265,13 @@ export const TechnologyPane = ({
     return ret;
   }, {});
   const sectorName = reverseTechMap[currentSector] || "\u00A0";
-  const technologyCardIDs = Object.keys(technologyMetadata).filter(
-    techID => technologyMetadata[techID].sector === sectorName
-  )
-  const technologyCardIDsInPortfolio = technologyCardIDs.filter(id =>
-    portfolioSolutions.includes(id)
-  );
-  const technologyCardIDsNotInPortfolio = technologyCardIDs.filter(
-    id => !portfolioSolutions.includes(id)
-  );
+  
+  const {
+    portfolioSolutions,
+    sectorTechnologyIDsInPortfolio,
+    sectorTechnologyIDsNotInPortfolio,
+  } = usePortfolioSolutions(technologyMetadata, sectorName);
+
   const handlePortfolioTechnologyClick = async id => {
     const result = await dispatch(
       doRemovePortfolioTechnologyPatchThunk({
@@ -303,11 +298,11 @@ export const TechnologyPane = ({
       viewLocation={viewLocation}
       currentSector={currentSector}
       color={`brand.${currentSector}.900`}>
-      {technologyCardIDsInPortfolio.length > 0 || sectorEdit ? (
+      {sectorTechnologyIDsInPortfolio.length > 0 ? (
         <TechnologyCardGrid
           mb="0"
           isEditingCards={sectorEdit}
-          technologyIDs={[...technologyCardIDsInPortfolio, ...technologyCardIDsNotInPortfolio]}
+          technologyIDs={sectorTechnologyIDsInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
           makeOnClickFn={technologyID => () => sectorEdit ?
@@ -331,25 +326,26 @@ export const TechnologyPane = ({
             />
           )}
         </TechnologyCardGrid>
-      ) : (
-        <Box>
-          <Text>The portfolio for this workbook is currently empty.</Text>
-          <Text>
-            <Link
-              textDecoration="underline"
-              textColor="brand.blue.700"
-              as={DomLink}
-              to={editLocation}
-            >
-              Add technologies to the portfolio
-            </Link>{" "}
-            to access them quickly.
-          </Text>
-        </Box>
+      ) : (!sectorEdit && (
+          <Box>
+            <Text>The portfolio for this workbook is currently empty.</Text>
+            <Text>
+              <Link
+                textDecoration="underline"
+                textColor="brand.blue.700"
+                as={DomLink}
+                to={editLocation}
+              >
+                Add technologies to the portfolio
+              </Link>{" "}
+              to access them quickly.
+            </Text>
+          </Box>
+        )
       )}
-      {sectorEdit && (
+      {(
         <TechnologyCardGrid
-          technologyIDs={technologyCardIDsNotInPortfolio}
+          technologyIDs={sectorTechnologyIDsNotInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
           makeOnClickFn={technologyID => () => sectorEdit ?
@@ -359,30 +355,6 @@ export const TechnologyPane = ({
           isFeaturedFn={() => true}>
         </TechnologyCardGrid>
       )}
-      {/*<TechnologyCardGrid
-        technologyIDs={technologyCardIDsNotInPortfolio}
-        cols={sidebar ? 3 : 4}
-        keyString="technology-soln-"
-        makeOnClickFn={technologyID => () =>
-          gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
-        isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
-        isFeaturedFn={() => false}
-      >
-        {currentSector === "electricity" && (
-          <TechnologyCard
-            conventional={true}
-            color={"grey"}
-            techID={"conventional"}
-            featured={false}
-            title={"Conventional Technologies"}
-            technologyImage={""}
-            onClick={() =>
-              gotoAndClose(`/workbook/${params.id}/technologies/conventional`)
-            }
-            selected={activeTechnology === "conventional"}
-          />
-        )}
-      </TechnologyCardGrid>*/}
     </TechnologyCardPaneWrapper>
   );
 };
