@@ -13,7 +13,6 @@ import {
 import { prettyFormatBigNumber } from "util/number-utils.js";
 import Logo from "components/Logo.js";
 import { errorAdded } from "redux/reducers/util/errorSlice";
-import { NONE } from "components/cards/AdoptionDashboardCard";
 
 /**
  * keyframe DOM
