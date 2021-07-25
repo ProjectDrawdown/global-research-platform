@@ -33,8 +33,8 @@ services:
       - GITHUB_CLIENT_SECRET=somegihubclientsecret
       - GITHUB_USER_URL=https://api.github.com/user
       - GOOGLE_DOMAIN=accounts.google.com
-      - GOOGLE_CLIENT_ID=somegoogleclientid
-      - GOOGLE_CLIENT_SECRET=somegoogleclientsecret
+      - GOOGLE_CLIENT_ID=773030908660-lgrmt2lh0biodt8hmpmj8prp93s29aem.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=JalFQxsWCNbqByYVp7Jy7xgl
       - MAX_VARIATIONS_PER_WORKBOOK=1000
       - REDIS_URL=redis://redis
       - MAX_WORKERS=4

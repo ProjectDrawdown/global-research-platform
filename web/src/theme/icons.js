@@ -3,7 +3,6 @@ import runButtonSVG from 'images/icons/run-button.svg';
 import loadButtonSVG from 'images/icons/load-button.svg';
 import playButtonSVG from 'images/icons/play.svg';
 
-
 export const faRightPanelClose = {
   prefix: "fas",
   iconName: "right-panel-close",
@@ -51,3 +50,4 @@ export const LoadButton = (props) => {
 export const PlayButton = (props) => {
   return <Image src={playButtonSVG} {...props} />;
 }
+

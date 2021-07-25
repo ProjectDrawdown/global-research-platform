@@ -13,6 +13,8 @@ import {
 import { prettyFormatBigNumber } from "util/number-utils.js";
 import Logo from "components/Logo.js";
 import { errorAdded } from "redux/reducers/util/errorSlice";
+import {InputWithAddons} from "../../Input";
+
 
 /**
  * keyframe DOM
@@ -59,6 +61,7 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
   const [calculated, setCalculated] = useState(true);
+  
   const calculate = () => {
     store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
   };
@@ -91,6 +94,7 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
       boxShadow="base"
       whiteSpace="nowrap"
     >
+      <InputWithAddons setCalculated={setCalculated} test = "testing prop"/>
       <Grid templateColumns="repeat(6, 1fr)" gap={1} w="100%" margin={0} p={2}>
         <GridItem colSpan={1} textAlign="center" mr="2rem" mt="0.25rem">
           <Logo />
@@ -124,6 +128,7 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
           <StyledRunWrapper onClick={calculate} >
             <StyledButton loading={workbookState?.calculationLoading}> 
               <RunButton /> 
+              
             </StyledButton>
             { workbookState?.techData ? 
               <Center
@@ -137,10 +142,12 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
                 fontWeight="bold"
                 textAlign="center"
               > 
+              
               { calculated? 
                 <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>:
                 <LoadButton />
               }
+                
               </Center> : 
               <PlayButton position="absolute" top="0" /> 
             }

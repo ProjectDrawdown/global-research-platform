@@ -12,38 +12,39 @@ import {
 import WorkbookHeader from "./workbook/header"; 
 import props from 'prop-types';
 
-
 const noop = () => null;
 
 // FIXME use Formik to handle change events and such
-export const InputWithAddons = ({
-  leftAddon,
-  placeholder,
-  rightAddon,
-  addonStyle,
-  handleSubmit = noop,
-  size = "md",
-  storeValue,
-  // Brute force approach to blacklisting these attributes from inputProps
-  varpath,
-  varpathfull,
-  varpathFull,
-  dataType,
-  conventional,
-  activeTechnology,
-  InputWidget,
-  width = "100%",
-  color = "black",
-  borderRadius = "md",
-  inputStyle = {},
-  defaultIsFocused = false,
-  // Functions to parse inputs values at a lower level than the binding fns. 
-  // Used for cases other than bound input widgets.
-  formatInputValueFn = x => x,
-  parseInputValueFn = x => x,
-  // Everything else gets passed to the input component itself
-  ...inputProps
-}) => {
+export const InputWithAddons = (props) => {
+  const { 
+    leftAddon,
+    onChange,
+    placeholder,
+    rightAddon,
+    addonStyle,
+    handleSubmit = noop,
+    size = "md",
+    storeValue,
+    // Brute force approach to blacklisting these attributes from inputProps
+    varpath,
+    varpathfull,
+    varpathFull,
+    dataType,
+    conventional,
+    activeTechnology,
+    InputWidget,
+    width = "100%",
+    color = "black",
+    borderRadius = "md",
+    inputStyle = {},
+    defaultIsFocused = false,
+    // Functions to parse inputs values at a lower level than the binding fns. 
+    // Used for cases other than bound input widgets.
+    formatInputValueFn = x => x,
+    parseInputValueFn = x => x,
+    // Everything else gets passed to the input component itself
+    ...inputProps
+  } = props;
   // We manage the state inside this component so it's most responsive. See
   // Redux state guideline docs.
   const [value, setValue] = React.useState(storeValue);
@@ -65,7 +66,7 @@ export const InputWithAddons = ({
   const handleChange = (e) => {
     const newValue = parseInputValueFn(e.target.value);
     if (newValue != value) {
-      props.setCalculated(false);
+      onChange && onChange();
       setValue(parseInputValueFn(e.target.value));
     }
   }
@@ -161,6 +162,7 @@ export const Select = ({
 }) => {
   const [value, setValue] = React.useState(storeValue);
   const handleChange = (e) => {
+
     setValue(e.target.value);
     handleSubmit(e);
   }

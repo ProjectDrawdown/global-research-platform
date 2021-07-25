@@ -170,7 +170,8 @@ export const doRemovePortfolioTechnologyPatchThunk = createAsyncThunk(
 
 const initialState = {
   workbook: null,
-  technologies: []
+  technologies: [],
+  isCalculated: false
 };
 
 const workbookSlice = createSlice({
@@ -392,6 +393,18 @@ const workbookSlice = createSlice({
       const variationVarpath = `${target}_vars.${helperStripVarpathValue(varpath)}`;
       objectPath.set(state.workbook.variations[variationIndex], variationVarpath, value);
     },
+    setCalculated (state) {
+      return {
+        ...state,
+        isCalculated:true
+      }
+    },
+    setCalculatedOff(state) {
+      return {
+        ...state,
+        isCalculated:false
+      }
+    },
     workbookLoading(state) {
       return {
         ...state,
@@ -465,7 +478,9 @@ export const {
   variationUpdated,
   calculationLoading,
   calculationLoaded,
-  calculationFail
+  calculationFail,
+  setCalculated,
+  setCalculatedOff
 } = workbookSlice.actions;
 
 export default workbookSlice.reducer;
