@@ -6,10 +6,11 @@ import {
   HStack,
   Grid,
   GridItem,
+  IconButton,
   Button,
   Text,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 import { Link as DomLink, useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -31,17 +32,6 @@ export const StyledRunWrapper = styled.div`
   width: auto;
   cursor: pointer;
   margin-left: auto;
-`;
-
-const StyledButton = styled(Button)`
-  background: white;
-  color: #3f3f3f;
-  filter: drop-shadow(0.5px 1px 1px rgba(0, 0, 0, 0.33));
-  border-radius: 25px;
-  &.view {
-    background: #3f3f3f;
-    color: white;
-  }
 `;
 
 export default function PortfolioHeader({ technologyId }) {
@@ -115,11 +105,12 @@ export default function PortfolioHeader({ technologyId }) {
         bg="#00416F"
         alignItems="center"
         boxShadow="2px 4px 4px rgba(0, 0, 0, 0.25)"
+        role="group"
       >
         <GridItem h="100%" colSpan="4">
           <Heading
-            lineHeight="90px"
-            fontSize="64px"
+            lineHeight={{ base: "55px", md: "60px", lg: "70px" }}
+            fontSize={{ base: "30px", md: "50px", lg: "60px" }}
             fontFamily="Bebas Neue"
             letterSpacing="0.02em"
             color="white"
@@ -133,7 +124,7 @@ export default function PortfolioHeader({ technologyId }) {
             <GridItem h="100%" pt="18px" colSpan="1">
               <Heading
                 lineHeight="27px"
-                fontSize="18px"
+                fontSize={{ base: "16px", md: "18px" }}
                 fontFamily="Bebas Neue"
                 letterSpacing="0.02em"
                 textAlign="right"
@@ -144,7 +135,7 @@ export default function PortfolioHeader({ technologyId }) {
               {workbookState.workbook?.created && (
                 <Heading
                   lineHeight="27px"
-                  fontSize="18px"
+                  fontSize={{ base: "16px", md: "18px" }}
                   fontFamily="Bebas Neue"
                   letterSpacing="0.02em"
                   textAlign="right"
@@ -171,7 +162,7 @@ export default function PortfolioHeader({ technologyId }) {
             <GridItem h="100%" pt="18px" colSpan="1">
               <Heading
                 lineHeight="27px"
-                fontSize="18px"
+                fontSize={{ base: "16px", md: "18px" }}
                 fontFamily="Bebas Neue"
                 letterSpacing="0.02em"
                 textAlign="right"
@@ -195,16 +186,23 @@ export default function PortfolioHeader({ technologyId }) {
         )}
         {workbookState.workbook?.author && (
           <>
-            <GridItem h="100%" pt="18px" colSpan="1">
-              <StyledButton
-                size="sm"
-                variant="ghost"
+            <GridItem
+              h="100%"
+              pt="18px"
+              colSpan="1"
+              opacity="0.00"
+              visibility="hidden"
+              transition="0.25s all ease-in-out"
+              _groupHover={{ visibility: "visible", opacity: "1.00" }}
+            >
+              <IconButton
+                colorScheme="white"
+                size="lg"
                 onClick={() => {
                   history.push(`${workbookID}/edit`);
                 }}
-              >
-                <AddIcon />
-              </StyledButton>
+                icon={<EditIcon />}
+              />
             </GridItem>
           </>
         )}
