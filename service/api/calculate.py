@@ -395,12 +395,12 @@ async def calculate(
     workbook_version = workbook.version
 
   cache_key = compound_key(workbook_id, workbook_version)
-  # cached_result = await cache.get(cache_key)
-  # if cached_result is not None:
-  #   if websocket:
-  #     await websocket_send_cached(str(cached_result), json.loads(cached_result), websocket, cache)
-  #     return
-  #   return json.loads(cached_result)
+  cached_result = await cache.get(cache_key)
+  if cached_result is not None:
+    if websocket:
+      await websocket_send_cached(str(cached_result), json.loads(cached_result), websocket, cache)
+      return
+    return json.loads(cached_result)
 
   [prev_version, prev_key, prev_data] = await get_prev_calc(workbook_id, workbook_version, cache)
 
@@ -409,8 +409,6 @@ async def calculate(
   result_paths = []
   variation = workbook.variations[variation_index]
 
-  with open(f"variation.log", 'a') as f:
-      f.write(f"\n\n\n{json.dumps(dict(variation))}\n\n\n")
   validation = await api.transforms.validate_variation.validate_full_schema(dict(variation), client)
   if not validation['valid']:
     raise HTTPException(status_code=422, detail=validation['reason'])
@@ -418,8 +416,8 @@ async def calculate(
 
   input_data = await fetch_data(variation, client)
   jsons = build_json(workbook.start_year, workbook.end_year, *input_data)
-  # if settings.input_logs:
-  with open(f"json_input.log", 'a') as f:
+  if settings.input_logs:
+    with open(f"json_input.log", 'a') as f:
       f.write(f"\n\n\n{json.dumps(jsons)}\n\n\n")
   [tasks, key_list, _] = await setup_calculations(jsons, regions, prev_data, cache, websocket, do_diffs)
 
