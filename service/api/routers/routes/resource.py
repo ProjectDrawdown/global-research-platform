@@ -9,6 +9,10 @@ from sqlalchemy.orm import Session
 from api.config import get_settings, get_db
 from api.db import models
 from api.routers import schemas
+from api.routers.auth import get_current_active_user
+from api.routers.helpers import (
+  validate_and_convert_resource_file
+)
 from api.queries.resource_queries import (
 	get_entity,
   get_entities_by_name,
@@ -27,7 +31,6 @@ from api.transform import (
   populate,
   convert_vmas_to_binary
 )
-from lib_mock.solution import validate_and_convert_resource
 
 settings = get_settings()
 router = APIRouter()
@@ -154,14 +157,15 @@ async def get_all_paths(entity: models.EntityName, database: Session = Depends(g
   return all_entity_paths(database, entity, entity_mapping[entity])
 
 
-@router.post('resource/{entity}',
+@router.post('/resource/{entity}',
 	summary="Uploads a new resource data of an entity by name",
   description="Uploads a new resource data of an entity by name. Accepts an Excel file" +
     "with a valid format"
 	)
 async def post_resource_data(
 	entity: models.EntityName, file: UploadFile = File(...),
-	name: str = Form(...), database: Session = Depends(get_db)):
+	name: str = Form(...), database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
   """
     Uploads a new resource data of an entity by name. Accepts Excel, CSV and Json object
 
@@ -184,8 +188,9 @@ async def post_resource_data(
     "application/json"]:
     raise HTTPException(status_code=400, detail="Invalid document type")
 
-  resource_obj = validate_and_convert_resource(entity, file)
-  save_entity(database, name, resource_obj, entity, )
+  resource_obj = validate_and_convert_resource_file(entity, file)
+
+  return save_entity(database, name, resource_obj, entity_mapping[entity], db_active_user)
 
 @router.post('/variation/fork/{input_id}', response_model=schemas.VariationOut,
 	summary="Fork a variation with given id",

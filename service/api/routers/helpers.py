@@ -1,12 +1,19 @@
-import jwt
 from datetime import datetime, timedelta
-from api.config import get_settings
-from .schemas import User
-from fastapi import Header, HTTPException, status
+from fastapi import UploadFile
+from fastapi import HTTPException, status
 from fastapi.security.utils import get_authorization_scheme_param
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.params import Security
 from pydantic import ValidationError
+import json
+import jwt
+from api.config import get_settings
+from .schemas import User
+from api.db import models
+from api.transform import (
+  csv_to_json
+)
+
 
 settings = get_settings()
 security = HTTPBearer() 
@@ -63,8 +70,39 @@ def create_access_token(*, data: User, exp: int = None) -> bytes:
     return encoded_jwt
 
 def generate_token():
+    """
+        generate a default token
+    """
     return 0
 
 def decode_google_id_token(id_token):
+    """
+        decode the token provided by google
+
+        Parameter:
+        ----
+        id_token: str
+            token to be decoded
+    """
     decoded_token = jwt.decode(id_token, verify=False)
     return decoded_token
+
+def validate_and_convert_resource_file(entity: models.EntityName, file: UploadFile):
+  """
+    process input file and convert them into data to be saved to the database
+    TODO: Discuss with Denise on potential implementation
+    TODO: How should we validate the data format?
+
+    Parameters:
+    ----
+    entity: EntityName
+        entity type for the object we are updating
+    file: UploadFile
+        the uploaded file streamed from the API
+  """
+  if (entity in ["scenario", "reference"]):
+    return json.loads(file.file.read())
+
+  data = csv_to_json(file.file.read().decode('utf-8').splitlines())
+
+  return {'rows':data}
