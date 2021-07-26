@@ -51,7 +51,7 @@ $ git checkout develop
 $ cp service/api/env-example service/api/.env
 ```
 
-2. Valid OAuth keys will be necessary. See [Github](https://docs.github.com/en/free-pro-team@latest/developers/apps/authorizing-oauth-apps) and [Google](https://developers.google.com/identity/protocols/oauth2/openid-connect) instructions for how to obtain these client ID and client secret keys. Update the .env file.
+2. A valid Google OAuth key will be necessary; GitHub key is optional. See [Github](https://docs.github.com/en/free-pro-team@latest/developers/apps/authorizing-oauth-apps) and [Google](https://developers.google.com/identity/protocols/oauth2/openid-connect) instructions for how to obtain these client ID and client secret keys. Update the .env file.
 ```
 GITHUB_CLIENT_ID=somegithubclientid
 GITHUB_CLIENT_SECRET=somegithubclientsecret
@@ -67,7 +67,7 @@ JWT_SECRET_KEY=somejwtsecretkey
 ### Web Environment
 No Environment configuration is needed for web
 
-## Getting started with Docker
+## Getting started with Docker (recommended)
 
 If you have docker and docker-compose installed, you should be able to get started fairly quickly, following these steps:
 
@@ -91,6 +91,12 @@ API:  localhost:8000
 ```
 
 The `web` application may take some time to load as it is being built post Docker. Check your container logs for status.
+
+### Initializing the data
+
+To create the default workbooks, enter `localhost:8000/initialize` in your browser. This will generate a variety of data, including the 3 Drawdown canonical workbooks. This will also load some CSVs into the database for easy retrieval, and provide the data for the `localhost:8000/resource/{path}` endpoints.
+
+To improve performance for the app, it is recommended you run `localhost:8000/calculate` for the 3 canonical workbooks as a first step, as this will cache results for all the technologies for the workbooks. Any variation updates, when calculated, will take advantage of this initial cache as much as possible.
 
 _DEVELOPER NOTE:_ If you choose to run via Docker, any changes to the library dependencies (`pip install` or `npm install`) will mean you will have to rebuild your container by restarting docker and running:
 
@@ -133,9 +139,6 @@ $ psql -h 0.0.0.0 -p 5432 -U postgres
 postgres=# CREATE DATABASE drawdown;
 ```
 
-## Running the project with Docker
-`$ docker-compose up` to run the project
-
 ## Running the project without Docker
 
 ### Without docker, you will need to do a database setup
@@ -169,12 +172,6 @@ Note: if you are not using docker-compose, you will need to manually run:
 ```sh
 $ alembic upgrade head
 ```
-
-### Initializing the data
-
-To create the default workbooks, use the `GET localhost:8000/initialize` endpoint. This will generate a variety of data, including the 3 Drawdown canonical workbooks. This will also load some CSVs into the database for easy retrieval, and provide the data for the `localhost:8000/resource/{path}` endpoints.
-
-To improve performance for the app, it is recommended you run the `GET localhost:8000/calculate` endpoint for the 3 canonical workbooks as a first step, as this will cache results for all the technologies for the workbooks. Any variation updates, when calculated, will take advantage of this initial cache as much as possible.
 
 ### Some gotchas
 
