@@ -1,10 +1,10 @@
 """
     Query Set for Resource Object
 """
+import hashlib
 from sqlalchemy.orm import Session
-
 from api.db import models
-from api.db.models import Variation, Workbook
+from api.db.models import Variation, Workbook, User
 from api.db.helpers import clone
 
 def row2dict(row):
@@ -66,9 +66,10 @@ def save_variation(database: Session, variation: Variation):
 	database.refresh(variation)
 	return variation
 
-def save_entity(database: Session, name: str, obj, table):
+def save_entity(database: Session, name: str, obj, table, user: User = None):
 	"""
-		Save object to database
+		Save object to database. When data is saved by a user, it will
+		generate a hashed name to prevent same name issues
 
 		parameters:
 		---
@@ -80,10 +81,20 @@ def save_entity(database: Session, name: str, obj, table):
 				modified data
 			table: Models
 				object model
+			ref_name: str
+				randomized name for reference to prevent multiple result
+				when querying resource
 	"""
+	ref_name = None
+
+	if user:
+		ref_name = hashlib.md5((str(user.id) + name).encode('utf-8')).hexdigest()
+
 	db_obj = table(
-			name=name,
-			data=obj)
+		name=name,
+		ref_name=ref_name,
+		author=user,
+		data=obj)
 
 	database.add(db_obj)
 	database.commit()

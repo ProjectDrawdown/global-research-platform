@@ -83,7 +83,7 @@ async def calculate_vma_groupings(
   db: Session = Depends(get_db)):
 
   vma_csvs = db.query(models.VMA_CSV).filter(
-    models.VMA_CSV.variable==variable
+    models.VMA_CSV.variable == variable
   ).all()
   results = []
   for csv in vma_csvs:

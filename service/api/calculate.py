@@ -246,6 +246,8 @@ async def setup_calculations(jsons, regions, prev_data, cache, websocket: WebSoc
     hashed_json_input = hashlib.md5(json.dumps(copied_json_input).encode('utf-8')).hexdigest()
 
     cached_result = await cache.get(hashed_json_input)
+    # TODO: load the VMA/resource/etc from database
+    # https://github.com/ProjectDrawdown/global-research-platform/issues/56
     if cached_result is None:
       tasks.append((
         name,
@@ -416,7 +418,7 @@ async def calculate(
   jsons = build_json(workbook.start_year, workbook.end_year, *input_data)
   if settings.input_logs:
     with open(f"json_input.log", 'a') as f:
-        f.write(f"\n\n\n{json.dumps(jsons)}\n\n\n")
+      f.write(f"\n\n\n{json.dumps(jsons)}\n\n\n")
   [tasks, key_list, _] = await setup_calculations(jsons, regions, prev_data, cache, websocket, do_diffs)
 
   perform_func = perform_calculations_async if run_async else perform_calculations_sync
