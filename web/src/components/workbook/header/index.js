@@ -37,6 +37,7 @@ const StyledRunWrapper = styled.div`
   height: 164px;
   width: auto;
   cursor: pointer;
+  pointer-events: ${props => (props.loading ? 'none' : 'auto')};
 `;
 
 /**
@@ -58,9 +59,12 @@ const StyledButton = styled.div`
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
-  const calculate = () => {
-    store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
-  };
+  const calculate = () => 
+    {if (workbookState.calculationLoading == true) {return}
+    else {
+      store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
+    }
+};
 
   const calculateMmtReduced = () => {
     const value = workbookState.techData.data.co2_mmt_reduced['World'].reduce((acc, item) => acc + item.value, 0);
@@ -120,9 +124,9 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
           </HStack>
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
-          <StyledRunWrapper onClick={calculate} >
+          <StyledRunWrapper onClick={calculate} loading={workbookState?.calculationLoading}>
             <StyledButton loading={workbookState?.calculationLoading}> 
-              <RunButton /> 
+              <RunButton/> 
             </StyledButton>
             { workbookState?.techData ? 
               <Center
