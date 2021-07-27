@@ -9,9 +9,23 @@ from sqlalchemy import DateTime, Boolean, Column, ForeignKey, Integer, String, E
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.declarative import declared_attr
 from api.config import get_resource_path, get_path
 from .database import Base
 from .json_schemas import workbook_schema
+
+class EntityName(str, enum.Enum):
+	"""
+		Maps input to a string name
+	"""
+	scenario = "scenario"
+	reference = "reference"
+	variation = "variation"
+	vma = "vma"
+	ad = "adoption_data"
+	tam = "tam"
+	ca_pds = "ca_pds"
+	ca_ref = "ca_ref"
 
 class UserRole(enum.Enum):
 	"""
@@ -78,7 +92,23 @@ class Resource(object):
 
 	id = Column(Integer, primary_key=True)
 	name = Column(String, index=True)
+	# uniqe name to prevent duplication on fetch
+	ref_name = Column(String)
 	data = Column(JSONB)
+
+	@declared_attr
+	def author_id(self):
+		"""
+			one to one relationship with User
+		"""
+		return Column('author_id', ForeignKey('user.id'))
+
+	@declared_attr
+	def author(self):
+		"""
+			one to one relationship with User
+		"""
+		return relationship("User")
 
 	@hybrid_property
 	def path(self):
@@ -116,6 +146,8 @@ class VMA_CSV(Base): # pylint: disable=invalid-name
 	variable = Column(String)
 	legacy_variable = Column(String)
 	original_filename = Column(String)
+	# uniqe name to prevent duplication on fetch
+	ref_name = Column(String)
 	author_id = Column(Integer, ForeignKey('user.id'))
 	author = relationship("User", back_populates="vma_csvs")
 	data = Column(LargeBinary)

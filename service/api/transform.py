@@ -1,145 +1,152 @@
+from io import TextIOWrapper
 import json
 import csv
 import os
 import importlib
-import pkg_resources
 from typing import List
 from os import listdir
 from os.path import isfile, join
+import pkg_resources
+from model.advanced_controls import get_param_for_vma_name
 from api.transforms.variable_paths import varProjectionNamesPaths
 from api.transforms.reference_variable_paths import varRefNamesPaths
 from api.transforms.metadata import pythonFieldMetadataArray
-from model.advanced_controls import AdvancedControls, get_vma_for_param, get_param_for_vma_name
 
 legacyDataFiles = {
   'drawdown-2020': [
 
     # Electricity Generation
-    ["onshorewind","solution/onshorewind/ac/PDS-27p2050-Drawdown2020.json"],
-    ["offshorewind","solution/offshorewind/ac/PDS-3p2050-Drawdown2020.json"],
-    ["nuclear","solution/nuclear/ac/PDS-9p2050-Drawdown2020.json"],
-    ["waveandtidal","solution/waveandtidal/ac/PDS-1p2050-Drawdown2020.json"],
-    ["solarpvroof","solution/solarpvroof/ac/PDS-14p2050-Drawdown2020.json"],
-    ["geothermal","solution/geothermal/ac/PDS-3p2050-Drawdown2020.json"],
-    ["biogas","solution/biogas/ac/PDS-1p2050-Drawdown2020.json"],
-    ["biomass","solution/biomass/ac/PDS-1p2050-Drawdown2020.json"],
-    ["solarpvutil","solution/solarpvutil/ac/PDS-25p2050-Drawdown2020.json"],
-    ["instreamhydro","solution/instreamhydro/ac/PDS-2p2050-Drawdown2020.json"],
-    ["concentratedsolar","solution/concentratedsolar/ac/PDS-6p2050-Drawdown2020.json"],
-    ["microwind","solution/microwind/ac/PDS-0p2050-Drawdown2020.json"],
+    ["onshorewind", "solution/onshorewind/ac/PDS-27p2050-Drawdown2020.json"],
+    ["offshorewind", "solution/offshorewind/ac/PDS-3p2050-Drawdown2020.json"],
+    ["nuclear", "solution/nuclear/ac/PDS-9p2050-Drawdown2020.json"],
+    ["waveandtidal", "solution/waveandtidal/ac/PDS-1p2050-Drawdown2020.json"],
+    ["solarpvroof", "solution/solarpvroof/ac/PDS-14p2050-Drawdown2020.json"],
+    ["geothermal", "solution/geothermal/ac/PDS-3p2050-Drawdown2020.json"],
+    ["biogas", "solution/biogas/ac/PDS-1p2050-Drawdown2020.json"],
+    ["biomass", "solution/biomass/ac/PDS-1p2050-Drawdown2020.json"],
+    ["solarpvutil", "solution/solarpvutil/ac/PDS-25p2050-Drawdown2020.json"],
+    ["instreamhydro", "solution/instreamhydro/ac/PDS-2p2050-Drawdown2020.json"],
+    ["concentratedsolar", "solution/concentratedsolar/ac/PDS-6p2050-Drawdown2020.json"],
+    ["microwind", "solution/microwind/ac/PDS-0p2050-Drawdown2020.json"],
 
     # Food
-    ["silvopasture","solution/silvopasture/ac/PDS-94p2050-Drawdown-customPDS-avg-Jan2020.json"],
-    ["biochar","solution/biochar/ac/PDS-16p2050-Drawdown-CustomPDS-High-Jan2020.json"],
-    ["treeintercropping","solution/treeintercropping/ac/PDS-99p2050-Drawdown-customPDS-high-30Jan2020.json"],
-    ["tropicaltreestaples","solution/tropicaltreestaples/ac/PDS-43p2050-Drawdown-customPDS-avg-Jan2020.json"],
-    ["conservationagriculture","solution/conservationagriculture/ac/PDS-44p2050-Drawdown-customPDS-highhighearly-Jan2020.json"],
-    ["managedgrazing","solution/managedgrazing/ac/PDS-65p2050-Drawdown-customPDS-high-Jan2020.json"],
-    ["improvedrice","solution/improvedrice/ac/PDS-100p2050-Drawdown-customPDS-high-Jan2020.json"],
-    ["riceintensification","solution/riceintensification/ac/PDS-100p2050-Drawdown-CustomPDS-high-Jan2020.json"],
-    ["farmlandrestoration","solution/farmlandrestoration/ac/PDS-80p2050-Drawdown-customPDS-high-29Jan2020.json"],
-    ["multistrataagroforestry","solution/multistrataagroforestry/ac/PDS-20p2050-Drawdown-customPDS-avg-Jan2020.json"],
-    ["regenerativeagriculture","solution/regenerativeagriculture/ac/PDS-47p2050-Drawdown-customPDS-high-29Jan2020.json"],
-    ["nutrientmanagement","solution/nutrientmanagement/ac/PDS-58p2050-Drawdown-customPDS-avg-Jan2020.json"],
+    ["silvopasture", "solution/silvopasture/ac/PDS-94p2050-Drawdown-customPDS-avg-Jan2020.json"],
+    ["biochar", "solution/biochar/ac/PDS-16p2050-Drawdown-CustomPDS-High-Jan2020.json"],
+    ["treeintercropping", "solution/treeintercropping/ac/PDS-99p2050-Drawdown-customPDS-high-30Jan2020.json"],
+    ["tropicaltreestaples", "solution/tropicaltreestaples/ac/PDS-43p2050-Drawdown-customPDS-avg-Jan2020.json"],
+    ["conservationagriculture",
+      "solution/conservationagriculture/ac/PDS-44p2050-Drawdown-customPDS-highhighearly-Jan2020.json"],
+    ["managedgrazing", "solution/managedgrazing/ac/PDS-65p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["improvedrice", "solution/improvedrice/ac/PDS-100p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["riceintensification", "solution/riceintensification/ac/PDS-100p2050-Drawdown-CustomPDS-high-Jan2020.json"],
+    ["farmlandrestoration", "solution/farmlandrestoration/ac/PDS-80p2050-Drawdown-customPDS-high-29Jan2020.json"],
+    ["multistrataagroforestry", "solution/multistrataagroforestry/ac/PDS-20p2050-Drawdown-customPDS-avg-Jan2020.json"],
+    ["regenerativeagriculture",
+      "solution/regenerativeagriculture/ac/PDS-47p2050-Drawdown-customPDS-high-29Jan2020.json"],
+    ["nutrientmanagement", "solution/nutrientmanagement/ac/PDS-58p2050-Drawdown-customPDS-avg-Jan2020.json"],
 
     # Land Use
-    ["peatlands","solution/peatlands/ac/PDS-97p2050-Drawdown-customPDS-high-Jan2020.json"],
-    ["forestprotection","solution/forestprotection/ac/PDS-97p2050-Drawdown-customPDS-high-Jan2020.json"],
-    ["bamboo","solution/bamboo/ac/PDS-57p2050-Drawdown-customPDS-high-Jan2020.json"],
-    ["indigenouspeoplesland","solution/indigenouspeoplesland/ac/PDS-99p2050-Drawdown-customPDS-high-Jan2020.json"],
-    ["afforestation","solution/afforestation/ac/PDS-65p2050-Drawdown-CustomPDS-high05stdv-Jan2020.json"],
-    ["grasslandprotection","solution/grasslandprotection/ac/PDS-87p2050-Drawdown-customPDS-high-Jan2020.json"],
-    ["perennialbioenergy","solution/perennialbioenergy/ac/PDS-72p2050-Drawdown-customPDS-high-30Jan2020.json"],
-    ["temperateforests","solution/temperateforests/ac/PDS-86p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["peatlands", "solution/peatlands/ac/PDS-97p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["forestprotection", "solution/forestprotection/ac/PDS-97p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["bamboo", "solution/bamboo/ac/PDS-57p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["indigenouspeoplesland", "solution/indigenouspeoplesland/ac/PDS-99p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["afforestation", "solution/afforestation/ac/PDS-65p2050-Drawdown-CustomPDS-high05stdv-Jan2020.json"],
+    ["grasslandprotection", "solution/grasslandprotection/ac/PDS-87p2050-Drawdown-customPDS-high-Jan2020.json"],
+    ["perennialbioenergy", "solution/perennialbioenergy/ac/PDS-72p2050-Drawdown-customPDS-high-30Jan2020.json"],
+    ["temperateforests", "solution/temperateforests/ac/PDS-86p2050-Drawdown-customPDS-high-Jan2020.json"],
 
     # Buildings and Cities
-    ["landfillmethane","solution/landfillmethane/ac/PDS-0p2050-Drawdown2020.json"],
+    ["landfillmethane", "solution/landfillmethane/ac/PDS-0p2050-Drawdown2020.json"],
   ],
   'plausible-2020': [
 
     # Electricity Generation
-    ["onshorewind","solution/onshorewind/ac/PDS-20p2050-Plausible2020.json"],
-    ["offshorewind","solution/offshorewind/ac/PDS-4p2050-Plausible2020.json"],
-    ["nuclear","solution/nuclear/ac/PDS-13p2050-Plausible2020.json"],
-    ["waveandtidal","solution/waveandtidal/ac/PDS-1p2050-Plausible2020.json"],
-    ["solarpvroof","solution/solarpvroof/ac/PDS-14p2050-Plausible2020.json"],
-    ["geothermal","solution/geothermal/ac/PDS-3p2050-Plausible2020.json"],
-    ["biogas","solution/biogas/ac/PDS-2p2050-Plausible2020.json"],
-    ["biomass","solution/biomass/ac/PDS-1p2050-Plausible2020.json"],
-    ["solarpvutil","solution/solarpvutil/ac/PDS-20p2050-Plausible2020.json"],
-    ["instreamhydro","solution/instreamhydro/ac/PDS-2p2050-Plausible2020.json"],
-    ["concentratedsolar","solution/concentratedsolar/ac/PDS-7p2050-Plausible2020.json"],
-    ["microwind","solution/microwind/ac/PDS-0p2050-Plausible2020.json"],
+    ["onshorewind", "solution/onshorewind/ac/PDS-20p2050-Plausible2020.json"],
+    ["offshorewind", "solution/offshorewind/ac/PDS-4p2050-Plausible2020.json"],
+    ["nuclear", "solution/nuclear/ac/PDS-13p2050-Plausible2020.json"],
+    ["waveandtidal", "solution/waveandtidal/ac/PDS-1p2050-Plausible2020.json"],
+    ["solarpvroof", "solution/solarpvroof/ac/PDS-14p2050-Plausible2020.json"],
+    ["geothermal", "solution/geothermal/ac/PDS-3p2050-Plausible2020.json"],
+    ["biogas", "solution/biogas/ac/PDS-2p2050-Plausible2020.json"],
+    ["biomass", "solution/biomass/ac/PDS-1p2050-Plausible2020.json"],
+    ["solarpvutil", "solution/solarpvutil/ac/PDS-20p2050-Plausible2020.json"],
+    ["instreamhydro", "solution/instreamhydro/ac/PDS-2p2050-Plausible2020.json"],
+    ["concentratedsolar", "solution/concentratedsolar/ac/PDS-7p2050-Plausible2020.json"],
+    ["microwind", "solution/microwind/ac/PDS-0p2050-Plausible2020.json"],
 
     # Food
-    ["silvopasture","solution/silvopasture/ac/PDS-88p2050-Plausible-customPDS-low-Jan2020.json"],
-    ["biochar","solution/biochar/ac/PDS-8p2050-Plausible-CustomPDS-Avg-Jan2020.json"],
-    ["treeintercropping","solution/treeintercropping/ac/PDS-84p2050-Plausible-customPDS-avg-30Jan2020.json"],
-    ["tropicaltreestaples","solution/tropicaltreestaples/ac/PDS-18p2050-Plausible-customPDS-low-Jan2020.json"],
-    ["conservationagriculture","solution/conservationagriculture/ac/PDS-54p2050-Plausible-customPDS-high-Jan2020.json"],
-    ["managedgrazing","solution/managedgrazing/ac/PDS-43p2050-Plausible-customPDS-avg-Jan2020.json"],
-    ["improvedrice","solution/improvedrice/ac/PDS-84p2050-Plausible-customPDS-avg-Jan2020.json"],
-    ["riceintensification","solution/riceintensification/ac/PDS-77p2050-Plausible-CustomPDS-avg-Jan2020.json"],
-    ["farmlandrestoration","solution/farmlandrestoration/ac/PDS-51p2050-Plauisble-customPDS-avg-29Jan2020.json"],
-    ["multistrataagroforestry","solution/multistrataagroforestry/ac/PDS-12p2050-Plausible-customPDS-low-Jan2020.json"],
-    ["regenerativeagriculture","solution/regenerativeagriculture/ac/PDS-32p2050-Plausible-customPDS-29Jan2020.json"],
-    ["nutrientmanagement","solution/nutrientmanagement/ac/PDS-27p2050-Plausible-customPDS-low-Jan2020.json"],
+    ["silvopasture", "solution/silvopasture/ac/PDS-88p2050-Plausible-customPDS-low-Jan2020.json"],
+    ["biochar", "solution/biochar/ac/PDS-8p2050-Plausible-CustomPDS-Avg-Jan2020.json"],
+    ["treeintercropping", "solution/treeintercropping/ac/PDS-84p2050-Plausible-customPDS-avg-30Jan2020.json"],
+    ["tropicaltreestaples", "solution/tropicaltreestaples/ac/PDS-18p2050-Plausible-customPDS-low-Jan2020.json"],
+    ["conservationagriculture",
+      "solution/conservationagriculture/ac/PDS-54p2050-Plausible-customPDS-high-Jan2020.json"],
+    ["managedgrazing", "solution/managedgrazing/ac/PDS-43p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["improvedrice", "solution/improvedrice/ac/PDS-84p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["riceintensification", "solution/riceintensification/ac/PDS-77p2050-Plausible-CustomPDS-avg-Jan2020.json"],
+    ["farmlandrestoration", "solution/farmlandrestoration/ac/PDS-51p2050-Plauisble-customPDS-avg-29Jan2020.json"],
+    ["multistrataagroforestry",
+      "solution/multistrataagroforestry/ac/PDS-12p2050-Plausible-customPDS-low-Jan2020.json"],
+    ["regenerativeagriculture", "solution/regenerativeagriculture/ac/PDS-32p2050-Plausible-customPDS-29Jan2020.json"],
+    ["nutrientmanagement", "solution/nutrientmanagement/ac/PDS-27p2050-Plausible-customPDS-low-Jan2020.json"],
 
     # Land Use
-    ["peatlands","solution/peatlands/ac/PDS-58p2050-Plausible-customPDS-avg-Jan2020.json"],
-    ["forestprotection","solution/forestprotection/ac/PDS-85p2050-Plausible-customPDS-avg-Jan2020.json"],
-    ["bamboo","solution/bamboo/ac/PDS-28p2050-Plausible-customPDS-avg-Jan2020.json"],
-    ["indigenouspeoplesland","solution/indigenouspeoplesland/ac/PDS-86p2050-Plausible-customPDS-avg-Jan2020.json"],
-    ["afforestation","solution/afforestation/ac/PDS-57p2050-Plausible-CustomPDS-Avg-Jan2020.json"],
-    ["grasslandprotection","solution/grasslandprotection/ac/PDS-74p2050-Plausible-customPDS-avg-Jan2020.json"],
-    ["perennialbioenergy","solution/perennialbioenergy/ac/PDS-40p2050-Plausible-customPDS-avg-30Jan2020.json"],
-    ["temperateforests","solution/temperateforests/ac/PDS-62p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["peatlands", "solution/peatlands/ac/PDS-58p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["forestprotection", "solution/forestprotection/ac/PDS-85p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["bamboo", "solution/bamboo/ac/PDS-28p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["indigenouspeoplesland", "solution/indigenouspeoplesland/ac/PDS-86p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["afforestation", "solution/afforestation/ac/PDS-57p2050-Plausible-CustomPDS-Avg-Jan2020.json"],
+    ["grasslandprotection", "solution/grasslandprotection/ac/PDS-74p2050-Plausible-customPDS-avg-Jan2020.json"],
+    ["perennialbioenergy", "solution/perennialbioenergy/ac/PDS-40p2050-Plausible-customPDS-avg-30Jan2020.json"],
+    ["temperateforests", "solution/temperateforests/ac/PDS-62p2050-Plausible-customPDS-avg-Jan2020.json"],
 
     # Buildings and Cities
-    ["landfillmethane","solution/landfillmethane/ac/PDS-0p2050-Plausible2020.json"],
+    ["landfillmethane", "solution/landfillmethane/ac/PDS-0p2050-Plausible2020.json"],
   ],
   'optimum-2020': [
 
     # Electricity Generation
-    ["onshorewind","solution/onshorewind/ac/PDS-27p2050-Optimum2020.json"],
-    ["offshorewind","solution/offshorewind/ac/PDS-6p2050-Optimum2020.json"],
-    ["nuclear","solution/nuclear/ac/PDS-0p2050-Optimum2020.json"],
-    ["waveandtidal","solution/waveandtidal/ac/PDS-2p2050-Optimum2020.json"],
-    ["solarpvroof","solution/solarpvroof/ac/PDS-14p2050-Optimum2020.json"],
-    ["geothermal","solution/geothermal/ac/PDS-6p2050-Optimum2020.json"],
-    ["biogas","solution/biogas/ac/PDS-1p2050-Optimum2020.json"],
-    ["biomass","solution/biomass/ac/PDS-1p2050-Optimum2020.json"],
-    ["solarpvutil","solution/solarpvutil/ac/PDS-25p2050-Optimum2020.json"],
-    ["instreamhydro","solution/instreamhydro/ac/PDS-2p2050-Optimum2020.json"],
-    ["concentratedsolar","solution/concentratedsolar/ac/PDS-6p2050-Optimum2020.json"],
-    ["microwind","solution/microwind/ac/PDS-0p2050-Optimum2020.json"],
+    ["onshorewind", "solution/onshorewind/ac/PDS-27p2050-Optimum2020.json"],
+    ["offshorewind", "solution/offshorewind/ac/PDS-6p2050-Optimum2020.json"],
+    ["nuclear", "solution/nuclear/ac/PDS-0p2050-Optimum2020.json"],
+    ["waveandtidal", "solution/waveandtidal/ac/PDS-2p2050-Optimum2020.json"],
+    ["solarpvroof", "solution/solarpvroof/ac/PDS-14p2050-Optimum2020.json"],
+    ["geothermal", "solution/geothermal/ac/PDS-6p2050-Optimum2020.json"],
+    ["biogas", "solution/biogas/ac/PDS-1p2050-Optimum2020.json"],
+    ["biomass", "solution/biomass/ac/PDS-1p2050-Optimum2020.json"],
+    ["solarpvutil", "solution/solarpvutil/ac/PDS-25p2050-Optimum2020.json"],
+    ["instreamhydro", "solution/instreamhydro/ac/PDS-2p2050-Optimum2020.json"],
+    ["concentratedsolar", "solution/concentratedsolar/ac/PDS-6p2050-Optimum2020.json"],
+    ["microwind", "solution/microwind/ac/PDS-0p2050-Optimum2020.json"],
 
     # Food
-    ["silvopasture","solution/silvopasture/ac/PDS-100p2050-Optimum-customPDS-high-Jan2020.json"],
-    ["biochar","solution/biochar/ac/PDS-20p2050-Optimum-CustomPDS-max-Jan2020.json"],
-    ["treeintercropping","solution/treeintercropping/ac/PDS-100p2050-Optimum.json"],
-    ["tropicaltreestaples","solution/tropicaltreestaples/ac/PDS-67p2050-Optimum-customPDS-high-Jan2020.json"],
-    ["conservationagriculture","solution/conservationagriculture/ac/PDS-31p2050-Optimum-PDSCustom-avg-Nov2019.json"],
-    ["managedgrazing","solution/managedgrazing/ac/PDS-62p2050-Optimum-BookVersion1-High2S.json"],
-    ["improvedrice","solution/improvedrice/ac/PDS-100p2050-Optimum-PDS_Custom-High_Growth,_Early_Adoption.json"],
-    ["riceintensification","solution/riceintensification/ac/PDS-100p2050-Optimum-CustomPDS-highearly-Jan2020.json"],
-    ["farmlandrestoration","solution/farmlandrestoration/ac/PDS-87p2050-Optimum-PDScustom-high-BookVersion1.json"],
-    ["multistrataagroforestry","solution/multistrataagroforestry/ac/PDS-28p2050-optimum-customPDS-high-Jan2020.json"],
-    ["regenerativeagriculture","solution/regenerativeagriculture/ac/PDS-62p2050-Optimum-PDScustom-max-BookVersion1.json"],
-    ["nutrientmanagement","solution/nutrientmanagement/ac/PDS-80p2050-Optimum-PDScustom-max-BookVersion1.json"],
+    ["silvopasture", "solution/silvopasture/ac/PDS-100p2050-Optimum-customPDS-high-Jan2020.json"],
+    ["biochar", "solution/biochar/ac/PDS-20p2050-Optimum-CustomPDS-max-Jan2020.json"],
+    ["treeintercropping", "solution/treeintercropping/ac/PDS-100p2050-Optimum.json"],
+    ["tropicaltreestaples", "solution/tropicaltreestaples/ac/PDS-67p2050-Optimum-customPDS-high-Jan2020.json"],
+    ["conservationagriculture", "solution/conservationagriculture/ac/PDS-31p2050-Optimum-PDSCustom-avg-Nov2019.json"],
+    ["managedgrazing", "solution/managedgrazing/ac/PDS-62p2050-Optimum-BookVersion1-High2S.json"],
+    ["improvedrice", "solution/improvedrice/ac/PDS-100p2050-Optimum-PDS_Custom-High_Growth,_Early_Adoption.json"],
+    ["riceintensification", "solution/riceintensification/ac/PDS-100p2050-Optimum-CustomPDS-highearly-Jan2020.json"],
+    ["farmlandrestoration", "solution/farmlandrestoration/ac/PDS-87p2050-Optimum-PDScustom-high-BookVersion1.json"],
+    ["multistrataagroforestry", "solution/multistrataagroforestry/ac/PDS-28p2050-optimum-customPDS-high-Jan2020.json"],
+    ["regenerativeagriculture",
+      "solution/regenerativeagriculture/ac/PDS-62p2050-Optimum-PDScustom-max-BookVersion1.json"],
+    ["nutrientmanagement", "solution/nutrientmanagement/ac/PDS-80p2050-Optimum-PDScustom-max-BookVersion1.json"],
 
     # Land Use
-    ["peatlands","solution/peatlands/ac/PDS-95p2050-Optimum-PDSCustom-80%lowdeg-Nov2019.json"],
-    ["forestprotection","solution/forestprotection/ac/PDS-99p2050-Optimum-customPDS-100%lowdeg-Jan2020.json"],
-    ["bamboo","solution/bamboo/ac/PDS-69p2050-Optimum-PDScustom-high-BookVersion1.json"],
-    ["indigenouspeoplesland","solution/indigenouspeoplesland/ac/PDS-91p2050-Optimum-PDScustom-high-BookVersion1.json"],
-    ["afforestation","solution/afforestation/ac/PDS-82p2050-Optimum-PDSCustom-high-Nov2019.json"],
-    ["grasslandprotection","solution/grasslandprotection/ac/PDS-85p2050-Optimum-PDSCustom-max-Nov2019.json"],
-    ["perennialbioenergy","solution/perennialbioenergy/ac/PDS-100p2050-Optimum-PDScustom-high-BookVersion1.json"],
-    ["temperateforests","solution/temperateforests/ac/PDS-74p2050-Optimum-PDScustomadoption-max.json"],
+    ["peatlands", "solution/peatlands/ac/PDS-95p2050-Optimum-PDSCustom-80%lowdeg-Nov2019.json"],
+    ["forestprotection", "solution/forestprotection/ac/PDS-99p2050-Optimum-customPDS-100%lowdeg-Jan2020.json"],
+    ["bamboo", "solution/bamboo/ac/PDS-69p2050-Optimum-PDScustom-high-BookVersion1.json"],
+    ["indigenouspeoplesland",
+      "solution/indigenouspeoplesland/ac/PDS-91p2050-Optimum-PDScustom-high-BookVersion1.json"],
+    ["afforestation", "solution/afforestation/ac/PDS-82p2050-Optimum-PDSCustom-high-Nov2019.json"],
+    ["grasslandprotection", "solution/grasslandprotection/ac/PDS-85p2050-Optimum-PDSCustom-max-Nov2019.json"],
+    ["perennialbioenergy", "solution/perennialbioenergy/ac/PDS-100p2050-Optimum-PDScustom-high-BookVersion1.json"],
+    ["temperateforests", "solution/temperateforests/ac/PDS-74p2050-Optimum-PDScustomadoption-max.json"],
 
     # Buildings and Cities
-    ["landfillmethane","solution/landfillmethane/ac/PDS-0p2050-Optimum2020.json"],
+    ["landfillmethane", "solution/landfillmethane/ac/PDS-0p2050-Optimum2020.json"],
   ],
 }
 
@@ -191,32 +198,32 @@ def transform():
 
   # variation_schema = projection_schema.copy()
 
-  jsonProjectionData = {
+  json_projection_data = {
     # 'start_year': 2014
   }
-  jsonRefData = {}
+  json_ref_data = {}
 
   for [technology, filenameData] in legacyDataFiles['drawdown-2020']:
     libraryFilenameData = get_path_from_library(filenameData)
     with open(libraryFilenameData) as f:
-      sampleScenarioData = json.load(f)
-      for [existing_name, path, converted_name, label, unit] in varProjectionNamesPaths:
-        technologyPath = path.replace('solarpvutil', technology)
-        if existing_name in sampleScenarioData:
-          value = sampleScenarioData[existing_name]
+      sample_scenario_data = json.load(f)
+      for [existing_name, path, _, _, _] in varProjectionNamesPaths:
+        technology_path = path.replace('solarpvutil', technology)
+        if existing_name in sample_scenario_data:
+          value = sample_scenario_data[existing_name]
           if value == value:
             #nan != nan
             #edge case scenario
-            set_value_at(jsonProjectionData, technologyPath, value)
+            set_value_at(json_projection_data, technology_path, value)
 
-      for [existing_name, path, converted_name, label, unit] in varRefNamesPaths:
-        technologyPath = path.replace('solarpvutil', technology)
-        if existing_name in sampleScenarioData:
-          value = sampleScenarioData[existing_name]
+      for [existing_name, path, _, _, _] in varRefNamesPaths:
+        technology_path = path.replace('solarpvutil', technology)
+        if existing_name in sample_scenario_data:
+          value = sample_scenario_data[existing_name]
           if value == value:
             #nan != nan
             #edge case scenario
-            set_value_at(jsonRefData, technologyPath, value)
+            set_value_at(json_ref_data, technology_path, value)
 
 
   return [jsonProjectionData, jsonRefData]
@@ -274,32 +281,39 @@ def rehydrate_legacy_json(start_year: int, end_year: int, technology: str, tech_
   rehydrated_json['report_end_year'] = end_year
   return rehydrated_json
 
-def csv_to_json(csvFilePath: str) -> dict: 
+def csv_file_to_json(csvFilePath: str) -> dict: 
       
   # create a dictionary 
   data = []
     
   # Open a csv reader called DictReader 
   with open(csvFilePath, encoding='utf-8') as csvf: 
-      csvReader = csv.DictReader(csvf) 
-        
-      # Convert each row into a dictionary  
-      # and add it to data 
-      for row in csvReader: 
-            
-          # Assuming a column named 'No' to 
-          # be the primary key 
-          # key = rows['No'] 
-          # data[key] = rows 
-          data.append(row)
+    data = csv_to_json(csvf)
 
   return {'rows':data}
+
+def csv_to_json(csvf: TextIOWrapper):
+  data = []
+
+  csvReader = csv.DictReader(csvf) 
+        
+  # Convert each row into a dictionary  
+  # and add it to data 
+  for row in csvReader: 
+        
+      # Assuming a column named 'No' to 
+      # be the primary key 
+      # key = rows['No'] 
+      # data[key] = rows 
+      data.append(row)
+  
+  return data
 
 def csv_to_binary(csvFilePath: str) -> bytes:
    with open(csvFilePath, 'rb') as f:
     return f.read()
 
-def populate(resource: str):
+def populate(resource: str) -> List[dict]:
   # resource can be one of the following:
   #   vma_data, tam, ca_pds_data, ca_ref_data
 
@@ -311,7 +325,7 @@ def populate(resource: str):
       for file in files:
         path = os.path.join(subdir_vma, file)
         converted = {
-         'data': csv_to_json(path),
+         'data': csv_file_to_json(path),
          'technology': subdir,
          'filename': file
         }
@@ -320,11 +334,15 @@ def populate(resource: str):
   return converted_list
 
 def convert_to_new_path(legacy_name: str, technology: str) -> str:
+  """
+    Mapping the current technology name to match the legacy path set from
+    the Solutions repository
+  """
   paths = varProjectionNamesPaths + varRefNamesPaths
-  for [existing_name, path, converted_name, label, unit] in paths:
-    technologyPath = path.replace('solarpvutil', technology)
+  for [existing_name, path, _, _, _] in paths:
+    technology_path = path.replace('solarpvutil', technology)
     if legacy_name == existing_name:
-      return technologyPath
+      return technology_path
 
 def convert_vmas_to_binary() -> List[dict]:
   directory = get_path_from_library('')
