@@ -9,10 +9,10 @@ export const Upload = ({ path }) => {
   const [loading, setIsLoading] = useState(false);
 
   const changeHandler = (event) => {
-		setIsFilePicked(true);
+    setIsFilePicked(true);
     setIsLoading(true);
     uploadFile(event.target.files[0]);
-	};
+  };
 
   const uploadFile = async (file) => {
     const data = new FormData();
