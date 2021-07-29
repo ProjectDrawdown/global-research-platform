@@ -6,6 +6,7 @@ import pathlib
 from fastapi import APIRouter, Depends, File, UploadFile, Form
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 from api.config import get_settings, get_db
 from api.db import models
 from api.routers import schemas
@@ -17,6 +18,7 @@ from api.queries.resource_queries import (
 	get_entity,
   get_entities_by_name,
   save_entity,
+  publish_entity,
   all_entities,
   all_entity_paths,
   clone_variation,
@@ -126,7 +128,8 @@ async def get_by_name(entity: models.EntityName, name: str, database: Session = 
 @router.get('/resource/{entity}s/full', response_model=List[schemas.ResourceOut],
 	summary="Get the full resource (all data) of an entity by name"
 	)
-async def get_all(entity: models.EntityName, database: Session = Depends(get_db)):
+async def get_all(entity: models.EntityName, database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
   """
     Get the full resource (all data) of an entity by name
 
@@ -136,8 +139,10 @@ async def get_all(entity: models.EntityName, database: Session = Depends(get_db)
       resource entity, maps to the EntityName enum
     database: Session
       database session, defaults to initialize session
+    db_active_user: User
+      current logged in user
   """
-  return all_entities(database, entity_mapping[entity])
+  return all_entities(database, entity_mapping[entity], db_active_user)
 
 
 @router.get('/resource/{entity}s/paths', response_model=List[str],
@@ -190,6 +195,57 @@ async def post_resource_data(
 
   # TODO: object validation when saved to DB
   return save_entity(database, name, resource_obj, entity_mapping[entity], db_active_user)
+
+@router.put('/resource/{entity}/{input_id}/publish',
+  summary='publish resource to be public',
+  description='publishing resource by entity to be public, if public, the resource ' +
+    'are then accessable for other users')
+async def publish_resource_by_id(entity: models.EntityName, input_id: int,
+  database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
+  """
+    Publishing an entity to make it public by its entity id and type
+
+    Parameters:
+    ----
+    entity: EntityName
+      resource entity, maps to the EntityName enum
+    input_id: str
+      id of entity
+    database: Session
+      database session, defaults to initialize session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, entity_mapping[entity], input_id, db_active_user, True)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail=entity + " not found")
+
+@router.delete('/resource/{entity}/{input_id}/publish',
+  summary='unpublish resource to be private',
+  description='unpublish a public resource to and make it accessable only to author')
+async def unpublish_resource_by_id(entity: models.EntityName, input_id: int,
+  database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
+  """
+    Unpublish an entity to make it private by its entity id and type
+
+    Parameters:
+    ----
+    entity: EntityName
+      resource entity, maps to the EntityName enum
+    input_id: str
+      id of entity
+    database: Session
+      database session, defaults to initialize session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, entity_mapping[entity], input_id, db_active_user, False)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail=entity + " not found")
 
 @router.post('/variation/fork/{input_id}', response_model=schemas.VariationOut,
 	summary="Fork a variation with given id",

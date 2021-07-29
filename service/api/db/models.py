@@ -73,6 +73,7 @@ class Workbook(Base):
 	has_run = Column(Boolean, default=False)
 	created_at = Column(DateTime, default=datetime.now())
 	updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
+	is_public = Column(Boolean)
 
 	@validates('data')
 	def validate_data(self, _, value):
@@ -95,6 +96,7 @@ class Resource(object):
 	# uniqe name to prevent duplication on fetch
 	ref_name = Column(String)
 	data = Column(JSONB)
+	is_public = Column(Boolean)
 
 	@declared_attr
 	def author_id(self):
@@ -151,6 +153,7 @@ class VMA_CSV(Base): # pylint: disable=invalid-name
 	author_id = Column(Integer, ForeignKey('user.id'))
 	author = relationship("User", back_populates="vma_csvs")
 	data = Column(LargeBinary)
+	is_public = Column(Boolean)
 
 	@hybrid_property
 	def path(self):
