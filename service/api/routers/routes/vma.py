@@ -34,7 +34,7 @@ async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
     for title in vma_titles:
       vma_file = m.VMAs.get(title)
       if vma_file and vma_file.filename:
-        db_file = get_entity_by_name(db, f'solution/{technology}/{vma_file.filename.name}', models.VMA)
+        db_file = get_entity_by_name(db, vma_file.filename.name, technology, models.VMA)
         if db_file:
           result.append({
             'var': path[0],
