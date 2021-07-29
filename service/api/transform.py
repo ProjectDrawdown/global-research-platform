@@ -226,7 +226,7 @@ def transform():
             set_value_at(json_ref_data, technology_path, value)
 
 
-  return [jsonProjectionData, jsonRefData]
+  return [json_projection_data, json_ref_data]
 
 def get_solution_file_paths(solution_name):
     path = f'solution/{solution_name}/ac/'
