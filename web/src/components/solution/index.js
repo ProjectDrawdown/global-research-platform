@@ -21,7 +21,7 @@ import AdoptionForm, { AdoptionHeader } from "./Adoption";
 import EmissionForm, { EmissionHeader } from "./Emission";
 import FinanceForm, { FinanceHeader } from "./Finance";
 import RawDataForm, { RawDataHeader } from "./RawData";
-import WorkbookFooter from "components/WorkbookFooter";
+import WorkbookFooter from "components/workbook/footer";
 import { Navigation } from "../../components/Navigation";
 // Legacy default export requirements
 

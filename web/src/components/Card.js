@@ -7,6 +7,9 @@ import {
   hasChildOfContainer
 } from "util/component-utilities";
 
+/**
+ * Styled Icon to be used in the CardTitle
+ */
 export const StyledIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
   margin: -3px;
@@ -15,6 +18,9 @@ export const StyledIcon = styled(FontAwesomeIcon)`
   font-size: 30px;
 `;
 
+/**
+ * Styled Heading to be used in the CardTitle
+ */
 export const StyledHeading = styled(Heading)`
   white-space: nowrap;
   overflow: hidden;
@@ -25,6 +31,9 @@ export const StyledHeading = styled(Heading)`
   font-weight: 700;
 `;
 
+/**
+ * Card Title is typically the content for a CardHeader(see below) that expects to be given children (just a string ... the card's title), an icon (see src/theme/icons.js or the module: @fortawesome/free-solid-svg-icons), an onClick handler, and whether the icon should float left or right.
+ */
 export const CardTitle = ({ children, icon, onClick, iconLeft = false }) => (
   <>
     {icon && (
@@ -43,6 +52,9 @@ export const CardTitle = ({ children, icon, onClick, iconLeft = false }) => (
   </>
 );
 
+/**
+ * The Card Header container that typically contains a CardTitle (see above) to be given as its "children", a background color parameter, and an invert boolean as seen in src/components/solution/index.js.
+ */
 export const CardHeader = ({ children, color, invert = false }) => (
   <Box
     px="3"
@@ -58,6 +70,11 @@ export const CardHeader = ({ children, color, invert = false }) => (
   </Box>
 );
 
+/**
+ * This is the main Card Body, right now used in the MarketChartCard, the DrawerLinkCard, and in src/components/solution/index.js when creating the cards for TAM, Adoption, Emissions, Finances, and RawData
+ *
+ * This component expects children (MarketChart, EmissionInputs, etc), and styling options
+ */
 export const CardBody = ({ children, wrapper = false, position, ...otherProps }) => (
   <Box
     p="3"
@@ -73,12 +90,20 @@ export const CardBody = ({ children, wrapper = false, position, ...otherProps })
   </Box>
 );
 
+/**
+ * A Footer component for a Card, expecting children.
+ */
 export const CardFooter = props => (
   <Box pos="relative" bottom="20px" right="0px" align="right" mt="2" mr="2">
     {props.children}
   </Box>
 );
 
+/**
+ * The main Card export, except that most places also import the CardHeader and CardTitle as well. The Footer doesn't appear to be used.
+ *
+ * TODO: explain "ChildByContainer"
+ */
 export const Card = ({ children, size, variant, color }) => {
   const styles = useStyleConfig("Card", { size, variant });
   return (

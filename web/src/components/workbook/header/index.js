@@ -1,20 +1,22 @@
-import React, { useEffect, useContext } from "react";
-import { Box, Heading, Flex, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import { Box, Heading, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RunButton, PlayButton } from "../theme/icons";
+import { RunButton, PlayButton } from "theme/icons";
 import styled, { css, keyframes } from "styled-components";
-import store from "../redux/store";
-import { calculateThunk } from "../redux/reducers/workbook/workbookSlice";
-import { UserContext } from "services/user";
+import store from "redux/store";
+import { calculateThunk } from "redux/reducers/workbook/workbookSlice";
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector
 } from "redux/selectors.js";
 import { prettyFormatBigNumber } from "util/number-utils.js";
-import Logo from "../parts/Logo";
-import { errorAdded } from "../redux/reducers/util/errorSlice";
+import Logo from "parts/Logo";
+import { errorAdded } from "redux/reducers/util/errorSlice";
 
+/**
+ * keyframe DOM
+ */
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -25,25 +27,44 @@ const rotate = keyframes`
   }
 `;
 
-export const StyledRunWrapper = styled.div`
+/**
+ * Wrapper DOM
+ */
+const StyledRunWrapper = styled.div`
   position: absolute;
   top: 0px;
   right: 0;
   height: 164px;
   width: auto;
   cursor: pointer;
+  pointer-events: ${props => (props.loading ? 'none' : 'auto')};
 `;
 
-export const StyledButton = styled.div`
+/**
+ * Button with Loading animation
+ */
+const StyledButton = styled.div`
   animation: ${props => (props.loading ? css`${rotate} 2s linear infinite` : 'none')};
 `
 
+/**
+ * Renders the Header of an opened workbook.
+ * Additional Header feature:
+ * * A floating button to use for Workbook recalculation.
+ * * A Toast for when a feature notebook is opened
+ * 
+ * @param {*} param0 
+ * @returns components
+ */
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
-  const calculate = () => {
-    store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
-  };
+  const calculate = () => 
+    {if (workbookState.calculationLoading == true) {return}
+    else {
+      store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
+    }
+};
 
   const calculateMmtReduced = () => {
     const value = workbookState.techData.data.co2_mmt_reduced['World'].reduce((acc, item) => acc + item.value, 0);
@@ -53,10 +74,6 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookID = useWorkbookIDSelector();
   const workbookHasAuthor = useWorkbookHasAuthorSelector();
   const showCopyButton = !workbookHasAuthor;
-
-  const { user } = useContext(UserContext);
-  const loggedIn = user && typeof user === "object" && user.id
-  const logoLink = loggedIn ? "/workbooks" : "/";
 
   useEffect(() => {
     !workbookHasAuthor && store.dispatch(errorAdded({
@@ -107,9 +124,9 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
           </HStack>
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
-          <StyledRunWrapper onClick={calculate} >
+          <StyledRunWrapper onClick={calculate} loading={workbookState?.calculationLoading}>
             <StyledButton loading={workbookState?.calculationLoading}> 
-              <RunButton /> 
+              <RunButton/> 
             </StyledButton>
             { workbookState?.techData ? 
               <Center

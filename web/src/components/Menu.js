@@ -1,8 +1,18 @@
 import React, { useContext } from "react";
 import { Flex, Link,  Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
-import styled from "styled-components"
-import { UserContext } from "services/user"
+import { useToast } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import { Image } from "@chakra-ui/react";
+import { RunButton } from "../theme/icons";
+import styled from "styled-components";
+import store from "../redux/store";
+import { calculateThunk } from "../redux/reducers/workbook/workbookSlice";
+import { UserContext } from "services/user";
+import {
+  useWorkbookIDSelector,
+  useWorkbookHasAuthorSelector
+} from "redux/selectors.js";
 
 const Item = styled(Text)`
   margin-right: 1.5rem;

@@ -80,6 +80,13 @@ Bug fixes must include an example that exposes the issue.
 New features should have tests that exercise its functionality. There is a [YouTube video describing the layers of testing](https://www.youtube.com/watch?v=K6P56qUkCrw0).
 If you're not sure what this means for your code, please ask in your pull request.
 
+### Code standard
+
+Please review the individual __README__ based on which project you are contributing
+
+* Web Application README
+* [Service Application README](service/README.md)
+
 ## Recognizing contributions
 
 We welcome and recognize all contributions from documentation to testing to code development.
