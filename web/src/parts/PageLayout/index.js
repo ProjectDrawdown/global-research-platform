@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types"
 import { Flex, Container } from "@chakra-ui/react";
 import { PageHeader } from "parts/PageHeader";
 import { PageFooter } from "parts/PageFooter";
@@ -25,5 +26,18 @@ const PageLayout = ({
     </Flex>
   );
 };
+
+PageLayout.propTypes = {
+  /** Enables margin */
+  navMargin: PropTypes.bool,
+
+  /** Max width of layout */
+  maxW: PropTypes.string,
+
+  /** enable/disable footer */
+  showFooter: PropTypes.bool,
+
+  children: PropTypes.elementType
+}
 
 export default PageLayout;

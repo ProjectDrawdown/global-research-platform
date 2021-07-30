@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Flex, Text } from "@chakra-ui/react";
-import Logo from "../../components/Logo.js";
+import Logo from "../Logo"
 import Menu from "../../components/Menu.js";
 
 const Item = styled(Text)`

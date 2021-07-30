@@ -6,7 +6,7 @@ import styled from "styled-components"
 import { RunButton } from "../../theme/icons"
 import store from "../../redux/store"
 import { calculateThunk } from "../../redux/reducers/workbook/workbookSlice"
-import Logo from "../../components/Logo.js"
+import Logo from "../Logo"
 import Menu from "../../components/Menu.js"
 import {
   useWorkbookIDSelector,

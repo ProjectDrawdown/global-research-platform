@@ -1,15 +1,17 @@
 import React from 'react'
-
-import { PageLayout } from './'
+import { UserContext } from "services/user";
+import PageLayout from './'
 
 export default {
   component: PageLayout,
-  title: 'Default Page Layout'
+  title: 'Layouts/Page'
 }
 
-const Template = args => <PageLayout {...args}/>
-
-// TODO: add arguments
+const Template = args => (
+  <UserContext.Provider value={{}}>
+    <PageLayout {...args}/>
+  </UserContext.Provider>
+)
 
 export const Default = Template.bind({})
 Default.args = {}
