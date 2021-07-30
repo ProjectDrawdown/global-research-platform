@@ -2,7 +2,9 @@
     Query Set for Resource Object
 """
 import hashlib
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.sqltypes import Boolean
 from api.db import models
 from api.db.models import Variation, Workbook, User
 from api.db.helpers import clone
@@ -38,11 +40,14 @@ def get_entity_by_name(database: Session, name: str, table):
 	"""
 	return database.query(table).filter(table.name.like(name)).first()
 
-def all_entities(database: Session, table):
+def all_entities(database: Session, table, user: models.User):
 	"""
-		Get all object from table
+		Get all object from table that is default data (author_id == none),
+		owned by user or has been set to true.
 	"""
-	return database.query(table).all()
+	return database.query(table) \
+		.filter(or_(table.is_public, table.author_id.is_(None), table.author_id == user.id)) \
+		.all()
 
 def all_entity_paths(database: Session, _, table):
 	"""
@@ -100,6 +105,27 @@ def save_entity(database: Session, name: str, obj, table, user: User = None):
 	database.commit()
 	database.refresh(db_obj)
 	return db_obj
+
+def publish_entity(database: Session, table, input_id: int, user: User, is_public: Boolean):
+	"""
+		publish an entity to make it publically accessable
+
+		parameters:
+		---
+			database: Session
+				database session
+			table: Models
+				object model
+			input_id: int
+				primary id key
+			user: User
+				logged in user
+			is_public: bool
+				set to publish/unpublish entity
+	"""
+	entity = database.query(table).filter(table.id == input_id, table.author_id == user.id).one()
+	entity.is_public = is_public
+	database.commit()
 
 def delete_unused_variations(database: Session):
 	"""
