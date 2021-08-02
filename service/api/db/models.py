@@ -125,14 +125,12 @@ class Scenario(Resource, Base):
         Represent the Scenario Table
     """
     __tablename__ = 'scenario'
-    technology = Column(String)
 
 class Reference(Resource, Base):
     """
         Represent the Reference Table
     """
     __tablename__ = 'reference'
-    technology = Column(String)
 
 class Variation(Resource, Base):
     """
@@ -170,33 +168,28 @@ class TAM(Resource, Base):
         Represent the TAM Table
     """
     __tablename__ = 'tam'
-    technology = Column(String)
 
 class VMA(Resource, Base):
     """
         Represent the VMA Table
     """
     __tablename__ = 'vma'
-    technology = Column(String)
 
 class AdoptionData(Resource, Base):
     """
         Represent the Adoption Data Table
     """
     __tablename__ = 'adoption_data'
-    technology = Column(String)
 
 class CustomAdoptionPDS(Resource, Base):
     """
         Represent the Custom Adoption PDS Table
     """
     __tablename__ = 'ca_pds'
-    technology = Column(String)
 
 class CustomAdoptionRef(Resource, Base):
     """
         Represent the Custom Adoption Reference Table
     """
     __tablename__ = 'ca_ref'
-    technology = Column(String)
 

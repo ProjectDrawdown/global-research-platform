@@ -32,7 +32,6 @@ def get_entities_by_name(database: Session, name: str, technology: str, table, u
     """
         Get multiple Resource from table by name
     """
-    print(f"name: {name}, technology: {technology}, table: {table}, user: {user}")
     return database.query(table) \
         .filter(and_(table.technology == technology, table.name == name, or_(table.is_public, table.author_id.is_(None), table.author_id == user.id))) \
         .all()
