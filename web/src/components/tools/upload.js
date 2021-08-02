@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { 
   Button, 
-  AtSignIcon,   
   Modal,
   ModalOverlay,
   ModalContent,
@@ -25,7 +24,7 @@ const UploadVMAPresent = ({ loading, onChangeHandler, entity }) =>  {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Upload a new {entity} </ModalHeader>
+          <ModalHeader>Upload a new {entity}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <input type="file" name="file" onChange={onChangeHandler} />
@@ -43,14 +42,13 @@ const UploadVMAPresent = ({ loading, onChangeHandler, entity }) =>  {
 }
 
 export const Upload = ({ name }) => {
-  const [isFilePicked, setIsFilePicked] = useState(false);
   const [loading, setIsLoading] = useState(false);
 
   const changeHandler = (event) => {
     setIsFilePicked(true);
     setIsLoading(true);
     uploadFile(event.target.files[0]);
-	};
+  };
 
   const uploadFile = async (file) => {
     const data = new FormData();
