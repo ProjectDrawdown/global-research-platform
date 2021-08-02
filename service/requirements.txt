@@ -7,7 +7,7 @@ fastapi==0.61.1
 fastapi-plugins==0.6.0
 httpx==0.16.1
 jsonschema==3.2.0
-pandas==1.2.4
+pandas~=1.2
 pydantic==1.7.1
 PyJWT==1.7.1
 python-dotenv==0.18.0

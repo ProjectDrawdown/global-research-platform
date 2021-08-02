@@ -163,12 +163,16 @@ To improve performance for the app, it is recommended you run `localhost:8000/ca
 ## Schema Updates
 When changing models in `service/api/db/models.py` run the following to create migrations:
 ```sh
+$ cd service
+
 $ alembic revision -m "add provider column" --autogenerate
 ```
 
 Note: if you are not using docker-compose, you will need to manually run:
 
 ```sh
+$ cd service
+
 $ alembic upgrade head
 ```
 
