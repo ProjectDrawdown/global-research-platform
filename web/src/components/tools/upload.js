@@ -47,7 +47,7 @@ export const Upload = ({ name }) => {
   const [loading, setIsLoading] = useState(false);
 
   const changeHandler = (event) => {
-		setIsFilePicked(true);
+    setIsFilePicked(true);
     setIsLoading(true);
     uploadFile(event.target.files[0]);
 	};
@@ -60,6 +60,6 @@ export const Upload = ({ name }) => {
     setIsLoading(false);
   }
 
-  return <UploadVMAPresent onChangeHandler={changeHandler} entity={name} />
+  return <UploadVMAPresent onChangeHandler={changeHandler} entity={name} loading={loading} />
 }
 
