@@ -1,7 +1,7 @@
 import { ChakraProvider, useColorMode, Flex, Button, useColorModeValue } from "@chakra-ui/react";
 import { Fonts } from "../src/Fonts"
 import theme from "../src/theme";
-import { WorkbookContextProvider, getVariableValue, setVariableValue, mockState as mockStateForWorkbook } from '../src/contexts/workbook-context.js'
+// import { WorkbookContextProvider, getVariableValue, setVariableValue, mockState as mockStateForWorkbook } from '../src/contexts/workbook-context.js'
 import { ConfigContextProvider, mockState as mockStateForConfig } from '../src/contexts/ConfigContext.js'
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -35,11 +35,11 @@ const withChakra = (StoryFn) => (
   </ChakraProvider>
 )
 
-const withWorkbookContext = (StoryFn) => {
-  return <WorkbookContextProvider value={mockStateForWorkbook}>
-    <StoryFn />
-  </WorkbookContextProvider>
-}
+// const withWorkbookContext = (StoryFn) => {
+//   return <WorkbookContextProvider value={mockStateForWorkbook}>
+//     <StoryFn />
+//   </WorkbookContextProvider>
+// }
 
 const withConfigContext = (StoryFn) => (
     <ConfigContextProvider value={mockStateForConfig}>
@@ -56,7 +56,7 @@ const withRouter = (StoryFn) => (
 export const decorators = [
   withRouter,
   withChakra,
-  withWorkbookContext,
+  // withWorkbookContext,
   withConfigContext
 ]
 

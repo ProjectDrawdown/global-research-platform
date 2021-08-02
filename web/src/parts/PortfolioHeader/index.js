@@ -5,7 +5,7 @@ import { useSelector } from "react-redux"
 import styled from "styled-components"
 import { format, parseISO } from 'date-fns'
 import { RunButton } from "theme/icons"
-import Logo from "components/Logo.js"
+import Logo from "../Logo"
 import Menu from "components/Menu.js"
 import { prettyFormatBigNumber } from "util/number-utils.js"
 import {

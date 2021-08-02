@@ -1,6 +1,7 @@
 """
   Query set for the Workbook object
 """
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from api.db.helpers import clone
@@ -30,14 +31,14 @@ def workbooks_by_default_user(database: Session) -> DBWorkbook:
 	"""
 	return database.query(DBWorkbook).filter(DBWorkbook.author_id.is_(None)).all()
 
-def all_workbooks(database: Session, input_id: int):
+def all_workbooks(database: Session, author_id: int):
 	"""
-		Get all Workbook from datas
+		Get all Workbook from datas that is owned by user, default data (author is null) and set to public
 	"""
-	query_1 = database.query(DBWorkbook).filter(DBWorkbook.author_id == input_id)
-	query_2 = database.query(DBWorkbook).filter(DBWorkbook.author_id.is_(None))
-	query_3 = query_1.union(query_2)
-	return query_3.all()
+	return database.query(DBWorkbook) \
+		.filter(or_(DBWorkbook.author_id == author_id, DBWorkbook.author_id.is_(None), DBWorkbook.is_public)) \
+		.all()
+
 
 def clone_workbook(database: Session, input_id: int):
 	"""

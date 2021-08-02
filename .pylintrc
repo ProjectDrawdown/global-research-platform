@@ -10,7 +10,7 @@ extension-pkg-whitelist=
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
-ignore=CVS,alembic,tests
+ignore=CVS,alembic,tests,versions
 
 # Add files or directories matching the regex patterns to the blacklist. The
 # regex matches against base names, not paths.
@@ -145,7 +145,12 @@ disable=print-statement,
         import-error,
         too-few-public-methods,
         no-self-use,
-        useless-object-inheritance
+        useless-object-inheritance,
+        bad-continuation,
+        mixed-indentation,
+        bad-indentation,
+        too-many-locals,
+        raise-missing-from
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
