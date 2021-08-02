@@ -1,5 +1,5 @@
-import React, { useEffect, useContext } from "react";
-import { Box, Heading, Flex, Spacer, HStack, Grid, Link, GridItem, Center, Button, Text } from "@chakra-ui/react";
+import React, { useContext } from "react";
+import { Flex, Link,  Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
