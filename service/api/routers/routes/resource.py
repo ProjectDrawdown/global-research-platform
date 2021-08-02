@@ -1,5 +1,5 @@
 """
-	Route mapping for the Resource API
+    Route mapping for the Resource API
 """
 from typing import List
 import pathlib
@@ -15,7 +15,7 @@ from api.routers.helpers import (
   convert_resource_file
 )
 from api.queries.resource_queries import (
-	get_entity,
+    get_entity,
   get_entities_by_name,
   save_entity,
   publish_entity,
@@ -49,15 +49,15 @@ entity_mapping = {
   'ca_ref': models.CustomAdoptionRef
 }
 
-@router.get('/resource/vma/info/{technology}',
-	summary="Get the VMA info for a given technology",
-	description="VMA info exists when VMA sources cannot be viewed." +
-		"Note that there may not be existing VMA info for every technology."
+@router.get('/resource/vma/info/{technology}/{name}',
+    summary="Get the VMA info for a given technology",
+    description="VMA info exists when VMA sources cannot be viewed." +
+        "Note that there may not be existing VMA info for every technology."
   )
-async def get_vma_info(technology: str, database: Session = Depends(get_db)):
+async def get_vma_info(name:str, technology: str, database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
   """
     VMA info exists when VMA sources cannot be viewed.
-		Note that there may not be existing VMA info for every technology.
+        Note that there may not be existing VMA info for every technology.
 
     Parameters:
     ------
@@ -66,14 +66,14 @@ async def get_vma_info(technology: str, database: Session = Depends(get_db)):
     database: Session
       database session, defaults to initialize session
   """
-  return get_entities_by_name(database, f'solution/{technology}/VMA_info.csv', models.VMA)
+  return get_entities_by_name(database, name, technology, models.VMA, db_active_user)
 
 
 @router.get('/resource/vma/all/{technology}',
-	summary="Get all the VMA data for a given technology",
-	description="Returns all VMA data for a technology"
-	)
-async def get_vma_all(technology: str, database: Session = Depends(get_db)):
+    summary="Get all the VMA data for a given technology",
+    description="Returns all VMA data for a technology"
+    )
+async def get_vma_all(technology: str, database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
   """
     Get all the VMA data for a given technology
 
@@ -84,12 +84,12 @@ async def get_vma_all(technology: str, database: Session = Depends(get_db)):
     database: Session
       database session, defaults to initialize session
   """
-  return get_entities_by_name(database, f'solution/{technology}/%.csv', models.VMA)
+  return get_entities_by_name(database, f'solution/{technology}/%.csv', models.VMA, db_active_user)
 
 
 @router.get('/resource/{entity}/{input_id}', response_model=schemas.ResourceOut,
-	summary="Get resource entity by id"
-	)
+    summary="Get resource entity by id"
+    )
 async def get_by_id(entity: models.EntityName, input_id: int, database: Session = Depends(get_db)):
   """
     Get resource entity by id
@@ -107,9 +107,9 @@ async def get_by_id(entity: models.EntityName, input_id: int, database: Session 
 
 
 @router.get('/resource/{entity}', response_model=List[schemas.ResourceOut],
-	summary="Get resource entity by name"
-	)
-async def get_by_name(entity: models.EntityName, name: str, database: Session = Depends(get_db)):
+    summary="Get resource entity by name"
+    )
+async def get_by_name(entity: models.EntityName, name: str, database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
   """
     Get resource entity by name
 
@@ -122,12 +122,12 @@ async def get_by_name(entity: models.EntityName, name: str, database: Session = 
     database: Session
       database session, defaults to initialize session
   """
-  return get_entities_by_name(database, name, entity_mapping[entity])
+  return get_entities_by_name(database, name, entity_mapping[entity], db_active_user)
 
 
 @router.get('/resource/{entity}s/full', response_model=List[schemas.ResourceOut],
-	summary="Get the full resource (all data) of an entity by name"
-	)
+    summary="Get the full resource (all data) of an entity by name"
+    )
 async def get_all(entity: models.EntityName, database: Session = Depends(get_db),
   db_active_user: models.User = Depends(get_current_active_user)):
   """
@@ -146,8 +146,8 @@ async def get_all(entity: models.EntityName, database: Session = Depends(get_db)
 
 
 @router.get('/resource/{entity}s/paths', response_model=List[str],
-	summary="Get the resource paths (no data) of an entity by name"
-	)
+    summary="Get the resource paths (no data) of an entity by name"
+    )
 async def get_all_paths(entity: models.EntityName, database: Session = Depends(get_db)):
   """
     Get the resource paths (no data) of an entity by name
@@ -163,13 +163,13 @@ async def get_all_paths(entity: models.EntityName, database: Session = Depends(g
 
 
 @router.post('/resource/{entity}',
-	summary="Uploads a new resource data of an entity by name",
+    summary="Uploads a new resource data of an entity by name",
   description="Uploads a new resource data of an entity by name. Accepts an Excel file" +
     "with a valid format"
-	)
+    )
 async def post_resource_data(
-	entity: models.EntityName, file: UploadFile = File(...),
-	name: str = Form(...), database: Session = Depends(get_db),
+    entity: models.EntityName, file: UploadFile = File(...),
+    name: str = Form(...), database: Session = Depends(get_db),
   db_active_user: models.User = Depends(get_current_active_user)):
   """
     Uploads a new resource data of an entity by name. Accepts CSV and Json object
@@ -248,10 +248,10 @@ async def unpublish_resource_by_id(entity: models.EntityName, input_id: int,
     raise HTTPException(status_code=404, detail=entity + " not found")
 
 @router.post('/variation/fork/{input_id}', response_model=schemas.VariationOut,
-	summary="Fork a variation with given id",
+    summary="Fork a variation with given id",
   description="Finds the variation by id, cloning and override the value before saving it" +
     "back to the database."
-	)
+    )
 async def fork_variation(input_id: int, patch: schemas.VariationPatch, database: Session = Depends(get_db)):
   """
     Finds the variation by id, cloning and override the value before saving it
@@ -338,8 +338,8 @@ async def initialize(database: Session = Depends(get_db)):
   # create base scenario
   canonical_scenarios = ['drawdown-2020', 'plausible-2020', 'optimum-2020']
   for canonical_scenario in canonical_scenarios:
-    scenario = save_entity(database, canonical_scenario, scenario_json, models.Scenario)
-    reference = save_entity(database, canonical_scenario, references_json, models.Reference)
+    scenario = save_entity(database, canonical_scenario, "n/a", scenario_json, models.Scenario)
+    reference = save_entity(database, canonical_scenario, "n/a", references_json, models.Reference)
     variation = models.Variation(
       name='default',
       data={
@@ -376,13 +376,14 @@ async def initialize(database: Session = Depends(get_db)):
   for (directory, model) in resource_models:
     resources = populate(directory)
     for res in resources:
-      name = f"{res['technology']}/{res['filename']}"
-      save_entity(database, name, res['data'], model)
+      tokens = res['technology'].split('/')
+      save_entity(database, res['filename'], tokens[len(tokens) - 1], res['data'], model)
 
   vmas = convert_vmas_to_binary()
   for vma in vmas:
+    tokens = vma['filename'].split('/')
     vma_csv = models.VMA_CSV(
-      name=vma['filename'],
+      name=tokens[len(tokens) - 1],
       technology=vma['technology'],
       variable=vma['path'],
       legacy_variable=vma['legacy_variable'],
@@ -391,3 +392,4 @@ async def initialize(database: Session = Depends(get_db)):
     )
     database.add(vma_csv)
   database.commit()
+
