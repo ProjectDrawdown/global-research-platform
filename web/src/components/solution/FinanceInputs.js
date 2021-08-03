@@ -73,9 +73,6 @@ const FinanceInputs = ({ color, technologyId }) => {
     values
   );
 
-  const handleChange = () =>{
-    dispatch(setCalculatedOff());
-  }
   const onClick = revealInputClickEventFactory(setInputState);
 
   useEffect(() => setCols(inputsPaneResizeSettings(width)), [width]);
@@ -93,7 +90,6 @@ const FinanceInputs = ({ color, technologyId }) => {
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.fixedCosts ? (
             <Row
-              onChange={handleChange}
               varpath="start_year_cost.value"
               dataType="numeric"
               leftAddon="$"

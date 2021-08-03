@@ -9,14 +9,16 @@ import {
   Select as ChakraSelect
 } from "@chakra-ui/react";
 
-import WorkbookHeader from "./workbook/header"; 
+import WorkbookHeader from "./workbook/header";
+import {setCalculatedOff} from "../redux/reducers/workbook/workbookSlice.js";
+import {useDispatch} from "react-redux";
 import props from 'prop-types';
 
 const noop = () => null;
 
 // FIXME use Formik to handle change events and such
 export const InputWithAddons = (props) => {
-  const { 
+  const {
     leftAddon,
     onChange,
     placeholder,
@@ -38,7 +40,7 @@ export const InputWithAddons = (props) => {
     borderRadius = "md",
     inputStyle = {},
     defaultIsFocused = false,
-    // Functions to parse inputs values at a lower level than the binding fns. 
+    // Functions to parse inputs values at a lower level than the binding fns.
     // Used for cases other than bound input widgets.
     formatInputValueFn = x => x,
     parseInputValueFn = x => x,
@@ -51,6 +53,7 @@ export const InputWithAddons = (props) => {
   const [isFocused, setIsFocused] = React.useState(defaultIsFocused);
   const inputValue = formatInputValueFn(value);
   const trimmedValue = (typeof inputValue === "number") ? Number(inputValue).toFixed(3) : inputValue;
+  const dispatch = useDispatch();
 
   // But we need to reset the value if the store changes, so we use an effect
   // tracking the storeValue prop.
@@ -66,7 +69,7 @@ export const InputWithAddons = (props) => {
   const handleChange = (e) => {
     const newValue = parseInputValueFn(e.target.value);
     if (newValue != value) {
-      onChange && onChange();
+      dispatch(setCalculatedOff());
       setValue(parseInputValueFn(e.target.value));
     }
   }
@@ -166,13 +169,13 @@ export const Select = ({
     setValue(e.target.value);
     handleSubmit(e);
   }
-  
+
   if (!Array.isArray(options) && typeof options === "object") {
     options = Object.entries(options);
   }
 
   useEffect(() => setValue(storeValue), [storeValue]);
- 
+
   return (
     <ChakraSelect
       bg="white"
@@ -201,7 +204,7 @@ export const Select = ({
               </option>
             );
           }
-          
+
           return (
             <option value={val} key={i}>
               {label}

@@ -171,7 +171,7 @@ export const doRemovePortfolioTechnologyPatchThunk = createAsyncThunk(
 const initialState = {
   workbook: null,
   technologies: [],
-  isCalculated: false
+  isCalculated: true,
 };
 
 const workbookSlice = createSlice({
@@ -397,13 +397,13 @@ const workbookSlice = createSlice({
       return {
         ...state,
         isCalculated:true
-      }
+      };
     },
     setCalculatedOff(state) {
       return {
         ...state,
         isCalculated:false
-      }
+      };
     },
     workbookLoading(state) {
       return {

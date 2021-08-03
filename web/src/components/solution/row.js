@@ -165,7 +165,6 @@ export const Minichart = ({
 
 export const Row = ({
   label,
-  onChange,
   InputWidget = InputWidgetForDataType,
   TooltipWidget,
   getValueFn,
@@ -268,7 +267,6 @@ export const Row = ({
                 varpathFull={varpathFull}
                 right={0}
                 color={color}
-                onInputChange={onChange}
               />
             </Collapse>
           </GridItem>

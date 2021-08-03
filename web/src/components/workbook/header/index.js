@@ -60,6 +60,7 @@ const StyledButton = styled.div`
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const { isCalculated } = workbookState;
+
   const params = useParams();
 
   const calculate = () => {
@@ -72,7 +73,8 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   };
 
   const handleClick = () => {
-    store.dispatch(setCalculated);
+    store.dispatch(setCalculated());
+    console.log(isCalculated);
   }
 
   const workbookID = useWorkbookIDSelector();

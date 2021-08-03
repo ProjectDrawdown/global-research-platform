@@ -71,7 +71,6 @@ const VMAFormItem = ({
 
 const VMA = ({
   dataType,
-  onInputChange,
   mean,
   high,
   low,
@@ -127,13 +126,13 @@ const VMA = ({
         </Stack>
         <Stack w="50%">
           <VMAFormItem label="Mean">
-            <VMAInput onChange = {onInputChange} leftAddon={leftAddon} rightAddon={rightAddon} value={mean} colorScheme={`brand.${color}`} />
+            <VMAInput leftAddon={leftAddon} rightAddon={rightAddon} value={mean} colorScheme={`brand.${color}`} />
           </VMAFormItem>
           <VMAFormItem label="High">
-            <VMAInput onChange = {onInputChange} leftAddon={leftAddon} rightAddon={rightAddon} value={high} colorScheme={`brand.${color}`} />
+            <VMAInput leftAddon={leftAddon} rightAddon={rightAddon} value={high} colorScheme={`brand.${color}`} />
           </VMAFormItem>
           <VMAFormItem label="Low">
-            <VMAInput onChange = {onInputChange} leftAddon={leftAddon} rightAddon={rightAddon} value={low} colorScheme={`brand.${color}`} focusBorderColor={`brand.${color}.900`}/>
+            <VMAInput leftAddon={leftAddon} rightAddon={rightAddon} value={low} colorScheme={`brand.${color}`} focusBorderColor={`brand.${color}.900`}/>
           </VMAFormItem>
         </Stack>
       </Stack>
