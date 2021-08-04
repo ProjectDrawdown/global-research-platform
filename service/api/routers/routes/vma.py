@@ -1,20 +1,21 @@
+"""
+	Route mapping for the VMA API
+"""
+import importlib
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
-import fastapi_plugins
-import aioredis
-import json
-import importlib
-import math
-
-from api.config import get_settings, get_db, AioWrap, get_resource_path
+from sqlalchemy.orm.exc import NoResultFound
+from model.vma2 import VMA
+from model.advanced_controls import get_vma_for_param
+from api.config import get_settings, get_db
 from api.transforms.variable_paths import varProjectionNamesPaths
 from api.transforms.reference_variable_paths import varRefNamesPaths
-from model.advanced_controls import AdvancedControls, get_vma_for_param
 from api.routers.auth import get_current_active_user
-from api.routers import schemas
-from api.queries.resource_queries import get_entity_by_name
+from api.queries.resource_queries import (
+  get_entity_by_name,
+  publish_entity
+)
 from api.db import models
-from model.vma2 import VMA
 
 settings = get_settings()
 router = APIRouter()
@@ -33,7 +34,7 @@ async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
     for title in vma_titles:
       vma_file = m.VMAs.get(title)
       if vma_file and vma_file.filename:
-        db_file = get_entity_by_name(db, f'solution/{technology}/{vma_file.filename.name}', models.VMA)
+        db_file = get_entity_by_name(db, vma_file.filename.name, technology, models.VMA)
         if db_file:
           result.append({
             'var': path[0],
@@ -72,6 +73,51 @@ async def post_vma_csv(
   db.refresh(vma_csv)
   return vma_csv
 
+@router.put('/vma_csv/{input_id}/publish',
+  summary='publish VMA CSV to be public',
+  description='publishing VMA CSV to be public, if public, the VMA CSV ' +
+    'are then accessable for other users')
+async def publish_vma_by_id(input_id: int, database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
+  """
+    Make VMA CSV publically accessable
+
+    Parameters:
+    ----
+    input_id: int
+      VMA CSV id
+    database: Session
+      current DB session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, models.VMA_CSV, input_id, db_active_user, True)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail="VMA CSV not found")
+
+@router.delete('/vma_csv/{input_id}/publish',
+  summary='unpublish VMA CSV to make it private',
+  description='unpublish a VMA CSV to private and make it accessable only to author')
+async def unpublish_vma_by_id(input_id: int, database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
+  """
+    Make VMA CSV private
+
+    Parameters:
+    ----
+    input_id: int
+      VMA CSV id
+    database: Session
+      current DB session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, models.VMA_CSV, input_id, db_active_user, False)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail="VMA CSV not found")
+  
 @router.get("/vma/calculation",
         summary="Get VMA calculation",
         description="For a given variable, calculate the VMA values from the corresponding CSVs. This will return low, mean, and high values for the variable, as well as the source name and path"
