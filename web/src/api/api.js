@@ -10,6 +10,7 @@ const REFRESH_TOKEN_URL = API_URL + "/refresh-token";
 const AUTHENTICATE_API_URL = API_URL + "/authorize";
 const VMA_CALCULATION_API_URL = API_URL + "/vma/calculation";
 const VMA_MAPPING_API_URL = API_URL + "/vma/mappings";
+const UPLOAD_VMA_URL = API_URL + "/resource";
 
 const addAuth = headers => {
   const token = localStorage.getItem("token");
@@ -203,5 +204,21 @@ export const fetchResourceURL = async resourceURL => {
     return Promise.reject(response);
   }
 };
+
+export const uploadVMA = async (data, entity) => {
+  const result = await fetch(`${UPLOAD_VMA_URL}/${entity}`, {
+    method: 'POST',
+    headers: addAuth({}),
+    body: data
+  });
+
+  if (result.ok) {
+    const response = await result.json();
+    return response;
+  }else {
+    const response = await result.json();
+    return Promise.reject(response);
+  }
+}
 
 export { dataConfig };
