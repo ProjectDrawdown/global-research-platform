@@ -1,17 +1,28 @@
-import React from "react"
-import { Box, Heading, Spacer, HStack, Grid, GridItem, Button, Text } from "@chakra-ui/react"
-import { Link as DomLink, useParams } from "react-router-dom"
-import { useSelector } from "react-redux"
-import styled from "styled-components"
-import { RunButton } from "../../theme/icons"
-import store from "../../redux/store"
-import { calculateThunk } from "../../redux/reducers/workbook/workbookSlice"
+import React from "react";
+import {
+  Box,
+  Heading,
+  Spacer,
+  HStack,
+  Grid,
+  GridItem,
+  IconButton,
+  Button,
+  Text,
+} from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
+import { Link as DomLink, useParams, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
+import { RunButton } from "../../theme/icons";
+import store from "../../redux/store";
+import { calculateThunk } from "../../redux/reducers/workbook/workbookSlice";
 import Logo from "../Logo"
-import Menu from "../../components/Menu.js"
+import Menu from "../../components/Menu.js";
 import {
   useWorkbookIDSelector,
-  useWorkbookHasAuthorSelector
-} from "redux/selectors.js"
+  useWorkbookHasAuthorSelector,
+} from "redux/selectors.js";
 
 export const StyledRunWrapper = styled.div`
   position: absolute;
@@ -23,9 +34,9 @@ export const StyledRunWrapper = styled.div`
   margin-left: auto;
 `;
 
-
 export default function PortfolioHeader({ technologyId }) {
-  const workbookState = useSelector(state => state.workbook);
+  const history = useHistory();
+  const workbookState = useSelector((state) => state.workbook);
   const params = useParams();
   const calculate = () => {
     store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
@@ -36,15 +47,17 @@ export default function PortfolioHeader({ technologyId }) {
   const showCopyButton = !workbookHasAuthor;
 
   return (
-    <Box
-      top={0}
-      zIndex={500}
-      fontSize="md"
-      whiteSpace="nowrap"
-    >
-      <Grid bg="white" templateColumns="repeat(6, 1fr)" gap={1} w="100%" margin={0} p={2}>
+    <Box top={0} zIndex={500} fontSize="md" whiteSpace="nowrap">
+      <Grid
+        bg="white"
+        templateColumns="repeat(6, 1fr)"
+        gap={1}
+        w="100%"
+        margin={0}
+        p={2}
+      >
         <GridItem colSpan={1} textAlign="center" mr="2rem" mt="0.25rem">
-        <Logo />
+          <Logo />
         </GridItem>
         <GridItem colSpan={5} textAlign="left" mr="2rem" mt="0.25rem">
           <HStack>
@@ -57,10 +70,10 @@ export default function PortfolioHeader({ technologyId }) {
               {(workbookState &&
                 workbookState.workbook &&
                 workbookState.workbook.name) ||
-               "\u00A0"}
+                "\u00A0"}
             </Heading>
             <Menu />
-            { showCopyButton &&
+            {showCopyButton && (
               <Button
                 as={DomLink}
                 to={`/workbook/${workbookID}/clone`}
@@ -69,10 +82,12 @@ export default function PortfolioHeader({ technologyId }) {
               >
                 Copy &amp; Edit
               </Button>
-            }
+            )}
           </HStack>
         </GridItem>
-        {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
+        {technologyId &&
+        (!workbookState?.workbook?.loading ||
+          workbookState?.workbook?.error) ? (
           <StyledRunWrapper onClick={calculate}>
             <RunButton />
           </StyledRunWrapper>
@@ -89,15 +104,18 @@ export default function PortfolioHeader({ technologyId }) {
         h="128px"
         bg="#00416F"
         alignItems="center"
-        boxShadow="2px 4px 4px rgba(0, 0, 0, 0.25)">
+        boxShadow="2px 4px 4px rgba(0, 0, 0, 0.25)"
+        role="group"
+      >
         <GridItem h="100%" colSpan="4">
           <Heading
-            lineHeight="90px"
-            fontSize="64px"
+            lineHeight={{ base: "55px", md: "60px", lg: "70px" }}
+            fontSize={{ base: "30px", md: "50px", lg: "60px" }}
             fontFamily="Bebas Neue"
             letterSpacing="0.02em"
-            color="white">
-            {'WORKBOOK OVERVIEW'}
+            color="white"
+          >
+            {"WORKBOOK OVERVIEW"}
           </Heading>
         </GridItem>
         <Spacer />
@@ -106,37 +124,33 @@ export default function PortfolioHeader({ technologyId }) {
             <GridItem h="100%" pt="18px" colSpan="1">
               <Heading
                 lineHeight="27px"
-                fontSize="18px"
+                fontSize={{ base: "16px", md: "18px" }}
                 fontFamily="Bebas Neue"
                 letterSpacing="0.02em"
                 textAlign="right"
-                color="white">
-                {'AUTHOR'}
+                color="white"
+              >
+                {"AUTHOR"}
               </Heading>
               {workbookState.workbook?.created && (
                 <Heading
                   lineHeight="27px"
-                  fontSize="18px"
+                  fontSize={{ base: "16px", md: "18px" }}
                   fontFamily="Bebas Neue"
                   letterSpacing="0.02em"
                   textAlign="right"
-                  color="white">
-                  {'CREATED'}
+                  color="white"
+                >
+                  {"CREATED"}
                 </Heading>
               )}
             </GridItem>
             <GridItem h="100%" pt="18px" colSpan="1">
-              <Text
-                lineHeight="27px"
-                fontSize="16px"
-                color="white">
+              <Text lineHeight="27px" fontSize="16px" color="white">
                 {workbookState.workbook.author.email}
               </Text>
               {workbookState.workbook?.created && (
-                <Text
-                  lineHeight="27px"
-                  fontSize="16px"
-                  color="white">
+                <Text lineHeight="27px" fontSize="16px" color="white">
                   {workbookState.workbook.created}
                 </Text>
               )}
@@ -148,12 +162,13 @@ export default function PortfolioHeader({ technologyId }) {
             <GridItem h="100%" pt="18px" colSpan="1">
               <Heading
                 lineHeight="27px"
-                fontSize="18px"
+                fontSize={{ base: "16px", md: "18px" }}
                 fontFamily="Bebas Neue"
                 letterSpacing="0.02em"
                 textAlign="right"
-                color="white">
-                {'ABOUT'}
+                color="white"
+              >
+                {"ABOUT"}
               </Heading>
             </GridItem>
             <GridItem h="100%" pt="18px" colSpan="3">
@@ -162,9 +177,32 @@ export default function PortfolioHeader({ technologyId }) {
                 fontSize="16px"
                 whiteSpace="normal"
                 noOfLines={2}
-                color="white">
+                color="white"
+              >
                 {workbookState.workbook.description}
               </Text>
+            </GridItem>
+          </>
+        )}
+        {workbookState.workbook?.author && (
+          <>
+            <GridItem
+              h="100%"
+              pt="18px"
+              colSpan="1"
+              opacity="0.00"
+              visibility="hidden"
+              transition="0.15s all ease-in-out"
+              _groupHover={{ visibility: "visible", opacity: "1.00" }}
+            >
+              <IconButton
+                colorScheme="white"
+                size="lg"
+                onClick={() => {
+                  history.push(`${workbookID}/edit`);
+                }}
+                icon={<EditIcon />}
+              />
             </GridItem>
           </>
         )}

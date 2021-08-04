@@ -86,6 +86,18 @@ export const doCloneAndPatchWorkbookThunk = createAsyncThunk(
   }
 );
 
+export const doEditDetailsPatchWorkbookThunk = createAsyncThunk(
+  "workbook/editDetailsPatch",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const patchResponse = await patchWorkbook(id, data);
+      return patchResponse;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 // Helper functions for adding/removing portfolio technologies so we don't need
 // to duplicate in all our reducers and thunks.
 function helperAddPortfolioTechnology(state, technology) {
@@ -183,6 +195,12 @@ const workbookSlice = createSlice({
       };
     },
     [doCloneAndPatchWorkbookThunk.fulfilled]: (state, action) => {
+      return {
+        status: "idle",
+        workbook: action.payload
+      };
+    },
+    [doEditDetailsPatchWorkbookThunk.fulfilled]: (state, action) => {
       return {
         status: "idle",
         workbook: action.payload
