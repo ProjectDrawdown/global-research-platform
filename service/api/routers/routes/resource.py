@@ -169,7 +169,7 @@ async def get_all_paths(entity: models.EntityName, database: Session = Depends(g
   return all_entity_paths(database, entity, entity_mapping[entity])
 
 
-@router.post('/resource/{technology}/{entity}',
+@router.post('/resource/{entity}/{technology}',
   summary="Uploads a new resource data of an entity by name",
   description="Uploads a new resource data of an entity by name. Accepts an Excel file" +
     "with a valid format",

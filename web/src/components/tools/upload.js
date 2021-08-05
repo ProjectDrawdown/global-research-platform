@@ -57,7 +57,6 @@ export const Upload = ({ name }) => {
   const technology = getTechFromURL(location.pathname);
 
   const changeHandler = (event) => {
-    setIsFilePicked(true);
     setIsLoading(true);
     uploadFile(event.target.files[0]);
   };

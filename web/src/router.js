@@ -10,6 +10,7 @@ import LogoutPage from "routes/LogoutPage";
 import WorkbookPage from "routes/WorkbookPage";
 import CloneChooseWorkbookPage from "routes/CloneChooseWorkbookPage";
 import CloneWorkbookPage from "routes/CloneWorkbookPage";
+import EditWorkbookPage from "routes/EditWorkbookPage";
 import PostClonePage from "routes/PostClonePage";
 import MainPage from "routes/MainPage";
 import NotFoundPage from "routes/NotFoundPage";
@@ -37,6 +38,7 @@ const Router = () => {
           component={CloneChooseWorkbookPage}
         />
         <ProtectedRoute exact path="/workbook/:id/clone" component={CloneWorkbookPage} />
+        <ProtectedRoute exact path="/workbook/:id/edit" component={EditWorkbookPage} />
         <ProtectedRoute exact path="/workbook/:id" component={PortfolioViewPage} />
         <ProtectedRoute exact path="/workbook/:id/postclone" component={PostClonePage} />
         <ProtectedRoute
