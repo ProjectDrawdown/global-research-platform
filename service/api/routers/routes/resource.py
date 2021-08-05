@@ -15,12 +15,13 @@ from api.routers.helpers import (
   convert_resource_file
 )
 from api.queries.resource_queries import (
-    get_entity,
+  get_entity,
   get_entities_by_name,
   save_entity,
   publish_entity,
   all_entities,
   all_entity_paths,
+  all_entities_by_technology,
   clone_variation,
   save_variation,
   clear_all_tables
@@ -75,7 +76,8 @@ async def get_vma_info(name:str, technology: str, database: Session = Depends(ge
   description="Returns all VMA data for a technology",
   tags=["Resource"]
   )
-async def get_vma_all(technology: str, database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
+async def get_vma_all(technology: str, database: Session = Depends(get_db), 
+  db_active_user: models.User = Depends(get_current_active_user)):
   """
     Get all the VMA data for a given technology
 
@@ -86,49 +88,7 @@ async def get_vma_all(technology: str, database: Session = Depends(get_db), db_a
     database: Session
       database session, defaults to initialize session
   """
-  return get_entities_by_name(database, f'solution/{technology}/%.csv', models.VMA, db_active_user)
-
-
-@router.get('/resource/{entity}/{input_id}', response_model=schemas.ResourceOut,
-  summary="Get resource entity by id",
-  tags=["Resource"]
-  )
-async def get_by_id(entity: models.EntityName, input_id: int, database: Session = Depends(get_db)):
-  """
-    Get resource entity by id
-
-    Parameters:
-    ------
-    entity: EntityName
-      resource entity, maps to the EntityName enum
-    input_id: int
-      desired resource entity id
-    database: Session
-      database session, defaults to initialize session
-  """
-  return get_entity(database, input_id, entity_mapping[entity])
-
-
-@router.get('/resource/{entity}', response_model=List[schemas.ResourceOut],
-  summary="Get resource entity by name",
-  tags=["Resource"]
-  )
-async def get_by_name(entity: models.EntityName, name: str, 
-  database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
-  """
-    Get resource entity by name
-
-    Parameters:
-    ------
-    entity: EntityName
-      resource entity, maps to the EntityName enum
-    name: str
-      resource entity name
-    database: Session
-      database session, defaults to initialize session
-  """
-  return get_entities_by_name(database, name, entity_mapping[entity], db_active_user)
-
+  return get_entities_by_name(database, f'solution/{technology}/%.csv', technology, models.VMA, db_active_user)
 
 @router.get('/resource/{entity}s/full', response_model=List[schemas.ResourceOut],
   summary="Get the full resource (all data) of an entity by name",
@@ -168,6 +128,30 @@ async def get_all_paths(entity: models.EntityName, database: Session = Depends(g
   """
   return all_entity_paths(database, entity, entity_mapping[entity])
 
+@router.get('/resource/{entity}s/{technology}', response_model=List[schemas.ResourceOut],
+  summary="Get resource entity by name",
+  tags=["Resource"]
+  )
+async def get_by_technology(entity: models.EntityName, technology: str,
+  database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
+  """
+    Get resource entity by name
+
+    Parameters:
+    ------
+    entity: EntityName
+      resource entity, maps to the EntityName enum
+    name: str
+      resource entity name
+    database: Session
+      database session, defaults to initialize session
+  """
+
+  if entity == models.EntityName.scenario or \
+    entity == models.EntityName.reference:
+    technology = 'n/a'
+    
+  return all_entities_by_technology(database, entity_mapping[entity], technology, db_active_user)
 
 @router.post('/resource/{entity}/{technology}',
   summary="Uploads a new resource data of an entity by name",
@@ -204,6 +188,25 @@ async def post_resource_data(
 
   # TODO: object validation when saved to DB
   return save_entity(database, name, technology, resource_obj, entity_mapping[entity], db_active_user)
+
+@router.get('/resource/{entity}/{input_id}', response_model=schemas.ResourceOut,
+  summary="Get resource entity by id",
+  tags=["Resource"]
+  )
+async def get_by_id(entity: models.EntityName, input_id: int, database: Session = Depends(get_db)):
+  """
+    Get resource entity by id
+
+    Parameters:
+    ------
+    entity: EntityName
+      resource entity, maps to the EntityName enum
+    input_id: int
+      desired resource entity id
+    database: Session
+      database session, defaults to initialize session
+  """
+  return get_entity(database, input_id, entity_mapping[entity])
 
 @router.put('/resource/{entity}/{input_id}/publish',
   summary='publish resource to be public',
