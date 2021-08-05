@@ -534,6 +534,11 @@ export const calculateThunk = (
     let techData = {};
     if (techValue.hash !== objectPath.get(state, "workbook.techData.hash")) {
       techData = await fetchData(techValue.path);
+
+      // TODO:
+        // get technology from hash
+       // fetch API
+
       techData = {...techData, hash: techValue.hash};
     }
 

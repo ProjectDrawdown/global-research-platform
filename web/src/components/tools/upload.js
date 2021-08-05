@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from 'react-router-dom';
 
 import { 
   Button, 
@@ -41,8 +42,19 @@ const UploadVMAPresent = ({ loading, onChangeHandler, entity }) =>  {
   )
 }
 
+function getTechFromURL(pathname) {
+  const split = pathname.split('/')
+  const tech = split[split.indexOf('technologies') + 1]
+
+  return tech
+}
+
 export const Upload = ({ name }) => {
   const [loading, setIsLoading] = useState(false);
+  const [_,setIsFilePicked] = useState(false);
+
+  const location = useLocation();
+  const technology = getTechFromURL(location.pathname);
 
   const changeHandler = (event) => {
     setIsFilePicked(true);
@@ -54,7 +66,7 @@ export const Upload = ({ name }) => {
     const data = new FormData();
     data.append('file', file);
     data.append('name', file.name);
-    const upload = await uploadVMA(data, name);
+    const upload = await uploadVMA(data, name, technology);
     setIsLoading(false);
   }
 

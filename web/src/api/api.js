@@ -205,8 +205,8 @@ export const fetchResourceURL = async resourceURL => {
   }
 };
 
-export const uploadVMA = async (data, entity) => {
-  const result = await fetch(`${UPLOAD_VMA_URL}/${entity}`, {
+export const uploadVMA = async (data, entity, technology) => {
+  const result = await fetch(`${UPLOAD_VMA_URL}/${technology}/${entity}`, {
     method: 'POST',
     headers: addAuth({}),
     body: data
