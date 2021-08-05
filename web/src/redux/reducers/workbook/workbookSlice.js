@@ -5,7 +5,8 @@ import {
   patchWorkbook,
   fetchData,
   updateVariation,
-  runCalculation
+  runCalculation,
+  fetchResources
 } from "../../../api/api";
 import objectPath from "object-path";
 import { errorAdded } from "../util/errorSlice";
@@ -555,11 +556,16 @@ export const calculateThunk = (
       techData = {...techData, hash: techValue.hash};
     }
 
+    const reference = await fetchResources(id, 'reference');
+    const vma = await fetchResources(id, 'vma');
+
     const summaryData = await fetchData(res.meta.summary_path);
 
     dispatch(
       calculationLoaded({
         projection: res,
+        references: reference,
+        vmas: vma,
         techData,
         summaryData
       })
