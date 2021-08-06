@@ -47,7 +47,7 @@ export default function PortfolioHeader({ technologyId }) {
         <Logo />
         </GridItem>
         <GridItem colSpan={5} textAlign="left" mr="2rem" mt="0.25rem">
-        <HStack>
+         <HStack>
             <Heading
               lineHeight="40px"
               fontSize="1.5rem"
@@ -73,7 +73,7 @@ export default function PortfolioHeader({ technologyId }) {
                 Copy &amp; Edit
               </Button>
             }
-        </HStack>
+         </HStack>
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
           <StyledRunWrapper onClick={calculate}>
