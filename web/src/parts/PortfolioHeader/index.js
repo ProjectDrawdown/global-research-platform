@@ -61,7 +61,6 @@ export default function PortfolioHeader({ technologyId }) {
                 workbookState.workbook.name) ||
                "\u00A0"}
             </Heading>
-
             <Menu />
             { showCopyButton &&
               <Button
@@ -70,7 +69,8 @@ export default function PortfolioHeader({ technologyId }) {
                 colorScheme="brand.blue"
                 size="xs"
               >
-                Copy &amp; Edit </Button>
+                Copy &amp; Edit
+              </Button>
             }
           </HStack>
         </GridItem>
