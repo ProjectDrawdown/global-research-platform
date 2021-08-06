@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Box, Flex, Link,  Text } from "@chakra-ui/react";
+import { Box, Link,  Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
@@ -53,7 +53,6 @@ export const Menu = () => {
   const logoLink = loggedIn ? "/workbooks" : "/";
 
   return (
-
     <Box position="absolute"  right="16px">
     {menuItems.map(({ title, to }, index) => (
       <MenuItem fontSize="md" key={index} to={to}>
