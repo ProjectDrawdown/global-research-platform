@@ -46,19 +46,24 @@ export default function PortfolioHeader({ technologyId }) {
         <GridItem colSpan={1} textAlign="center" mr="2rem" mt="0.25rem">
         <Logo />
         </GridItem>
-        <GridItem colSpan={5} textAlign="left" mr="2rem" mt="0.25rem">
-          <HStack>
+        <GridItem colSpan={4} textAlign="left" mr="2rem" mt="0.25rem">
+        <HStack>
             <Heading
               lineHeight="40px"
               fontSize="1.5rem"
               as={DomLink}
               to={`/workbook/${params.id}`}
+              maxW={{ base: "8rem", md: "37rem", lg: "100rem" }}
+              isTruncated
             >
               {(workbookState &&
                 workbookState.workbook &&
                 workbookState.workbook.name) ||
                "\u00A0"}
             </Heading>
+            </HStack>
+        </GridItem>
+        <GridItem colSpan={1} textAlign="left" mr="2rem" mt="0.25rem">
             <Menu />
             { showCopyButton &&
               <Button
@@ -70,7 +75,6 @@ export default function PortfolioHeader({ technologyId }) {
                 Copy &amp; Edit
               </Button>
             }
-          </HStack>
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
           <StyledRunWrapper onClick={calculate}>
