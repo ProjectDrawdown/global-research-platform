@@ -56,7 +56,8 @@ entity_mapping = {
       "Note that there may not be existing VMA info for every technology.",
   tags=["Resource"]
   )
-async def get_vma_info(name:str, technology: str, database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
+async def get_vma_info(name: str, technology: str, database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
   """
     VMA info exists when VMA sources cannot be viewed.
         Note that there may not be existing VMA info for every technology.
@@ -76,7 +77,7 @@ async def get_vma_info(name:str, technology: str, database: Session = Depends(ge
   description="Returns all VMA data for a technology",
   tags=["Resource"]
   )
-async def get_vma_all(technology: str, database: Session = Depends(get_db), 
+async def get_vma_all(technology: str, database: Session = Depends(get_db),
   db_active_user: models.User = Depends(get_current_active_user)):
   """
     Get all the VMA data for a given technology
@@ -128,14 +129,14 @@ async def get_all_paths(entity: models.EntityName, database: Session = Depends(g
   """
   return all_entity_paths(database, entity, entity_mapping[entity])
 
-@router.get('/resource/{entity}s/{technology}', response_model=List[schemas.ResourceOut],
+@router.get('/resource/{entity}s/{technology}', response_model=dict,
   summary="Get resource entity by name",
   tags=["Resource"]
   )
 async def get_by_technology(entity: models.EntityName, technology: str,
   database: Session = Depends(get_db), db_active_user: models.User = Depends(get_current_active_user)):
   """
-    Get resource entity by name
+    Get resource entity by name, returns a map of { entity_name: reference_path }
 
     Parameters:
     ------
@@ -147,11 +148,16 @@ async def get_by_technology(entity: models.EntityName, technology: str,
       database session, defaults to initialize session
   """
 
-  if entity == models.EntityName.scenario or \
-    entity == models.EntityName.reference:
+  if entity in (models.EntityName.scenario, models.EntityName.reference):
     technology = 'n/a'
-    
-  return all_entities_by_technology(database, entity_mapping[entity], technology, db_active_user)
+
+  entities = all_entities_by_technology(database, entity_mapping[entity], technology, db_active_user)
+  result = dict()
+
+  for s_entity in entities:
+    result[s_entity.name] = f"/resource/{entity}/{s_entity.id}"
+
+  return result
 
 @router.post('/resource/{entity}/{technology}',
   summary="Uploads a new resource data of an entity by name",
@@ -163,7 +169,7 @@ async def post_resource_data(
     technology: str,
     entity: models.EntityName, file: UploadFile = File(...),
     name: str = Form(...), database: Session = Depends(get_db),
-  db_active_user: models.User = Depends(get_current_active_user)):
+    db_active_user: models.User = Depends(get_current_active_user)):
   """
     Uploads a new resource data of an entity by name. Accepts CSV and Json object
 
@@ -409,4 +415,3 @@ async def initialize(database: Session = Depends(get_db)):
     )
     database.add(vma_csv)
   database.commit()
-
