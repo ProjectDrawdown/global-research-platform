@@ -1,5 +1,6 @@
 import { Image } from "@chakra-ui/react";
 import runButtonSVG from 'images/icons/run-button.svg';
+import loadButtonSVG from 'images/icons/load-button.svg';
 import playButtonSVG from 'images/icons/play.svg';
 
 export const faRightPanelClose = {
@@ -42,6 +43,11 @@ export const RunButton = (props) => {
   return <Image src={runButtonSVG} {...props} />;
 }
 
+export const LoadButton = (props) => {
+  return <Image src={loadButtonSVG} {...props} />;
+}
+
 export const PlayButton = (props) => {
   return <Image src={playButtonSVG} {...props} />;
 }
+

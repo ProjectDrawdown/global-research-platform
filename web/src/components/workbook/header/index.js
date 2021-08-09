@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Heading, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RunButton, PlayButton } from "theme/icons";
+import { RunButton, PlayButton, LoadButton } from "theme/icons";
 import styled, { css, keyframes } from "styled-components";
 import store from "redux/store";
-import { calculateThunk } from "redux/reducers/workbook/workbookSlice";
+import { calculateThunk, setCalculated } from "redux/reducers/workbook/workbookSlice";
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector
@@ -13,6 +13,8 @@ import {
 import { prettyFormatBigNumber } from "util/number-utils.js";
 import Logo from "components/Logo.js";
 import { errorAdded } from "redux/reducers/util/errorSlice";
+import {InputWithAddons} from "../../Input";
+
 
 /**
  * keyframe DOM
@@ -51,13 +53,16 @@ const StyledButton = styled.div`
  * Additional Header feature:
  * * A floating button to use for Workbook recalculation.
  * * A Toast for when a feature notebook is opened
- * 
- * @param {*} param0 
+ *
+ * @param {*} param0
  * @returns components
  */
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
+  const { isCalculated } = workbookState;
+
   const params = useParams();
+
   const calculate = () => {
     store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
   };
@@ -66,6 +71,11 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
     const value = workbookState.techData.data.co2_mmt_reduced['World'].reduce((acc, item) => acc + item.value, 0);
     return prettyFormatBigNumber(value, 3, ['Mt', 'Gt']);
   };
+
+  const handleClick = () => {
+    store.dispatch(setCalculated());
+    console.log(isCalculated);
+  }
 
   const workbookID = useWorkbookIDSelector();
   const workbookHasAuthor = useWorkbookHasAuthorSelector();
@@ -121,13 +131,14 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
           <StyledRunWrapper onClick={calculate} >
-            <StyledButton loading={workbookState?.calculationLoading}> 
-              <RunButton /> 
+            <StyledButton loading={workbookState?.calculationLoading}>
+              <RunButton />
+
             </StyledButton>
-            { workbookState?.techData ? 
+            { workbookState?.techData ?
               <Center
-                position="absolute" 
-                left="0" 
+                position="absolute"
+                left="0"
                 right="0"
                 top="0"
                 bottom="0"
@@ -135,10 +146,17 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
                 marginTop="19%"
                 fontWeight="bold"
                 textAlign="center"
-              > 
-                <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>
-              </Center> : 
-              <PlayButton position="absolute" top="0" /> 
+              >
+
+              { isCalculated?
+                <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>:
+                <div onClick={handleClick}>
+                  <LoadButton/>
+                </div>
+              }
+
+              </Center> :
+              <PlayButton position="absolute" top="0" />
             }
           </StyledRunWrapper>
         ) : null}

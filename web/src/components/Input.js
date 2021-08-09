@@ -9,43 +9,51 @@ import {
   Select as ChakraSelect
 } from "@chakra-ui/react";
 
+import WorkbookHeader from "./workbook/header";
+import {setCalculatedOff} from "../redux/reducers/workbook/workbookSlice.js";
+import {useDispatch} from "react-redux";
+import props from 'prop-types';
+
 const noop = () => null;
 
 // FIXME use Formik to handle change events and such
-export const InputWithAddons = ({
-  leftAddon,
-  placeholder,
-  rightAddon,
-  addonStyle,
-  handleSubmit = noop,
-  size = "md",
-  storeValue,
-  // Brute force approach to blacklisting these attributes from inputProps
-  varpath,
-  varpathfull,
-  varpathFull,
-  dataType,
-  conventional,
-  activeTechnology,
-  InputWidget,
-  width = "100%",
-  color = "black",
-  borderRadius = "md",
-  inputStyle = {},
-  defaultIsFocused = false,
-  // Functions to parse inputs values at a lower level than the binding fns. 
-  // Used for cases other than bound input widgets.
-  formatInputValueFn = x => x,
-  parseInputValueFn = x => x,
-  // Everything else gets passed to the input component itself
-  ...inputProps
-}) => {
+export const InputWithAddons = (props) => {
+  const {
+    leftAddon,
+    onChange,
+    placeholder,
+    rightAddon,
+    addonStyle,
+    handleSubmit = noop,
+    size = "md",
+    storeValue,
+    // Brute force approach to blacklisting these attributes from inputProps
+    varpath,
+    varpathfull,
+    varpathFull,
+    dataType,
+    conventional,
+    activeTechnology,
+    InputWidget,
+    width = "100%",
+    color = "black",
+    borderRadius = "md",
+    inputStyle = {},
+    defaultIsFocused = false,
+    // Functions to parse inputs values at a lower level than the binding fns.
+    // Used for cases other than bound input widgets.
+    formatInputValueFn = x => x,
+    parseInputValueFn = x => x,
+    // Everything else gets passed to the input component itself
+    ...inputProps
+  } = props;
   // We manage the state inside this component so it's most responsive. See
   // Redux state guideline docs.
   const [value, setValue] = React.useState(storeValue);
   const [isFocused, setIsFocused] = React.useState(defaultIsFocused);
   const inputValue = formatInputValueFn(value);
   const trimmedValue = (typeof inputValue === "number") ? Number(inputValue).toFixed(3) : inputValue;
+  const dispatch = useDispatch();
 
   // But we need to reset the value if the store changes, so we use an effect
   // tracking the storeValue prop.
@@ -61,6 +69,7 @@ export const InputWithAddons = ({
   const handleChange = (e) => {
     const newValue = parseInputValueFn(e.target.value);
     if (newValue != value) {
+      dispatch(setCalculatedOff());
       setValue(parseInputValueFn(e.target.value));
     }
   }
@@ -156,16 +165,17 @@ export const Select = ({
 }) => {
   const [value, setValue] = React.useState(storeValue);
   const handleChange = (e) => {
+
     setValue(e.target.value);
     handleSubmit(e);
   }
-  
+
   if (!Array.isArray(options) && typeof options === "object") {
     options = Object.entries(options);
   }
 
   useEffect(() => setValue(storeValue), [storeValue]);
- 
+
   return (
     <ChakraSelect
       bg="white"
@@ -194,7 +204,7 @@ export const Select = ({
               </option>
             );
           }
-          
+
           return (
             <option value={val} key={i}>
               {label}
