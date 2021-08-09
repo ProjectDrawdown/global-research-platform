@@ -66,6 +66,8 @@ export default function PortfolioHeader({ technologyId }) {
               fontSize="1.5rem"
               as={DomLink}
               to={`/workbook/${params.id}`}
+              maxW={{ base: "8rem", md: "37rem", lg: "100rem" }}
+              isTruncated
             >
               {(workbookState &&
                 workbookState.workbook &&
