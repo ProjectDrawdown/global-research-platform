@@ -105,7 +105,7 @@ function AdoptionDashboardCard({ drawer, color, techData }) {
               <BoundSourceSelect
                 varpath="adoption_prognostication_source"
                 InputWidget={BoundSourceSelect}
-                sourceListObjectpath="workbook.techData.metadata.ad_data_sources"
+                sourceListObjectpath="workbook.adoption_data"
                 additionalOptions={[]}
                 size="sm"
               />

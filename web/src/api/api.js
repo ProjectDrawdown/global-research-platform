@@ -221,8 +221,10 @@ export const uploadVMA = async (data, entity, technology) => {
   }
 }
 
-export const fetchResources = async (id, entity) => {
-  const result = await fetch(`${RESOURCE_URL}/${entity}s/paths`);
+export const fetchResources = async (id, entity, technology) => {
+  const result = await fetch(`${RESOURCE_URL}/${entity}s/${technology}`, {
+    headers: addAuth({})
+  });
   if (result.ok) {
     const response = await result.json();
     return response;

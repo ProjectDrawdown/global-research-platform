@@ -1,8 +1,8 @@
-export function sourcesObjectToOptionsArray(sourcesObj, initial = [], categoryRegex = /^Region/) {
+export function sourcesObjectToOptionsArray(sourcesObj, initial = []) {
   return Object.entries(sourcesObj).reduce(
     (acc, [category, sources]) => {
-      if (category.match(categoryRegex)) return acc;
-      return acc.concat([category], Object.keys(sources));
+      acc.push([category, sources]);
+      return acc;
     },
     initial
   );

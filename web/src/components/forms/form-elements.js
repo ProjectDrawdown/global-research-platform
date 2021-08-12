@@ -307,14 +307,13 @@ export const BoundSourceSelect = props => {
   const {
     sourceListObjectpath,
     additionalOptions = [],
-    categoryRegex = /^Region/,
     ...formElementProps
   } = props;
   const sourcesObj = useObjectPathSelector(
     sourceListObjectpath,
     {}
   );
-  const sourcesOptions = sourcesObjectToOptionsArray(sourcesObj, additionalOptions, categoryRegex);
+  const sourcesOptions = sourcesObjectToOptionsArray(sourcesObj, additionalOptions);
   return <BoundFormElement
            options={sourcesOptions}
            WidgetComponent={Select}

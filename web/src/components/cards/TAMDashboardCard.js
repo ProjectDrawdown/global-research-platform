@@ -32,7 +32,7 @@ function TAMDashboardCard({ drawer, color, techData }) {
             <BoundSourceSelect
               varType="categories"
               varpath="source_until_start_year"
-              sourceListObjectpath="workbook.techData.metadata.tam_ref_data_sources"
+              sourceListObjectpath="workbook.references"
               additionalOptions={["ALL SOURCES"]}
               size="sm"
             />
@@ -50,7 +50,7 @@ function TAMDashboardCard({ drawer, color, techData }) {
               varType="categories"
               varpath="tam_source_post_start_year"
               target="reference"
-              sourceListObjectpath="workbook.techData.metadata.tam_ref_data_sources"
+              sourceListObjectpath="workbook.scenarios"
               additionalOptions={["ALL SOURCES"]}
               size="sm"
             />
