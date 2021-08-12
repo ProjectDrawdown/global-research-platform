@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useLocation } from 'react-router-dom';
+import React, { useState } from "react"
+import { useLocation } from 'react-router-dom'
+import { Image } from "@chakra-ui/react"
 
 import { 
   Button, 
@@ -13,14 +14,15 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 
+import UploadIcon from 'images/icons/upload.svg'
 import { uploadVMA } from "../../api/api";
 
-const UploadVMAPresent = ({ loading, onChangeHandler, entity }) =>  {
+const UploadResourceModal = ({ loading, onChangeHandler, entity }) =>  {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Button colorScheme="orange" variant="solid" onClick={onOpen}>
-        Upload
+      <Button colorScheme="orange" variant="solid" onClick={onOpen} title="Upload">
+        <Image maxWidth="initial" src={UploadIcon} />
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -49,7 +51,7 @@ function getTechFromURL(pathname) {
   return tech
 }
 
-export const Upload = ({ name }) => {
+export const UploadResource = ({ name }) => {
   const [loading, setIsLoading] = useState(false);
   const [_,setIsFilePicked] = useState(false);
 
@@ -69,6 +71,6 @@ export const Upload = ({ name }) => {
     setIsLoading(false);
   }
 
-  return <UploadVMAPresent onChangeHandler={changeHandler} entity={name} loading={loading} />
+  return <UploadResourceModal onChangeHandler={changeHandler} entity={name} loading={loading} />
 }
 
