@@ -10,7 +10,8 @@ import {
 import IfIn from "components/IfIn.js";
 import DrawerLinkCard from "components/cards/DrawerLinkCard.js";
 import AdoptionChart from "components/charts/AdoptionChart";
-import { BoundSelect, BoundNumericInputs, BoundSourceSelect } from "components/forms/form-elements.js";
+import { BoundSelect, BoundSourceSelect } from "components/forms/form-elements.js";
+import { UploadResource } from "components/tools/upload"
 
 // FIXME DRY this up beteween Adoption forms. 
 export const LINEAR = "Linear";
@@ -122,6 +123,11 @@ function AdoptionDashboardCard({ drawer, color, techData }) {
               />
             </Box>
           </IfIn>
+          <Box p="2" pt="8">
+            <UploadResource
+              name="adoption_data"
+            />
+          </Box>
         </Flex>
       </VStack>
     </DrawerLinkCard>

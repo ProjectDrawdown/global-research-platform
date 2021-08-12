@@ -36,13 +36,23 @@ def get_entities_by_name(database: Session, name: str, technology: str, table, u
         .filter(and_(table.technology == technology, table.name == name, or_(table.is_public, table.author_id.is_(None), table.author_id == user.id))) \
         .all()
 
-def get_entity_by_name(database: Session, name: str, technology: str, table):
+def get_entity_by_name(database: Session, name: str, technology: str, table, user: models.User):
     """
         Get first object from table by name
     """
     return database.query(table) \
         .filter(and_(table.technology == technology, table.name.like(name), or_(table.is_public, table.author_id.is_(None), table.author_id == user.id))) \
         .first()
+
+def all_entities_by_technology(database: Session, table, technology: str, user: models.User):
+    """
+        Get all object from table that is default data (author_id == none),
+        owned by user or has been set to true set by technology.
+    """
+    return database.query(table) \
+        .filter(and_(table.technology == technology, or_(table.is_public, table.author_id.is_(None), table.author_id == user.id))) \
+        .all()
+
 
 def all_entities(database: Session, table, user: models.User):
     """
