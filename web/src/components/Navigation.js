@@ -1,5 +1,12 @@
 import React, { useRef, createRef, useState } from "react";
+import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {hideshowTour} from "../redux/reducers/workbook/workbookUISlice"
+import steps from "../Toursteps";
+import stepsWorkbook from "../TourstepsWorkbook";
+import TooltipHelp from "../HelpMode/TooltipHelp";
+import Tour from 'reactour'
 import {
   useTheme,
   useDisclosure,
@@ -34,7 +41,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { GlobeOutline, AddCircleOutline } from "react-ionicons";
 import { ArrowRightIcon, ArrowLeftIcon, QuestionIcon } from "@chakra-ui/icons";
-
+import Tourtooltip from "./Tourtooltip"
 import styled from "styled-components";
 
 import { getPathByHash } from "../util/component-utilities";
@@ -107,6 +114,7 @@ const SideNavigation = ({
   navRef,
   showAgencyFilters = false
 }) => {
+  const {showTour} = useSelector(state=>state.workbookUI)
   return (
     <StyledNavigationStack
       direction="column"
@@ -120,19 +128,23 @@ const SideNavigation = ({
       ref={navRef}
     >
       {isOpen ? (
+        <TooltipHelp content="Hello this is a Tooltip" direction="right">
         <ButtonSector
           variant="ghost"
-          icon={<ArrowLeftIcon />}
+          icon={<ArrowLeftIcon className="first-step"/>}
           as={Link}
           to="#"
         />
+        </TooltipHelp>
       ) : (
+        <TooltipHelp content="Hello this is a Tooltip" direction="right">
         <ButtonSector
           variant="ghost"
-          icon={<ArrowRightIcon />}
+          icon={<ArrowRightIcon className="first-step"/>}
           as={Link}
           to="#nav/portfolio"
         />
+        </TooltipHelp>
       )}
       <ButtonSector
         variant="outline"
@@ -144,7 +156,9 @@ const SideNavigation = ({
       <ButtonSector
         brandColor="electricity"
         selected={activeItem === "electricity"}
-        icon={<FontAwesomeIcon icon={faBolt} />}
+        icon={
+          <FontAwesomeIcon className="second-step"  icon={faBolt} data-tut="reactour__iso"/>
+        }
         to="#nav/sector/electricity"
       />
       <ButtonSector
@@ -157,7 +171,9 @@ const SideNavigation = ({
         brandColor="industry"
         selected={activeItem === "industry"}
         to="#nav/sector/industry"
-        icon={<FontAwesomeIcon icon={faIndustry} />}
+        icon={
+        <FontAwesomeIcon className="third-step" icon={faIndustry} />
+      }
       />
       <ButtonSector
         brandColor="transport"
@@ -232,11 +248,31 @@ const SideNavigation = ({
 
 export const Navigation = () => {
   // TODO refactor as abstract
+  const CloseTourButton = styled.button`
+  position:fixed;
+  bottom:20px;
+  right:10px;
+  padding:10px 20px;
+  background:blue;
+  color:white;
+  height:50px;
+  z-index:99999;
+  text-align:center;
+  border:none;
+  `;
+
+
   const params = useParams();
   const location = useLocation();
   const history = useHistory();
   const activeTechnology = params.technologyId;
   const workbookId = params.id;
+  const {showTour} = useSelector(state=>state.workbookUI);
+  const dispatch = useDispatch();
+  const stopTour =()=>{
+    dispatch(hideshowTour());
+  }
+
 
   const navigationPath = getPathByHash("nav", location.hash);
   const portfolioPath = getPathByHash("portfolio", "#" + navigationPath);
@@ -257,7 +293,9 @@ export const Navigation = () => {
       history.push({ hash: "" });
     }
   });
-
+  const handleTourClick=()=>{
+    dispatch(hideshowTour())
+  }
   let navContent;
   if (!!navigationPath) {
     switch (true) {
@@ -279,6 +317,7 @@ export const Navigation = () => {
             <EditPortfolioPane
               cols={3}
               viewLocation="#nav/portfolio"
+              onClose={onClose}
             />
           );
         } else {
@@ -323,6 +362,14 @@ export const Navigation = () => {
           workbookId={workbookId}
         />
       </Portal>
+      <Tour
+      steps={steps}
+      isOpen={showTour}
+      closeWithMask={false}
+      onRequestClose={() => stopTour()}
+      lastStepNextButton={<Button>Done! You are ready to start working</Button>}
+        CustomHelper={ Tourtooltip } />
+      <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </>
   );
 };
