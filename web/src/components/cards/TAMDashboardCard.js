@@ -39,7 +39,7 @@ function TAMDashboardCard({ drawer, color, techData }) {
           </Box>
           <Box p="2" pt="4">
             <UploadResource
-              name="scenario"
+              name="tam_pds"
             />
           </Box>
           <Box p="4">
@@ -57,7 +57,7 @@ function TAMDashboardCard({ drawer, color, techData }) {
           </Box>
           <Box p="2" pt="4">
             <UploadResource
-              name="reference"
+              name="tam_ref"
             />
           </Box>
         </Flex>
