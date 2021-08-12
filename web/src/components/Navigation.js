@@ -2,7 +2,7 @@ import React, { useRef, createRef, useState } from "react";
 import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {hideshowTour} from "../redux/reducers/workbook/workbookUISlice"
+import {hideshowTour,showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
 import steps from "../Toursteps";
 import stepsWorkbook from "../TourstepsWorkbook";
 import TooltipHelp from "../HelpMode/TooltipHelp";
@@ -115,6 +115,7 @@ const SideNavigation = ({
   showAgencyFilters = false
 }) => {
   const {showTour} = useSelector(state=>state.workbookUI)
+  const {HelpMode} = useSelector(state=>state.workbookUI)
   return (
     <StyledNavigationStack
       direction="column"
@@ -128,7 +129,7 @@ const SideNavigation = ({
       ref={navRef}
     >
       {isOpen ? (
-        <TooltipHelp content="Hello this is a Tooltip" direction="right">
+        <TooltipHelp content="Hello this is a Tooltip" direction="right" show={HelpMode} >
         <ButtonSector
           variant="ghost"
           icon={<ArrowLeftIcon className="first-step"/>}
@@ -137,7 +138,7 @@ const SideNavigation = ({
         />
         </TooltipHelp>
       ) : (
-        <TooltipHelp content="Hello this is a Tooltip" direction="right">
+        <TooltipHelp content="Hello this is a Tooltip" direction="right" show={HelpMode}>
         <ButtonSector
           variant="ghost"
           icon={<ArrowRightIcon className="first-step"/>}
@@ -248,26 +249,13 @@ const SideNavigation = ({
 
 export const Navigation = () => {
   // TODO refactor as abstract
-  const CloseTourButton = styled.button`
-  position:fixed;
-  bottom:20px;
-  right:10px;
-  padding:10px 20px;
-  background:blue;
-  color:white;
-  height:50px;
-  z-index:99999;
-  text-align:center;
-  border:none;
-  `;
-
-
   const params = useParams();
   const location = useLocation();
   const history = useHistory();
   const activeTechnology = params.technologyId;
   const workbookId = params.id;
   const {showTour} = useSelector(state=>state.workbookUI);
+  const {HelpMode} = useSelector(state=>state.workbookUI);
   const dispatch = useDispatch();
   const stopTour =()=>{
     dispatch(hideshowTour());
