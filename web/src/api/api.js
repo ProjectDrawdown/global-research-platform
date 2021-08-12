@@ -11,6 +11,7 @@ const AUTHENTICATE_API_URL = API_URL + "/authorize";
 const VMA_CALCULATION_API_URL = API_URL + "/vma/calculation";
 const VMA_MAPPING_API_URL = API_URL + "/vma/mappings";
 const RESOURCE_URL = API_URL + "/resource";
+const VMA_CVS_URL = API_URL + "/vma_csv";
 
 const addAuth = headers => {
   const token = localStorage.getItem("token");
@@ -205,8 +206,25 @@ export const fetchResourceURL = async resourceURL => {
   }
 };
 
-export const uploadVMA = async (data, entity, technology) => {
+export const uploadResource = async (data, entity, technology) => {
   const result = await fetch(`${RESOURCE_URL}/${entity}/${technology}`, {
+    method: 'POST',
+    headers: addAuth({}),
+    body: data
+  });
+
+  if (result.ok) {
+    const response = await result.json();
+    return response;
+  }else {
+    const response = await result.json();
+    return Promise.reject(response);
+  }
+}
+
+export const uploadVMA = async (data) => {
+  // TODO: varPath, technology
+  const result = await fetch(`${VMA_CVS_URL}`, {
     method: 'POST',
     headers: addAuth({}),
     body: data
