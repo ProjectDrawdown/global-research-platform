@@ -31,6 +31,7 @@ from api.queries.workbook_queries import (
 from api.transform import (
   transform,
   populate,
+  populate_tam,
   convert_vmas_to_binary
 )
 
@@ -45,6 +46,8 @@ entity_mapping = {
   'vma': models.VMA,
   'adoption_data': models.AdoptionData,
   'tam': models.TAM,
+  'tam_ref': models.TAM_REF,
+  'tam_pds': models.TAM_PDS,
   'ca_pds': models.CustomAdoptionPDS,
   'ca_ref': models.CustomAdoptionRef
 }
@@ -392,6 +395,16 @@ async def initialize(database: Session = Depends(get_db)):
     for res in resources:
       tokens = res['technology'].split('/')
       save_entity(database, res['filename'], tokens[len(tokens) - 1], res['data'], model)
+
+  # populate tam_ref and tam_pds tables:
+  tam_resources = [
+    ('tam_ref', models.TAM_REF),
+    ('tam_pds', models.TAM_PDS)
+  ]
+  for (resource_name, model) in tam_resources:
+    tam_resource = populate_tam(resource_name)
+    for tam in tam_resource:
+      save_entity(database, tam['filename'], "n/a", tam['data'], model)
 
   vmas = convert_vmas_to_binary()
   for vma in vmas:

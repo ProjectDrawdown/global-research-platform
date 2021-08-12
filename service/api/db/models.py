@@ -169,6 +169,18 @@ class TAM(Resource, Base):
     """
     __tablename__ = 'tam'
 
+class TAM_REF(Resource, Base):
+    """
+        Represent the TAM REF Table
+    """
+    __tablename__ = 'tam_ref'
+
+class TAM_PDS(Resource, Base):
+    """
+        Represent the TAM PDS Table
+    """
+    __tablename__ = 'tam_pds'
+
 class VMA(Resource, Base):
     """
         Represent the VMA Table

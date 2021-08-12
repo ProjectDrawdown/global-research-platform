@@ -157,6 +157,8 @@ def clear_all_tables(database: Session):
     for model in [
             models.VMA,
             models.TAM,
+            models.TAM_REF,
+            models.TAM_PDS,
             models.AdoptionData,
             models.CustomAdoptionPDS,
             models.CustomAdoptionRef,
