@@ -151,7 +151,8 @@ async def get_by_technology(entity: models.EntityName, technology: str,
       database session, defaults to initialize session
   """
 
-  if entity in (models.EntityName.scenario, models.EntityName.reference):
+  if entity in (models.EntityName.scenario, models.EntityName.reference,
+    models.EntityName.tam_ref, models.EntityName.tam_pds):
     technology = 'n/a'
 
   entities = all_entities_by_technology(database, entity_mapping[entity], technology, db_active_user)

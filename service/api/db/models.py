@@ -26,6 +26,8 @@ class EntityName(str, enum.Enum):
     tam = "tam"
     ca_pds = "ca_pds"
     ca_ref = "ca_ref"
+    tam_ref = "tam_ref"
+    tam_pds = "tam_pds"
 
 class UserRole(enum.Enum):
     """
