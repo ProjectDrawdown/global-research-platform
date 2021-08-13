@@ -3,8 +3,8 @@ import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {hideshowTour,showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
-import steps from "../Toursteps";
-import stepsWorkbook from "../TourstepsWorkbook";
+import steps from "../redux/reducers/tour/Toursteps";
+import stepsWorkbook from "../redux/reducers/tour/TourstepsWorkbook";
 import TooltipHelp from "../HelpMode/TooltipHelp";
 import { UserContext } from "services/user"
 import Tour from 'reactour'
@@ -130,7 +130,7 @@ const SideNavigation = ({
       ref={navRef}
     >
       {isOpen ? (
-        <TooltipHelp content="Hello this is a Tooltip" direction="right" show={HelpMode} >
+        <TooltipHelp content="Hello this is a Tooltip" direction="right" show={HelpMode}>
         <ButtonSector
           variant="ghost"
           icon={<ArrowLeftIcon className="first-step"/>}
@@ -248,7 +248,7 @@ const SideNavigation = ({
   );
 };
 
-export const Navigation = ({CompletedTour,setCompletedTour}) => {
+export const Navigation = () => {
   // TODO refactor as abstract
   const params = useParams();
   const location = useLocation();
@@ -260,7 +260,6 @@ export const Navigation = ({CompletedTour,setCompletedTour}) => {
   const dispatch = useDispatch();
   const { user, patchUserFromAPI } = useContext(UserContext);
   const stopTour =()=>{
-    setCompletedTour(true);
     patchUserFromAPI({
       ...user,
       meta: {
@@ -360,7 +359,7 @@ export const Navigation = ({CompletedTour,setCompletedTour}) => {
       </Portal>
       <Tour
       steps={steps}
-      isOpen={!CompletedTour}
+      isOpen={!user.meta.hasOnboarded}
       closeWithMask={false}
       onRequestClose={() => stopTour()}
       lastStepNextButton={<Button>Done! You are ready to start working</Button>}

@@ -97,7 +97,7 @@ const ViewPortfolioPage = () => {
         />
       </Stack>
       <Box mr="3" flex="1" bg="white">
-        <Navigation CompletedTour={CompletedTour} setCompletedTour={setCompletedTour}/>
+        <Navigation/>
       </Box>
     </PortfolioLayout>
   );
