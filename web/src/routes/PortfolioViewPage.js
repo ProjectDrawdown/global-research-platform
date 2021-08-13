@@ -34,7 +34,6 @@ const ViewPortfolioPage = () => {
   const { user, patchUserFromAPI } = useContext(UserContext);
   const {HelpMode} = useSelector(state=>state.workbookUI)
   const [CompletedTour, setCompletedTour] = useState(user.meta.hasOnboarded);
-  console.log(user.meta.hasOnboarded);
   const resetOnboarding = async () => {
     const result = await patchUserFromAPI({
       ...user,

@@ -360,7 +360,7 @@ export const Navigation = (CompletedTour,setCompletedTour) => {
       </Portal>
       <Tour
       steps={steps}
-      isOpen={!CompletedTour}
+      isOpen={CompletedTour !== undefined ?true:!CompletedTour}
       closeWithMask={false}
       onRequestClose={() => stopTour()}
       lastStepNextButton={<Button>Done! You are ready to start working</Button>}
