@@ -248,7 +248,7 @@ const SideNavigation = ({
   );
 };
 
-export const Navigation = (CompletedTour,setCompletedTour) => {
+export const Navigation = ({CompletedTour,setCompletedTour}) => {
   // TODO refactor as abstract
   const params = useParams();
   const location = useLocation();
@@ -360,7 +360,7 @@ export const Navigation = (CompletedTour,setCompletedTour) => {
       </Portal>
       <Tour
       steps={steps}
-      isOpen={CompletedTour !== undefined ?true:!CompletedTour}
+      isOpen={!CompletedTour}
       closeWithMask={false}
       onRequestClose={() => stopTour()}
       lastStepNextButton={<Button>Done! You are ready to start working</Button>}
