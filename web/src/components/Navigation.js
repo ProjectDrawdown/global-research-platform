@@ -2,7 +2,7 @@ import React, { useRef, useContext, createRef, useState } from "react";
 import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {hideshowTour,showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
+import {showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
 import steps from "../redux/reducers/tour/Toursteps";
 import stepsWorkbook from "../redux/reducers/tour/TourstepsWorkbook";
 import TooltipHelp from "../HelpMode/TooltipHelp";
@@ -115,8 +115,7 @@ const SideNavigation = ({
   navRef,
   showAgencyFilters = false
 }) => {
-  const {showTour} = useSelector(state=>state.workbookUI)
-  const {HelpMode} = useSelector(state=>state.workbookUI)
+  const {HelpMode} = useSelector(state=>state.workbookUI);
   return (
     <StyledNavigationStack
       direction="column"
@@ -255,7 +254,6 @@ export const Navigation = () => {
   const history = useHistory();
   const activeTechnology = params.technologyId;
   const workbookId = params.id;
-  const {showTour} = useSelector(state=>state.workbookUI);
   const {HelpMode} = useSelector(state=>state.workbookUI);
   const dispatch = useDispatch();
   const { user, patchUserFromAPI } = useContext(UserContext);
@@ -288,9 +286,6 @@ export const Navigation = () => {
       history.push({ hash: "" });
     }
   });
-  const handleTourClick=()=>{
-    dispatch(hideshowTour())
-  }
   let navContent;
   if (!!navigationPath) {
     switch (true) {
