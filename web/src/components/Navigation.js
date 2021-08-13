@@ -4,7 +4,6 @@ import { Link, useParams, useLocation, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
 import steps from "../redux/reducers/tour/Toursteps";
-import stepsWorkbook from "../redux/reducers/tour/TourstepsWorkbook";
 import TooltipHelp from "../HelpMode/TooltipHelp";
 import { UserContext } from "services/user"
 import Tour from 'reactour'
@@ -354,7 +353,7 @@ export const Navigation = () => {
       </Portal>
       <Tour
       steps={steps}
-      isOpen={!user.meta.hasOnboarded}
+      isOpen={true}
       closeWithMask={false}
       onRequestClose={() => stopTour()}
       lastStepNextButton={<Button>Done! You are ready to start working</Button>}

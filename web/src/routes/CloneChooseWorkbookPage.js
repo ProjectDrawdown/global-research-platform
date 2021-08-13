@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useContext } from "react"
 import { useSelector } from "react-redux"
 // import { unwrapResult } from '@reduxjs/toolkit'
 import store from "redux/store"
@@ -11,9 +11,25 @@ import { WorkbookCard } from "components/workbook/card"
 import WorkbookCardGrid from "components/workbook/cardGrid"
 import LoadingSpinner from "components/LoadingSpinner"
 
+import { UserContext } from "services/user";
+import steps from "../redux/reducers/tour/TourstepsChooseWorkbookClone";
+import TooltipHelp from "../HelpMode/TooltipHelp";
+import Tourtooltip from "../components/Tourtooltip"
+import Tour from 'reactour'
+
 export const CloneChooseWorkbookPage = () => {
   const workbooks = useSelector(state => state.workbooks);
   const loadingStatus = useSelector(state => state.workbooks.status);
+  const { user, patchUserFromAPI } = useContext(UserContext);
+  const stopTour =()=>{
+      patchUserFromAPI({
+        ...user,
+        meta: {
+          ...user.meta,
+          hasOnboarded: true
+        }
+      });
+    }
 
   useEffect(() => {
     store.dispatch(fetchWorkbooksThunk());
@@ -54,6 +70,13 @@ export const CloneChooseWorkbookPage = () => {
           </WorkbookCardGrid>
         </Box>
       </VStack>
+      <Tour
+      steps={steps}
+      isOpen={!user.meta.hasOnboarded}
+      closeWithMask={false}
+      onRequestClose={() => stopTour()}
+        CustomHelper={ Tourtooltip } />
+      <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </PageLayout>
   );
 };

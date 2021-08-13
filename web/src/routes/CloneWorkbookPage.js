@@ -21,11 +21,24 @@ import {
 } from "@chakra-ui/react";
 
 import { UserContext } from "services/user";
+import steps from "../redux/reducers/tour/TourstepsWorkbookClone";
+import TooltipHelp from "../HelpMode/TooltipHelp";
+import Tourtooltip from "../components/Tourtooltip"
+import Tour from 'reactour'
 
 const CloneWorkbookPage = () => {
-  const { user } = useContext(UserContext);
+  const { user, patchUserFromAPI } = useContext(UserContext);
   const params = useParams();
   const history = useHistory();
+  const stopTour =()=>{
+    patchUserFromAPI({
+      ...user,
+      meta: {
+        ...user.meta,
+        hasOnboarded: true
+      }
+    });
+  }
 
   const loadingStatus = useSelector(state => state.workbook.status);
 
@@ -126,6 +139,13 @@ const CloneWorkbookPage = () => {
           </Form>
         )}
       </Formik>
+      <Tour
+      steps={steps}
+      isOpen={!user.meta.hasOnboarded}
+      closeWithMask={false}
+      onRequestClose={() => stopTour()}
+        CustomHelper={ Tourtooltip } />
+      <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </PageLayout>
   );
 };
