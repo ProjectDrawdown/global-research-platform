@@ -33,6 +33,8 @@ const ViewPortfolioPage = () => {
   const [ width, setWidth ] = useState(window.innerWidth);
   const { user, patchUserFromAPI } = useContext(UserContext);
   const {HelpMode} = useSelector(state=>state.workbookUI)
+  const [CompletedTour, setCompletedTour] = useState(user.meta.hasOnboarded);
+  console.log(user.meta.hasOnboarded);
   const resetOnboarding = async () => {
     const result = await patchUserFromAPI({
       ...user,
@@ -96,7 +98,7 @@ const ViewPortfolioPage = () => {
         />
       </Stack>
       <Box mr="3" flex="1" bg="white">
-        <Navigation />
+        <Navigation CompletedTour={CompletedTour} setCompletedTour={setCompletedTour}/>
       </Box>
     </PortfolioLayout>
   );

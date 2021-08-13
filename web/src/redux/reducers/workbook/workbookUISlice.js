@@ -6,8 +6,9 @@ import { errorAdded } from "redux/reducers/util/errorSlice";
 const initialState = {
   activeFormRow: null,
   HelpMode:false,
-  showTour:true
+  showTour:true,
 };
+
 
 const workbookUISlice = createSlice({
   name: "workbookUI",
@@ -34,7 +35,7 @@ export const {
   setActiveFormRow,
   hideshowTour,
   showHelpMode,
-  hideHelpMode
+  hideHelpMode,
 } = workbookUISlice.actions;
 
 export default workbookUISlice.reducer;
