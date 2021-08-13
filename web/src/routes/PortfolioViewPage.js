@@ -100,7 +100,7 @@ const ViewPortfolioPage = () => {
     <PortfolioLayout showFooter={false}>
     <Tour
     steps={steps}
-    isOpen={true}
+    isOpen={!user.meta.hasOnboarded}
     closeWithMask={false}
     onRequestClose={() => stopTour()}
     lastStepNextButton={<Button>Done! You are ready to start working</Button>}
