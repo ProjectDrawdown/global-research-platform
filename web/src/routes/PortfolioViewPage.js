@@ -7,6 +7,9 @@ import { useConfigContext } from "contexts/ConfigContext"
 import { Stack, Box } from "@chakra-ui/react"
 import PortfolioLayout from "parts/PortfolioLayout"
 import { Navigation } from "components/Navigation"
+import steps from "../redux/reducers/tour/Toursteps";
+import Tourtooltip from "components/Tourtooltip"
+import Tour from 'reactour'
 import {
   ViewPortfolioPane,
 } from "components/TechnologyCardPanes"
@@ -33,7 +36,6 @@ const ViewPortfolioPage = () => {
   const [ width, setWidth ] = useState(window.innerWidth);
   const { user, patchUserFromAPI } = useContext(UserContext);
   const {HelpMode} = useSelector(state=>state.workbookUI)
-  const [CompletedTour, setCompletedTour] = useState(user.meta.hasOnboarded);
   const resetOnboarding = async () => {
     const result = await patchUserFromAPI({
       ...user,
@@ -84,8 +86,26 @@ const ViewPortfolioPage = () => {
       }
     }, [location.hash]);
 
+    const stopTour =()=>{
+      patchUserFromAPI({
+        ...user,
+        meta: {
+          ...user.meta,
+          hasOnboarded: true
+        }
+      });
+    }
+
   return (
     <PortfolioLayout showFooter={false}>
+    <Tour
+    steps={steps}
+    isOpen={true}
+    closeWithMask={false}
+    onRequestClose={() => stopTour()}
+    lastStepNextButton={<Button>Done! You are ready to start working</Button>}
+      CustomHelper={ Tourtooltip } />
+    <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
       <Stack direction="row" h="100%" mx="auto">
         <ViewPortfolioPane
           onClose={() => null}
@@ -96,7 +116,7 @@ const ViewPortfolioPage = () => {
           w="100%"
         />
       </Stack>
-      <Box mr="3" flex="1" bg="white">
+      <Box mr="3" flex="1" bg="white" >
         <Navigation/>
       </Box>
     </PortfolioLayout>

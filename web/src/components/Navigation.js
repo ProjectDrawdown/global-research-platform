@@ -3,10 +3,8 @@ import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
-import steps from "../redux/reducers/tour/Toursteps";
 import TooltipHelp from "../HelpMode/TooltipHelp";
 import { UserContext } from "services/user"
-import Tour from 'reactour'
 import {
   useTheme,
   useDisclosure,
@@ -41,7 +39,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { GlobeOutline, AddCircleOutline } from "react-ionicons";
 import { ArrowRightIcon, ArrowLeftIcon, QuestionIcon } from "@chakra-ui/icons";
-import Tourtooltip from "./Tourtooltip"
 import styled from "styled-components";
 
 import { getPathByHash } from "../util/component-utilities";
@@ -255,16 +252,7 @@ export const Navigation = () => {
   const workbookId = params.id;
   const {HelpMode} = useSelector(state=>state.workbookUI);
   const dispatch = useDispatch();
-  const { user, patchUserFromAPI } = useContext(UserContext);
-  const stopTour =()=>{
-    patchUserFromAPI({
-      ...user,
-      meta: {
-        ...user.meta,
-        hasOnboarded: true
-      }
-    });
-  }
+
 
   const navigationPath = getPathByHash("nav", location.hash);
   const portfolioPath = getPathByHash("portfolio", "#" + navigationPath);
@@ -351,14 +339,6 @@ export const Navigation = () => {
           workbookId={workbookId}
         />
       </Portal>
-      <Tour
-      steps={steps}
-      isOpen={true}
-      closeWithMask={false}
-      onRequestClose={() => stopTour()}
-      lastStepNextButton={<Button>Done! You are ready to start working</Button>}
-        CustomHelper={ Tourtooltip } />
-      <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </>
   );
 };

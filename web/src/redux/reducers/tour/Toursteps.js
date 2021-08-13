@@ -14,6 +14,10 @@ const steps = [
   {
     selector: '.third-step',
     content: 'Coming soon :)',
+  },
+  {
+    selector: '.fourth-step',
+    content: 'Click any of the workbooks to open it :)',
   }
   // ...
 ];
