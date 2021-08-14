@@ -62,7 +62,9 @@ export const PortfolioCardPaneWrapper = props => {
               onClick={() => {
                 history.push(props.viewLocation);
               }}>
+              <div className="second-postclone-tour">
               <CheckIcon mr={2} /> SAVE SELECTION
+              </div>
             </StyledButton>
           ) : (
             <StyledButton
@@ -170,6 +172,7 @@ export const EditPortfolioPane = props => {
       mx={mx}
       w={w}
     >
+    <div className="first-postclone-tour">
       <SortedTechnologyCardGrid
         isEditingPortfolio={true}
         technologyIDs={allSolutions}
@@ -181,6 +184,7 @@ export const EditPortfolioPane = props => {
         isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
         isFeaturedFn={() => true}
       />
+      </div>
     </PortfolioCardPaneWrapper>
   );
 };
