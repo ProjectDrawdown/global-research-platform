@@ -1,11 +1,7 @@
 const stepsWorkbook = [
   {
-    selector: '.start-workbook-tour',
-    content: 'Start Workbook Tour',
-  },
-  {
     selector: '.first-workbook-step',
-    content: 'This is your choose clone workbooks page',
+    content: 'Choose a Workbook you want to use',
   },
   // ...
 ];

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Heading, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -6,9 +6,6 @@ import { RunButton, PlayButton } from "theme/icons";
 import styled, { css, keyframes } from "styled-components";
 import store from "redux/store";
 import { calculateThunk } from "redux/reducers/workbook/workbookSlice";
-import steps from "redux/reducers/tour/TourstepsWorkbook";
-import Tour from 'reactour';
-import Tourtooltip from "components/Tourtooltip";
 import {
   useWorkbookIDSelector,
   useWorkbookHasAuthorSelector
@@ -16,7 +13,7 @@ import {
 import { prettyFormatBigNumber } from "util/number-utils.js";
 import Logo from "parts/Logo";
 import { errorAdded } from "redux/reducers/util/errorSlice";
-import { UserContext } from "services/user"
+
 /**
  * keyframe DOM
  */
@@ -86,16 +83,6 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
    }));
   }, [workbookHasAuthor])
 
-  const { user, patchUserFromAPI } = useContext(UserContext);
-  const stopTour =()=>{
-    patchUserFromAPI({
-      ...user,
-      meta: {
-        ...user.meta,
-        hasOnboarded: true
-      }
-    });
-  }
 
   return (
     <Box
@@ -138,7 +125,7 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
           </HStack>
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
-          <StyledRunWrapper onClick={calculate} loading={workbookState?.calculationLoading}>
+          <StyledRunWrapper onClick={calculate} loading={workbookState?.calculationLoading} className="first-workbook-solution-tour">
             <StyledButton loading={workbookState?.calculationLoading}>
               <RunButton/>
             </StyledButton>
@@ -161,13 +148,6 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
           </StyledRunWrapper>
         ) : null}
       </Grid>
-      <Tour
-      steps={steps}
-      isOpen={!user.meta.hasOnboarded}
-      closeWithMask={false}
-      onRequestClose={() => stopTour()}
-      lastStepNextButton={<Button>Done! You are ready to start working</Button>}
-        CustomHelper={ Tourtooltip } />
     </Box>
   );
 }

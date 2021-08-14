@@ -1,7 +1,7 @@
 const steps = [
   {
     selector: '.start-tour',
-    content: 'Start Tour',
+    content: 'Start Portfolio Page Tour',
   },
   {
     selector: '.first-step',
@@ -17,7 +17,15 @@ const steps = [
   },
   {
     selector: '.fourth-step',
-    content: 'Click any of the workbooks to open it :)',
+    content: 'Click to toggle Help mode',
+  },
+  {
+    selector: '.fifth-step',
+    content: 'Click to toggle Help mode',
+  },
+  {
+    selector: '.sixth-step',
+    content: 'Click any technology sector to open it',
   }
   // ...
 ];

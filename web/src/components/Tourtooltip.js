@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import styled from "styled-components"
+import { UserContext } from "services/user"
 
 const ToolTipBox = styled.div`
 min-height:100px;
@@ -23,7 +24,16 @@ width:100px;
 
 
 const Tourtooltip = ({  current, content, totalSteps, gotoStep, close }) => {
-
+  const { user, patchUserFromAPI } = useContext(UserContext);
+  const stopTour =()=>{
+    patchUserFromAPI({
+      ...user,
+      meta: {
+        ...user.meta,
+        hasOnboarded: true
+      }
+    });
+  }
 
   return (
 <ToolTipBox>
@@ -36,7 +46,8 @@ const Tourtooltip = ({  current, content, totalSteps, gotoStep, close }) => {
         ()=> gotoStep(current+1)} >
         {!!current ?"next": "start"}
       </NavigationButton>}
-      <NavigationButton onClick={()=> close() }>skip</NavigationButton>
+    {(current === (totalSteps-1) )?<NavigationButton onClick={()=> close() }>finish</NavigationButton>:
+    <NavigationButton onClick={()=> stopTour() }>skip tour</NavigationButton>}
 
 </ToolTipBox>
   )

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react"
+import React, { useEffect, useContext, useState } from "react"
 import { useSelector } from "react-redux"
 // import { unwrapResult } from '@reduxjs/toolkit'
 import store from "redux/store"
@@ -20,16 +20,8 @@ import Tour from 'reactour'
 export const CloneChooseWorkbookPage = () => {
   const workbooks = useSelector(state => state.workbooks);
   const loadingStatus = useSelector(state => state.workbooks.status);
-  const { user, patchUserFromAPI } = useContext(UserContext);
-  const stopTour =()=>{
-      patchUserFromAPI({
-        ...user,
-        meta: {
-          ...user.meta,
-          hasOnboarded: true
-        }
-      });
-    }
+  const { user } = useContext(UserContext);
+  const [showTour, setshowTour] = useState(true);
 
   useEffect(() => {
     store.dispatch(fetchWorkbooksThunk());
@@ -49,6 +41,7 @@ export const CloneChooseWorkbookPage = () => {
             Choose Workbook
           </Heading>
           <ProgressBar progressState={0} />
+          <div className="first-workbook-step">
           <WorkbookCardGrid>
             {workbooks &&
               workbooks.workbooks &&
@@ -61,6 +54,7 @@ export const CloneChooseWorkbookPage = () => {
                 />
               ))}
           </WorkbookCardGrid>
+          </div>
         </Box>
         <Box>
           <WorkbookCardGrid>
@@ -72,9 +66,9 @@ export const CloneChooseWorkbookPage = () => {
       </VStack>
       <Tour
       steps={steps}
-      isOpen={!user.meta.hasOnboarded}
+      isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
       closeWithMask={false}
-      onRequestClose={() => stopTour()}
+      onRequestClose={() => setshowTour(false)}
         CustomHelper={ Tourtooltip } />
       <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </PageLayout>

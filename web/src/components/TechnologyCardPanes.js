@@ -70,7 +70,7 @@ export const PortfolioCardPaneWrapper = props => {
               variant="ghost"
               onClick={() => {
                 history.push(props.editLocation);
-              }}>
+              }} className="fifth-step">
               <AddIcon mr={2} /> EDIT PORTFOLIO
             </StyledButton>
           )}
@@ -208,7 +208,7 @@ export const ViewPortfolioPane = props => {
       w={w}>
       {portfolioSolutions.length > 0 ? (
         <TooltipHelp content="Hello this is a Tooltip" direction="bottom" show={false}>
-        <div className="fourth-step">
+        <div className="sixth-step">
         <SortedTechnologyCardGrid
           isEditingPortfolio={false}
           technologyIDs={portfolioSolutions}

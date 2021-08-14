@@ -86,24 +86,15 @@ const ViewPortfolioPage = () => {
       }
     }, [location.hash]);
 
-    const stopTour =()=>{
-      patchUserFromAPI({
-        ...user,
-        meta: {
-          ...user.meta,
-          hasOnboarded: true
-        }
-      });
-    }
+  const [showTour, setshowTour] = useState(true);
 
   return (
     <PortfolioLayout showFooter={false}>
     <Tour
     steps={steps}
-    isOpen={!user.meta.hasOnboarded}
+    isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
     closeWithMask={false}
-    onRequestClose={() => stopTour()}
-    lastStepNextButton={<Button>Done! You are ready to start working</Button>}
+    onRequestClose={() => setshowTour(false)}
       CustomHelper={ Tourtooltip } />
     <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
       <Stack direction="row" h="100%" mx="auto">

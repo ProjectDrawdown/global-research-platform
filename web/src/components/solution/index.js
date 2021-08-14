@@ -1,7 +1,11 @@
-import React, { useRef, useEffect, useCallback, useMemo } from "react";
+import React, { useRef, useEffect, useCallback, useMemo, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Box, Grid, Flex, Stack } from "@chakra-ui/react";
+import Tour from 'reactour';
+import Tourtooltip from "components/Tourtooltip";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "services/user";
+import steps from "redux/reducers/tour/TourstepsWorkbookSolution";
 import {
   Drawer,
   DrawerOverlay,
@@ -141,6 +145,8 @@ export const SolutionLayout = ({
   modal,
   modalPath
 }) => {
+  const { user} = useContext(UserContext);
+  const [showTour,setshowTour]= useState(true)
   const solutionHeaderChildren = findChildByContainerType(
     children,
     SolutionHeaderRegion
@@ -222,6 +228,12 @@ export const SolutionLayout = ({
           {solutionCardModal}
         </SolutionCardModal>
       )}
+      <Tour
+      steps={steps}
+      isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
+      closeWithMask={false}
+      onRequestClose={() => setshowTour(false)}
+        CustomHelper={ Tourtooltip } />
     </>
   );
 };

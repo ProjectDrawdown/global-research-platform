@@ -154,7 +154,7 @@ const SideNavigation = ({
         brandColor="electricity"
         selected={activeItem === "electricity"}
         icon={
-          <FontAwesomeIcon className="second-step"  icon={faBolt} data-tut="reactour__iso"/>
+          <FontAwesomeIcon className="second-step"  icon={faBolt}/>
         }
         to="#nav/sector/electricity"
       />
@@ -237,7 +237,7 @@ const SideNavigation = ({
       <ButtonSector
         to={`/workbook/${workbookId}#show-onboarding`}
         variant="ghost"
-        icon={<QuestionIcon/>}
+        icon={<QuestionIcon className="fourth-step"/>}
       />
     </StyledNavigationStack>
   );
