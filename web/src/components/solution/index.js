@@ -145,8 +145,8 @@ export const SolutionLayout = ({
   modal,
   modalPath
 }) => {
-  const { user} = useContext(UserContext);
-  const [showTour,setshowTour]= useState(true)
+  const { user, patchUserFromAPI} = useContext(UserContext);
+
   const solutionHeaderChildren = findChildByContainerType(
     children,
     SolutionHeaderRegion
@@ -176,6 +176,17 @@ export const SolutionLayout = ({
     ({ left: "66.66666%", right: "33.33333%" }) :
     ({ left: "60%", right: "40%" });
   const stack = useRef();
+  const [showTour, setshowTour] = useState(true);
+  const closeTour = () =>{
+    setshowTour(false);
+    patchUserFromAPI({
+      ...user,
+      meta: {
+        ...user.meta,
+        hasOnboarded: true
+      }
+    });
+  }
   return (
     <>
       <Stack direction="row" h="100%">
@@ -232,7 +243,7 @@ export const SolutionLayout = ({
       steps={steps}
       isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
       closeWithMask={false}
-      onRequestClose={() => setshowTour(false)}
+      onRequestClose={() => closeTour()}
         CustomHelper={ Tourtooltip } />
     </>
   );

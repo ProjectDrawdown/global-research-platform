@@ -1,6 +1,6 @@
 const stepsWorkbook = [
   {
-    selector: '.start-workbook-tour',
+    selector: '.start-workbook-solution-tour',
     content: 'Welcome To your Solutions Dashboard',
   },
   {
