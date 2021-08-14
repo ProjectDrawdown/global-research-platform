@@ -6,6 +6,9 @@ const TooltipHelp = ({ children, delay, content, direction, show, stopHover }) =
   const [active, setActive] = useState(!!show);
 
   const showTip = () => {
+    if (!show){
+      return
+    }
     timeout = setTimeout(() => {
       setActive(true);
     }, delay || 400);
@@ -24,8 +27,8 @@ const TooltipHelp = ({ children, delay, content, direction, show, stopHover }) =
     <div
       className="Tooltip-Wrapper"
       // When to show the tooltip
-      onMouseEnter={!stopHover ? showTip : () => {}}
-      onMouseLeave={!stopHover ? hideTip : () => {}}
+      onMouseEnter={showTip}
+      onMouseLeave={hideTip}
     >
       {/* Wrapping */}
       {children}
