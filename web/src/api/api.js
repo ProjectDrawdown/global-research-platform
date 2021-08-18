@@ -223,7 +223,6 @@ export const uploadResource = async (data, entity, technology) => {
 }
 
 export const uploadVMA = async (data) => {
-  // TODO: varPath, technology
   const result = await fetch(`${VMA_CVS_URL}`, {
     method: 'POST',
     headers: addAuth({}),
