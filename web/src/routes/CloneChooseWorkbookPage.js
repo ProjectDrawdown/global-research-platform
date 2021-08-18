@@ -13,7 +13,6 @@ import LoadingSpinner from "components/LoadingSpinner"
 
 import { UserContext } from "services/user";
 import steps from "../redux/reducers/tour/TourstepsChooseWorkbookClone";
-import TooltipHelp from "../HelpMode/TooltipHelp";
 import Tourtooltip from "../components/Tourtooltip"
 import Tour from 'reactour'
 

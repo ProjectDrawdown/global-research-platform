@@ -22,7 +22,6 @@ import {
 
 import { UserContext } from "services/user";
 import steps from "../redux/reducers/tour/TourstepsWorkbookClone";
-import TooltipHelp from "../HelpMode/TooltipHelp";
 import Tourtooltip from "../components/Tourtooltip"
 import Tour from 'reactour'
 

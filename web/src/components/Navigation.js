@@ -3,7 +3,7 @@ import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
-import TooltipHelp from "../HelpMode/TooltipHelp";
+import TooltipHelp from "../components/HelpMode/TooltipHelp";
 import { UserContext } from "services/user"
 import {
   useTheme,

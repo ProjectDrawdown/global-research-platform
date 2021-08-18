@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import "./Tooltip.css";
 
 const TooltipHelp = ({ children, delay, content, direction, show, stopHover }) => {

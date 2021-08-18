@@ -15,7 +15,6 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { updateFilter } from "redux/reducers/filterQuery/filterQuerySlice";
 import LoadingSpinner from "components/LoadingSpinner";
 import steps from "../redux/reducers/tour/TourstepsWorkbookpage";
-import TooltipHelp from "../HelpMode/TooltipHelp";
 import Tourtooltip from "../components/Tourtooltip"
 import Tour from 'reactour'
 import { UserContext } from "services/user"

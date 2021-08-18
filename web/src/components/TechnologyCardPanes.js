@@ -1,5 +1,5 @@
 import React from "react";
-import TooltipHelp from "../HelpMode/TooltipHelp";
+import TooltipHelp from "../components/HelpMode/TooltipHelp";
 import { useSelector, useDispatch } from "react-redux";
 import {
   doAddPortfolioTechnologyPatchThunk,
