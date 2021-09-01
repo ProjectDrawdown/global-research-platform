@@ -3,7 +3,6 @@ import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
-import TooltipHelp from "../components/HelpMode/TooltipHelp";
 import { UserContext } from "services/user"
 import {
   useTheme,
@@ -125,23 +124,19 @@ const SideNavigation = ({
       ref={navRef}
     >
       {isOpen ? (
-        <TooltipHelp content="Hello this is a Tooltip" direction="right" show={HelpMode}>
         <ButtonSector
           variant="ghost"
           icon={<ArrowLeftIcon className="first-step"/>}
           as={Link}
           to="#"
         />
-        </TooltipHelp>
       ) : (
-        <TooltipHelp content="Hello this is a Tooltip" direction="right" show={HelpMode}>
         <ButtonSector
           variant="ghost"
           icon={<ArrowRightIcon className="first-step"/>}
           as={Link}
           to="#nav/portfolio"
         />
-        </TooltipHelp>
       )}
       <ButtonSector
         variant="outline"

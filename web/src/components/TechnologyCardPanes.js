@@ -1,5 +1,4 @@
 import React from "react";
-import TooltipHelp from "../components/HelpMode/TooltipHelp";
 import { useSelector, useDispatch } from "react-redux";
 import {
   doAddPortfolioTechnologyPatchThunk,
@@ -211,7 +210,6 @@ export const ViewPortfolioPane = props => {
       mx={mx}
       w={w}>
       {portfolioSolutions.length > 0 ? (
-        <TooltipHelp content="Hello this is a Tooltip" direction="bottom" show={false}>
         <div className="sixth-step">
         <SortedTechnologyCardGrid
           isEditingPortfolio={false}
@@ -224,7 +222,6 @@ export const ViewPortfolioPane = props => {
           isFeaturedFn={() => true}
         />
         </div>
-        </TooltipHelp>
       ) : (
         <Box>
           <Text>The portfolio for this workbook is currently empty.</Text>
