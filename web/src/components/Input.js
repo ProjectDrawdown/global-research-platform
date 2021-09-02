@@ -177,7 +177,6 @@ export const Select = ({
       iconColor="black"
       focusBorderColor="#CBD5E0">
       {options.map((option, i) => {
-        console.log(option);
         if (Array.isArray(option)) {
           const [key, val] = option;
           // In some cases, dropdown object will have tooltip to help understand option details
@@ -188,12 +187,20 @@ export const Select = ({
           //     "details": "SOME_DETAILS"
           //   }
           // }
-          if (typeof label === "object") {
+          if (typeof val === "object") {
             return (
               <option value={val} key={i}>
                 {val.name}
               </option>
             );
+          }
+
+          if (!val) {
+            return (
+              <option value={false} key={i} disabled>
+                --------
+              </option>
+            ); 
           }
           
           return (
@@ -202,6 +209,15 @@ export const Select = ({
             </option>
           );
         } else {
+
+          if (!option) {
+            return (
+              <option value={option} key={i} disabled>
+                --------
+              </option>
+            ); 
+          }
+
           return (
             <option value={option} key={i}>
               {option}

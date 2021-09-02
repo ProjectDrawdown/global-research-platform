@@ -60,6 +60,10 @@ varProjectionNamesPaths = [
   ["low_sd_mult","categories.electricity_generation.tam_low_sd_mult","low_sd_mult","","regionalize_float"],
   ["high_sd_mult","categories.electricity_generation.tam_high_sd_mult","high_sd_mult","","regionalize_float"],
 
+  # Custom uploaded source
+  ["pds_tam_custom_source","categories.electricity_generation.pds_tam_custom_source","pds_tam_custom_source","",""],
+  ["pds_adoption_custom_source","categories.solarpvutil.pds_adoption_custom_source","pds_adoption_custom_source","",""],
+
   #land
   ["use_custom_tla","technologies.solarpvutil.use_custom_tla","use_custom_tla","","boolean"],
   ["custom_tla_fixed_value","technologies.solarpvutil.custom_tla_fixed_value","custom_tla_fixed_value","","float"],

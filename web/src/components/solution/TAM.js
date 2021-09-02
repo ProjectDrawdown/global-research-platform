@@ -37,21 +37,25 @@ const TAMForm = (props) => {
       <Row
         varType="categories"
         varpath="source_until_start_year"
+        varpathSecondary="pds_tam_custom_source"
         label="Source Until Current Year"
         dataType="select"
         color={props.color}
         InputWidget={BoundSourceSelect}
         sourceListObjectpath="workbook.techData.metadata.tam_ref_data_sources"
+        secondarySourceListObjectpath="workbook.tam_scenarios"
         additionalOptions={["ALL SOURCES"]} />
 
       <Row
         varType="categories"
         varpath="tam_source_post_start_year"
+        varpathSecondary="ref_tam_custom_source"
         target="reference"
         color={props.color}
         label="Source After Start Year"
         InputWidget={BoundSourceSelect}
         sourceListObjectpath="workbook.techData.metadata.tam_ref_data_sources"
+        secondarySourceListObjectpath="workbook.tam_scenarios"
         additionalOptions={["ALL SOURCES"]} />
 
       <StyledSpacer />

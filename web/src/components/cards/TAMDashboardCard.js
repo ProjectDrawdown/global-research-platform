@@ -32,14 +32,11 @@ function TAMDashboardCard({ drawer, color, techData }) {
             <BoundSourceSelect
               varType="categories"
               varpath="source_until_start_year"
-              sourceListObjectpath="workbook.references"
+              varpathSecondary="pds_tam_custom_source"
+              sourceListObjectpath="workbook.techData.metadata.tam_ref_data_sources"
+              secondarySourceListObjectpath="workbook.tam_scenarios"
               additionalOptions={["ALL SOURCES"]}
               size="sm"
-            />
-          </Box>
-          <Box p="2" pt="4">
-            <UploadResource
-              name="scenario"
             />
           </Box>
           <Box p="4">
@@ -49,15 +46,18 @@ function TAMDashboardCard({ drawer, color, techData }) {
             <BoundSourceSelect
               varType="categories"
               varpath="tam_source_post_start_year"
+              varpathSecondary="ref_tam_custom_source"
               target="reference"
-              sourceListObjectpath="workbook.scenarios"
+              sourceListObjectpath="workbook.techData.metadata.tam_ref_data_sources"
+              secondarySourceListObjectpath="workbook.tam_scenarios"
               additionalOptions={["ALL SOURCES"]}
               size="sm"
             />
           </Box>
           <Box p="2" pt="4">
             <UploadResource
-              name="reference"
+              entity="tam_pds"
+              name="custom Total Addressable Market (TAM) data"
             />
           </Box>
         </Flex>

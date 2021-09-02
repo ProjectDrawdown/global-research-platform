@@ -26,7 +26,6 @@ legacyDataFiles = {
     ["biomass", "solution/biomass/ac/PDS-1p2050-Drawdown2020.json"],
     ["solarpvutil", "solution/solarpvutil/ac/PDS-25p2050-Drawdown2020.json"],
     ["instreamhydro", "solution/instreamhydro/ac/PDS-2p2050-Drawdown2020.json"],
-    ["concentratedsolar", "solution/concentratedsolar/ac/PDS-6p2050-Drawdown2020.json"],
     ["microwind", "solution/microwind/ac/PDS-0p2050-Drawdown2020.json"],
 
     # Food
@@ -43,7 +42,6 @@ legacyDataFiles = {
     ["multistrataagroforestry", "solution/multistrataagroforestry/ac/PDS-20p2050-Drawdown-customPDS-avg-Jan2020.json"],
     ["regenerativeagriculture",
       "solution/regenerativeagriculture/ac/PDS-47p2050-Drawdown-customPDS-high-29Jan2020.json"],
-    ["nutrientmanagement", "solution/nutrientmanagement/ac/PDS-58p2050-Drawdown-customPDS-avg-Jan2020.json"],
 
     # Land Use
     ["peatlands", "solution/peatlands/ac/PDS-97p2050-Drawdown-customPDS-high-Jan2020.json"],

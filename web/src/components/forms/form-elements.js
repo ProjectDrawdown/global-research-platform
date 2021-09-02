@@ -14,7 +14,10 @@ import {
   useWorkbookIsLoadedSelector,
   useWorkbookHasAuthorSelector
 } from "redux/selectors.js";
-import { sourcesObjectToOptionsArray } from "util/form-utilities.js"
+import { 
+  sourcesObjectToOptionsArray,
+  secondarySourcesObjectToOptionsArray
+ } from "util/form-utilities.js"
 import { QuestionBox, StyledParagraph } from "components/tools/QuestionBox"
 
 const regions = [
@@ -77,6 +80,7 @@ export const BoundFormElement = props => {
     compareFn = (oldVal, newVal) => oldVal === newVal,
     varType = "technologies",
     varpath,
+    varpathSecondary = "NONE",
     region, // for updating a single region value within a var
     target = "scenario",
     inputTooltipEnabled = false,
@@ -92,8 +96,11 @@ export const BoundFormElement = props => {
         props.activeTechnology ||
         params.technologyId;
 
-  const varpathFull =
+  let varpathRemoved = null
+  let varpathFull =
     props.varpathFull || getVarPathFull(varType, activeTechnology, varpath);
+  const varpathSecondaryFull = 
+    props.varpathSecondaryFull || getVarPathFull(varType, activeTechnology, varpathSecondary);
 
   const [error, setError] = React.useState(false);
   // TODO narrow this selector to just what we need for this element
@@ -149,6 +156,16 @@ export const BoundFormElement = props => {
         : compareFn(oldValue, newValue);
     // Do not dispatch a state change if the varpath is empty
     if (!unchanged && varpath && varpath !== "") {
+
+      // If varValue is form of URL, we set varPathfull as secondary
+      if (!isValidHttpUrl(newValue)) {
+        if (varpathSecondary !== "NONE") {
+          varpathRemoved = varpathSecondaryFull
+        }
+      } else {
+        varpathFull = varpathSecondaryFull
+      }
+
       await store.dispatch(
         doUpdateWorkbookVariationVariableThunk({
           workbookId: workbookState.workbook.id,
@@ -156,6 +173,7 @@ export const BoundFormElement = props => {
           technology: activeTechnology,
           target,
           varpathFull,
+          varpathRemoved,
           oldValue,
           newValue
         })
@@ -306,17 +324,48 @@ export const BoundNumericRegionInputs = props => {
 export const BoundSourceSelect = props => {
   const {
     sourceListObjectpath,
+    secondarySourceListObjectpath = null,
     additionalOptions = [],
+    categoryRegex = /^Region/,
     ...formElementProps
   } = props;
+  let finalOptions = [];
+
   const sourcesObj = useObjectPathSelector(
     sourceListObjectpath,
     {}
   );
-  const sourcesOptions = sourcesObjectToOptionsArray(sourcesObj, additionalOptions);
+  const secondarySourcesObj = useObjectPathSelector(
+    secondarySourceListObjectpath,
+    {}
+  );
+
+
+  const sourcesOptions = sourcesObjectToOptionsArray(sourcesObj, additionalOptions, categoryRegex);
+
+  finalOptions = sourcesOptions;
+  if (Object.keys(secondarySourcesObj).length != 0) {
+    const secondarySourcesOptions = secondarySourcesObjectToOptionsArray(secondarySourcesObj);
+
+    finalOptions.push(false);
+    finalOptions = sourcesOptions.concat(secondarySourcesOptions)
+  }
+
   return <BoundFormElement
-           options={sourcesOptions}
+           options={finalOptions}
            WidgetComponent={Select}
            {...formElementProps}
          />;
+}
+
+const isValidHttpUrl = (string) => {
+  let url;
+  
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;  
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
 }

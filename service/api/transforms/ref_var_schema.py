@@ -2,6 +2,9 @@ ref_var_schema = {
   "categories.electricity_generation.tam_source_post_start_year": [
     "<class 'str'>"
   ],
+  "categories.electricity_generation.ref_tam_custom_source": [
+    "<class 'str'>"
+  ],
   "technologies.onshorewind.adoption_base": [
     {
       "World": "<class 'float'>",

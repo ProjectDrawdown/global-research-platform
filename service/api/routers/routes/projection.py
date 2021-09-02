@@ -14,7 +14,8 @@ settings = get_settings()
 router = APIRouter()
 default_provider = settings.default_provider
 
-@router.get("/projection/technology/{technology_hash}", response_model=schemas.Calculation,
+# @router.get("/projection/technology/{technology_hash}", response_model=schemas.Calculation,
+@router.get("/projection/technology/{technology_hash}",
         summary="Return the result of a calculation for the given technology hash"
         )
 async def get_tech_result(

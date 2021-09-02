@@ -1,6 +1,7 @@
 """
     Route mapping for the Resource API
 """
+import os
 from typing import List
 import pathlib
 from fastapi import APIRouter, Depends, File, UploadFile, Form
@@ -47,10 +48,8 @@ entity_mapping = {
   'vma': models.VMA,
   'adoption_data': models.AdoptionData,
   'tam': models.TAM,
-  'tam_ref': models.TAM_REF,
   'tam_pds': models.TAM_PDS,
-  'ca_pds': models.CustomAdoptionPDS,
-  'ca_ref': models.CustomAdoptionRef
+  'ca_pds': models.CustomAdoptionPDS
 }
 
 @router.get('/resource/vma/info/{technology}/{name}',
@@ -151,15 +150,14 @@ async def get_by_technology(entity: models.EntityName, technology: str,
       database session, defaults to initialize session
   """
 
-  if entity in (models.EntityName.scenario, models.EntityName.reference,
-    models.EntityName.tam_ref, models.EntityName.tam_pds):
+  if entity in (models.EntityName.scenario, models.EntityName.reference):
     technology = 'n/a'
 
   entities = all_entities_by_technology(database, entity_mapping[entity], technology, db_active_user)
   result = dict()
 
   for s_entity in entities:
-    result[s_entity.name] = f"/resource/{entity}/{s_entity.id}"
+    result[s_entity.name] = f"{os. environ['API_URL']}/resource/{entity}/{s_entity.id}"
 
   return result
 
@@ -397,8 +395,7 @@ async def initialize(database: Session = Depends(get_db)):
     ('vma_data', models.VMA),
     ('tam', models.TAM),
     ('ad', models.AdoptionData),
-    ('ca_pds_data', models.CustomAdoptionPDS),
-    ('ca_ref_data', models.CustomAdoptionRef)
+    ('ca_pds_data', models.CustomAdoptionPDS)
   ]
   for (directory, model) in resource_models:
     resources = populate(directory)
@@ -408,7 +405,6 @@ async def initialize(database: Session = Depends(get_db)):
 
   # populate tam_ref and tam_pds tables:
   tam_resources = [
-    ('tam_ref', models.TAM_REF),
     ('tam_pds', models.TAM_PDS)
   ]
   for (resource_name, model) in tam_resources:

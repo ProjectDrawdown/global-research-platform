@@ -6,7 +6,8 @@ import {
   fetchData,
   updateVariation,
   runCalculation,
-  fetchResources
+  fetchResources,
+  fetchResourcesByTech
 } from "../../../api/api";
 import objectPath from "object-path";
 import { errorAdded } from "../util/errorSlice";
@@ -161,7 +162,6 @@ export const doRemovePortfolioTechnologyPatchThunk = createAsyncThunk(
   async ({ id, technology }, { getState, rejectWithValue }) => {
     try {
       const state = getState();
-      console.log(state);
       if (!state.workbook.workbook || !state.workbook.workbook.ui) {
         throw Error("Workbook not loaded");
       }
@@ -218,6 +218,7 @@ const workbookSlice = createSlice({
         technology,
         target,
         varpathFull,
+        varpathRemoved,
         oldValue,
         newValue
       } = action.meta.arg;
@@ -227,6 +228,12 @@ const workbookSlice = createSlice({
         `${target}_vars.${helperStripVarpathValue(varpathFull)}`,
         newValue
       );
+      if (varpathRemoved) {
+        objectPath.del(
+          state.workbook.variations[variationIndex],
+          `${target}_vars.${helperStripVarpathValue(varpathRemoved)}`,
+        );
+      }
       return state;
     },
     [doUpdateWorkbookVariationVariableThunk.rejectedWithValue]: (
@@ -456,7 +463,7 @@ const workbookSlice = createSlice({
           has_run: true
         },
         references: action.payload.references,
-        scenarios: action.payload.scenarios,
+        tam_scenarios: action.payload.tam_scenarios,
         vmas: action.payload.vmas,
         adoption_data: action.payload.adoption_data,
         projection: action.payload.projection,
@@ -560,10 +567,10 @@ export const calculateThunk = (
       techData = {...techData, hash: techValue.hash};
     }
 
-    const reference = await fetchResources(id, 'tam_ref', activeTechnology);
-    const scenario = await fetchResources(id, 'tam_pds', activeTechnology);
-    const vma = await fetchResources(id, 'vma', activeTechnology);
-    const adoption_data = await fetchResources(id, 'adoption_data', activeTechnology);
+    const tam_scenario = await fetchResourcesByTech(id, 'tam_pds', activeTechnology);
+    const adoption_data = await fetchResourcesByTech(id, 'adoption_data', activeTechnology);
+    const reference = await fetchResources(id, 'reference');
+    const vma = await fetchResources(id, 'vma');
 
     const summaryData = await fetchData(res.meta.summary_path);
 
@@ -571,7 +578,7 @@ export const calculateThunk = (
       calculationLoaded({
         projection: res,
         references: reference,
-        scenarios: scenario,
+        tam_scenarios: tam_scenario,
         adoption_data: adoption_data,
         vmas: vma,
         techData,
