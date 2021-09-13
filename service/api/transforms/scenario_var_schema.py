@@ -224,6 +224,9 @@ scenario_var_schema = {
   "categories.electricity_generation.source_until_start_year": [
     "<class 'str'>"
   ],
+  "categories.electricity_generation.pds_tam_custom_source": [
+    "<class 'str'>"
+  ],
   "technologies.onshorewind.soln_ref_adoption_basis": [
     "<class 'str'>"
   ],

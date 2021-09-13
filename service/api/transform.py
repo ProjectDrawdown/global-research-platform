@@ -26,7 +26,6 @@ legacyDataFiles = {
     ["biomass", "solution/biomass/ac/PDS-1p2050-Drawdown2020.json"],
     ["solarpvutil", "solution/solarpvutil/ac/PDS-25p2050-Drawdown2020.json"],
     ["instreamhydro", "solution/instreamhydro/ac/PDS-2p2050-Drawdown2020.json"],
-    ["concentratedsolar", "solution/concentratedsolar/ac/PDS-6p2050-Drawdown2020.json"],
     ["microwind", "solution/microwind/ac/PDS-0p2050-Drawdown2020.json"],
 
     # Food
@@ -43,7 +42,6 @@ legacyDataFiles = {
     ["multistrataagroforestry", "solution/multistrataagroforestry/ac/PDS-20p2050-Drawdown-customPDS-avg-Jan2020.json"],
     ["regenerativeagriculture",
       "solution/regenerativeagriculture/ac/PDS-47p2050-Drawdown-customPDS-high-29Jan2020.json"],
-    ["nutrientmanagement", "solution/nutrientmanagement/ac/PDS-58p2050-Drawdown-customPDS-avg-Jan2020.json"],
 
     # Land Use
     ["peatlands", "solution/peatlands/ac/PDS-97p2050-Drawdown-customPDS-high-Jan2020.json"],
@@ -331,6 +329,42 @@ def populate(resource: str) -> List[dict]:
         }
         converted_list.append(converted)
         
+  return converted_list
+
+def populate_tam(resource: str) -> List[dict]:
+  directory = get_path_from_library('')
+  converted_list = []
+  rrs = importlib.import_module('solution.rrs')
+
+  if resource == 'tam_ref':
+    sources = rrs.energy_tam_2_ref_data_sources
+
+  if resource == 'tam_pds':
+    sources = rrs.energy_tam_2_pds_data_sources
+
+  for case_or_region in sources:
+    for filename_or_case in sources[case_or_region]:
+      if type(sources[case_or_region][filename_or_case]) is dict:
+
+        # it is a region
+        for filename in sources[case_or_region][filename_or_case]:
+            path = os.path.abspath(sources[case_or_region][filename_or_case][filename])
+            converted = {
+             'data': csv_file_to_json(path),
+             'technology': None,
+             'filename': filename
+            }
+            converted_list.append(converted)
+      else:
+        # it is a case
+        path = os.path.abspath(sources[case_or_region][filename_or_case])
+        converted = {
+         'data': csv_file_to_json(path),
+         'technology': None,
+         'filename': filename_or_case # it's a filename
+        }
+        converted_list.append(converted)
+
   return converted_list
 
 def convert_to_new_path(legacy_name: str, technology: str) -> str:

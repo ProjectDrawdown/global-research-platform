@@ -6,5 +6,8 @@ varRefNamesPaths = [
   ["soln_ref_adoption_regional_data","technologies.solarpvutil.adoption_regional_data","regional_data","Reference Adoption Regional Data","reference"],
   ["soln_ref_adoption_custom_name","technologies.solarpvutil.adoption_custom_name","custom_name","Reference Adoption Name","reference-string"],
   ["ref_2014_cost","technologies.solarpvutil.start_year_cost","start_year_cost","SOLUTION First Cost per Implementation Unit","currency"],
+
+  # custom data path
+  ["ref_tam_custom_source","categories.electricity_generation.ref_tam_custom_source","ref_tam_custom_source","",""],
 ]
 

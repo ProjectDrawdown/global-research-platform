@@ -11,9 +11,9 @@ from deepdiff import DeepDiff
 import concurrent.futures
 
 from model.data_handler import DataHandler
-from solution import factory, factory_2
+from solution import factory
 
-from api.config import AioWrap, LogSettings, get_projection_path, get_settings
+from api.config import LogSettings, get_projection_path, get_settings
 from api.queries.workbook_queries import workbook_by_id
 from api.transform import rehydrate_legacy_json
 from api.db.models import Workbook
@@ -156,10 +156,14 @@ def to_json(scenario, regions):
       try:
           obj = getattr(scenario, iv)
           if issubclass(type(obj), DataHandler):
-              json_data[iv] = obj.to_json(regions)
-              for jv in json_data[iv]:
-                if type(json_data[iv][jv]) in [DataFrame, Series]:
-                  json_data[iv][jv] = json.loads(json_data[iv][jv].to_json())
+            json_data[iv] = obj.to_json(regions)
+            for jv in json_data[iv]:
+              # TODO: this is a hack, we are still unsure when this data is going
+              # to be used in the UI
+              if jv in ['FaIR_CFT_Drawdown_RCP3', 'FaIR_CFT_Drawdown_RCP45']:
+                del json_data[iv][jv]
+              if type(json_data[iv][jv]) in [DataFrame, Series]:
+                json_data[iv][jv] = json.loads(json_data[iv][jv].to_json())
       except BaseException as e:
             json_data[iv] = None
     if 'c2' in json_data and json_data['c2']:
@@ -174,7 +178,7 @@ def to_json(scenario, regions):
         }
     for x in json_data:
         if json_data[x] is not None:
-            json_data[x] = format_year_data(json_data[x])
+          json_data[x] = format_year_data(json_data[x])
     return {'name': scenario.name, 'data': json_data, 'metadata': metadata}
 
 # async def calc(input, hashed_json_input, technology, json_input, prev_results, key_list, cache, websocket, do_diffs):
@@ -187,12 +191,12 @@ def to_json(scenario, regions):
 #   return result
 
 def calc(input, name_full, hashed_json_input, technology, regions, json_input, prev_results, key_list, cache, websocket, do_diffs):
-  constructor = factory_2.one_solution_scenarios(technology, json_input)[0]
-
   try:
-    result = to_json(constructor(input), regions)
+    myscenarioresult = factory.load_scenario(technology, json_input)
+
+    result = to_json(myscenarioresult, regions)
   except Exception as e:
-    logger.error("Failed to calculate scenario: {}".format(e))
+    logger.error("Failed to calculate {0} scenario: {1}".format(technology, e))
     result = e
   return (result, input, name_full, hashed_json_input, technology, json_input, prev_results, key_list, cache, websocket, do_diffs)
 
@@ -297,8 +301,8 @@ async def process_tech_calc(json_result, name, key_hash, prev_results, tech, key
       await find_diffs(prev_results['results'], tech, json_result, key_hash, key_list, cache, websocket)
     else:
       key_list.append([tech, json_result['name'], name, key_hash, False])
-  except:
-    str_json_result = json.dumps({"error": str(json_result)})
+  except Exception as e:
+    str_json_result = json.dumps({"technology": tech, "error": str(e)})
     logger.error(str_json_result)
 
   if websocket:
@@ -416,9 +420,8 @@ async def calculate(
 
   input_data = await fetch_data(variation, client)
   jsons = build_json(workbook.start_year, workbook.end_year, *input_data)
-  if settings.input_logs:
-    with open(f"json_input.log", 'a') as f:
-      f.write(f"\n\n\n{json.dumps(jsons)}\n\n\n")
+  with open(f"json_input.log", 'a') as f:
+    f.write(f"\n\n\n{json.dumps(jsons)}\n\n\n")
   [tasks, key_list, _] = await setup_calculations(jsons, regions, prev_data, cache, websocket, do_diffs)
 
   perform_func = perform_calculations_async if run_async else perform_calculations_sync

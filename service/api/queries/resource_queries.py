@@ -33,7 +33,7 @@ def get_entities_by_name(database: Session, name: str, technology: str, table, u
         Get multiple Resource from table by name
     """
     return database.query(table) \
-        .filter(and_(table.technology == technology, table.name == name, or_(table.is_public, table.author_id.is_(None), table.author_id == user.id))) \
+        .filter(and_(table.technology == technology, table.name == name, or_(table.is_public, table.author_id == user.id))) \
         .all()
 
 def get_entity_by_name(database: Session, name: str, technology: str, table, user: models.User):
@@ -41,7 +41,7 @@ def get_entity_by_name(database: Session, name: str, technology: str, table, use
         Get first object from table by name
     """
     return database.query(table) \
-        .filter(and_(table.technology == technology, table.name.like(name), or_(table.is_public, table.author_id.is_(None), table.author_id == user.id))) \
+        .filter(and_(table.technology == technology, table.name.like(name), or_(table.is_public, table.author_id == user.id))) \
         .first()
 
 def all_entities_by_technology(database: Session, table, technology: str, user: models.User):
@@ -50,7 +50,7 @@ def all_entities_by_technology(database: Session, table, technology: str, user: 
         owned by user or has been set to true set by technology.
     """
     return database.query(table) \
-        .filter(and_(table.technology == technology, or_(table.is_public, table.author_id.is_(None), table.author_id == user.id))) \
+        .filter(and_(table.technology == technology, or_(table.is_public, table.author_id == user.id))) \
         .all()
 
 
@@ -60,7 +60,7 @@ def all_entities(database: Session, table, user: models.User):
         owned by user or has been set to true.
     """
     return database.query(table) \
-        .filter(or_(table.is_public, table.author_id.is_(None), table.author_id == user.id)) \
+        .filter(or_(table.is_public, table.author_id == user.id)) \
         .all()
 
 def all_entity_paths(database: Session, _, table):
@@ -167,6 +167,8 @@ def clear_all_tables(database: Session):
     for model in [
             models.VMA,
             models.TAM,
+            models.TAM_REF,
+            models.TAM_PDS,
             models.AdoptionData,
             models.CustomAdoptionPDS,
             models.CustomAdoptionRef,

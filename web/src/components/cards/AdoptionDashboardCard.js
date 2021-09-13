@@ -104,8 +104,10 @@ function AdoptionDashboardCard({ drawer, color, techData }) {
               </Heading>
               <BoundSourceSelect
                 varpath="adoption_prognostication_source"
+                varpathSecondary="pds_adoption_custom_source"
                 InputWidget={BoundSourceSelect}
                 sourceListObjectpath="workbook.techData.metadata.ad_data_sources"
+                secondarySourceListObjectpath="workbook.adoption_data"
                 additionalOptions={[]}
                 size="sm"
               />
@@ -125,7 +127,8 @@ function AdoptionDashboardCard({ drawer, color, techData }) {
           </IfIn>
           <Box p="2" pt="8">
             <UploadResource
-              name="adoption_data"
+              entity="adoption_data"
+              name="custom Adoption data"
             />
           </Box>
         </Flex>

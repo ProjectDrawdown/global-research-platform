@@ -26,6 +26,8 @@ class EntityName(str, enum.Enum):
     tam = "tam"
     ca_pds = "ca_pds"
     ca_ref = "ca_ref"
+    tam_ref = "tam_ref"
+    tam_pds = "tam_pds"
 
 class UserRole(enum.Enum):
     """
@@ -168,6 +170,18 @@ class TAM(Resource, Base):
         Represent the TAM Table
     """
     __tablename__ = 'tam'
+
+class TAM_REF(Resource, Base):
+    """
+        Represent the TAM REF Table
+    """
+    __tablename__ = 'tam_ref'
+
+class TAM_PDS(Resource, Base):
+    """
+        Represent the TAM PDS Table
+    """
+    __tablename__ = 'tam_pds'
 
 class VMA(Resource, Base):
     """

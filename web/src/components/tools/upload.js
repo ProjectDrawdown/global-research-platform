@@ -17,7 +17,7 @@ import {
 import UploadIcon from 'images/icons/upload.svg'
 import { uploadVMA } from "../../api/api";
 
-const UploadResourceModal = ({ loading, onChangeHandler, entity }) =>  {
+const UploadResourceModal = ({ loading, onChangeHandler, name }) =>  {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -27,7 +27,7 @@ const UploadResourceModal = ({ loading, onChangeHandler, entity }) =>  {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Upload a new {entity}</ModalHeader>
+          <ModalHeader>Upload a new {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <input type="file" name="file" onChange={onChangeHandler} />
@@ -51,7 +51,7 @@ function getTechFromURL(pathname) {
   return tech
 }
 
-export const UploadResource = ({ name }) => {
+export const UploadResource = ({ entity, name }) => {
   const [loading, setIsLoading] = useState(false);
   const [_,setIsFilePicked] = useState(false);
 
@@ -67,10 +67,12 @@ export const UploadResource = ({ name }) => {
     const data = new FormData();
     data.append('file', file);
     data.append('name', file.name);
-    const upload = await uploadVMA(data, name, technology);
-    setIsLoading(false);
+    const upload = await uploadVMA(data, entity, technology);
+    // This is a hack, I dont like how we have to reload when new file is
+    // uploaded, but its a way to repopulate the options
+    window.location.reload();
   }
 
-  return <UploadResourceModal onChangeHandler={changeHandler} entity={name} loading={loading} />
+  return <UploadResourceModal onChangeHandler={changeHandler} name={name} loading={loading} />
 }
 
