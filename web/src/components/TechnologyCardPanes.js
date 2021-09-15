@@ -1,5 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLink
+} from "@fortawesome/free-solid-svg-icons";
 import {
   doAddPortfolioTechnologyPatchThunk,
   doRemovePortfolioTechnologyPatchThunk
@@ -122,6 +126,30 @@ export const TechnologyCardPaneWrapper = props => {
           )}
         </Flex>
       </Stack>
+
+      {props.currentSector === "health" &&
+        <Stack>
+          <Flex>
+            <Button 
+              leftIcon={<FontAwesomeIcon icon={faLink} />}
+              color={`brand.electricity.900`}
+              variant="outline"
+              mr="2">
+              Population
+            </Button>
+            <Button 
+              leftIcon={<FontAwesomeIcon icon={faLink} />}
+              color={`brand.electricity.900`}
+              variant="outline">
+              Emissions Factors
+            </Button>
+          </Flex>
+          <Flex>
+            Clusters
+          </Flex>
+        </Stack>
+      }
+      
       <Stack spacing={4}>
         {props.children}
       </Stack>
@@ -211,8 +239,12 @@ export const ViewPortfolioPane = props => {
           technologyIDs={portfolioSolutions}
           cols={props.cols}
           keyString="portfolio-soln-"
-          makeOnClickFn={technologyID => () =>
-            gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
+          makeOnClickFn={technologyID => techSectorType => () =>
+            techSectorType === 'HE' ? 
+              gotoAndClose(`/workbook/${params.id}/cluster/${technologyID}`)
+              :
+              gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)
+            }
           isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
           isFeaturedFn={() => true}
         />

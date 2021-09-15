@@ -212,6 +212,7 @@ export const TechnologyCardGrid = ({
           const techData = technologyMetadata[technologyID];
           const techImgFilename = technologyImages[technologyID];
           const techSectorID = techMap[techData.sector];
+          const techSectorType = techData.type;
           const color = techSectorID || techMap.default;
           const icon = iconMap[technologyID] || iconMap.default;
           const techImg = techImgFilename
@@ -228,7 +229,7 @@ export const TechnologyCardGrid = ({
               changed={isChangedFn(technologyID)}
               title={techData.name}
               technologyImage={techImg}
-              onClick={makeOnClickFn(technologyID)}
+              onClick={makeOnClickFn(technologyID)(techSectorType)}
               selected={isSelectedFn(technologyID)}
             />
           );

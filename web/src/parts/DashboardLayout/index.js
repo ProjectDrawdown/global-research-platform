@@ -18,7 +18,6 @@ const DashboardLayout = ({
         pt="1rem"
         flex="1"
         maxW="none"
-        position="fixed"
         ml={navMargin ? "3rem" : 0}
         mb="6rem"
         w={`calc(${maxW} - ${navMargin ? "3" : "0"}rem)`}

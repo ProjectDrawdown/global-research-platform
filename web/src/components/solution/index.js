@@ -179,7 +179,7 @@ export const SolutionLayout = ({
           rounded="lg"
           overflowY="auto"
           w={isSidebar() ? getSidebarWidth().left : "100%"}>
-          <Box top="0" zIndex="1500" pos="sticky">
+          <Box top="0" pos="sticky">
             {solutionHeaderChildren && (
               <Box>{solutionHeaderChildren.props.children}</Box>
             )}
