@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Heading, HStack, Grid, GridItem, Center, Button, Text } from "@chakra-ui/react";
 import { Link as DomLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -52,14 +52,14 @@ const StyledButton = styled.div`
  * Additional Header feature:
  * * A floating button to use for Workbook recalculation.
  * * A Toast for when a feature notebook is opened
- * 
- * @param {*} param0 
+ *
+ * @param {*} param0
  * @returns components
  */
 export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
-  const calculate = () => 
+  const calculate = () =>
     {if (workbookState.calculationLoading == true) {return}
     else {
       store.dispatch(calculateThunk(workbookState.workbook.id, 0, technologyId));
@@ -82,6 +82,7 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
       type: "info"
    }));
   }, [workbookHasAuthor])
+
 
   return (
     <Box
@@ -124,14 +125,14 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
           </HStack>
         </GridItem>
         {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
-          <StyledRunWrapper onClick={calculate} loading={workbookState?.calculationLoading}>
-            <StyledButton loading={workbookState?.calculationLoading}> 
-              <RunButton/> 
+          <StyledRunWrapper onClick={calculate} loading={workbookState?.calculationLoading} className="first-workbook-solution-tour">
+            <StyledButton loading={workbookState?.calculationLoading}>
+              <RunButton/>
             </StyledButton>
-            { workbookState?.techData ? 
+            { workbookState?.techData ?
               <Center
-                position="absolute" 
-                left="0" 
+                position="absolute"
+                left="0"
                 right="0"
                 top="0"
                 bottom="0"
@@ -139,10 +140,10 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
                 marginTop="19%"
                 fontWeight="bold"
                 textAlign="center"
-              > 
+              >
                 <Text flex="1 1 160px"> {calculateMmtReduced()} </Text>
-              </Center> : 
-              <PlayButton position="absolute" top="0" /> 
+              </Center> :
+              <PlayButton position="absolute" top="0" />
             }
           </StyledRunWrapper>
         ) : null}

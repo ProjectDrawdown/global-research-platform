@@ -44,7 +44,7 @@ export const CardTitle = ({ children, icon, onClick, iconLeft = false }) => (
         }}
         icon={icon}
         onClick={onClick}
-      />
+       className="second-workbook-solution-tour"/>
     )}
     <StyledHeading as="h6" mb="0" size="sm" float="left">
       {children}

@@ -62,7 +62,9 @@ export const PortfolioCardPaneWrapper = props => {
               onClick={() => {
                 history.push(props.viewLocation);
               }}>
+              <div className="second-postclone-tour">
               <CheckIcon mr={2} /> SAVE SELECTION
+              </div>
             </StyledButton>
           ) : (
             <StyledButton
@@ -70,7 +72,7 @@ export const PortfolioCardPaneWrapper = props => {
               variant="ghost"
               onClick={() => {
                 history.push(props.editLocation);
-              }}>
+              }} className="fifth-step">
               <AddIcon mr={2} /> EDIT PORTFOLIO
             </StyledButton>
           )}
@@ -170,6 +172,7 @@ export const EditPortfolioPane = props => {
       mx={mx}
       w={w}
     >
+    <div className="first-postclone-tour">
       <SortedTechnologyCardGrid
         isEditingPortfolio={true}
         technologyIDs={allSolutions}
@@ -181,6 +184,7 @@ export const EditPortfolioPane = props => {
         isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
         isFeaturedFn={() => true}
       />
+      </div>
     </PortfolioCardPaneWrapper>
   );
 };
@@ -207,6 +211,7 @@ export const ViewPortfolioPane = props => {
       mx={mx}
       w={w}>
       {portfolioSolutions.length > 0 ? (
+        <div className="sixth-step">
         <SortedTechnologyCardGrid
           isEditingPortfolio={false}
           technologyIDs={portfolioSolutions}
@@ -217,6 +222,7 @@ export const ViewPortfolioPane = props => {
           isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
           isFeaturedFn={() => true}
         />
+        </div>
       ) : (
         <Box>
           <Text>The portfolio for this workbook is currently empty.</Text>
