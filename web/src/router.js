@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import EnergyTechnology from "components/technologies/EnergyTechnology";
 import PortfolioViewPage from "routes/PortfolioViewPage";
 import PortfolioEditPage from "routes/PortfolioEditPage";
+import HealthAndEducationViewPage from "routes/HealthAndEducationViewPage";
 import HomePage from "routes/HomePage";
 import LoginPage from "routes/LoginPage";
 import LogoutPage from "routes/LogoutPage";
@@ -51,6 +52,11 @@ const Router = () => {
           exact
           path="/workbook/:id/technologies/:technologyId"
           component={EnergyTechnology}
+        />
+        <ProtectedRoute
+          exact
+          path="/workbook/:workbookId/cluster/:technologyId"
+          component={HealthAndEducationViewPage}
         />
         <Route exact path="/login" component={LoginPage} />
         <ProtectedRoute exact path="/workbooks" component={WorkbookPage} />

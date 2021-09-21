@@ -433,7 +433,7 @@ const dataConfig = {
     },
     hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" },
     heelectricity: {
-      name: "Electriity",
+      name: "Electricity",
       sector: "Health and Education",
       type: "HE"
     },
