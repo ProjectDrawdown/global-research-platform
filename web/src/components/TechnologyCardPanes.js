@@ -343,7 +343,7 @@ export const TechnologyPane = ({
           technologyIDs={sectorTechnologyIDsInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
-          makeOnClickFn={technologyID => () => sectorEdit ?
+          makeOnClickFn={technologyID => () => () => sectorEdit ?
             handlePortfolioTechnologyClick(technologyID) :
             gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
           isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
@@ -386,7 +386,7 @@ export const TechnologyPane = ({
           technologyIDs={sectorTechnologyIDsNotInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
-          makeOnClickFn={technologyID => () => sectorEdit ?
+          makeOnClickFn={technologyID => () => () => sectorEdit ?
             handleNonportfolioTechnologyClick(technologyID) :
             gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
           isSelectedFn={() => false}
