@@ -1,7 +1,11 @@
-import React, { useRef, useEffect, useCallback, useMemo } from "react";
+import React, { useRef, useEffect, useCallback, useMemo, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Box, Grid, Flex, Stack } from "@chakra-ui/react";
+import Tour from 'reactour';
+import Tourtooltip from "components/Tourtooltip";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "services/user";
+import steps from "redux/reducers/tour/TourstepsWorkbookSolution";
 import {
   Drawer,
   DrawerOverlay,
@@ -141,6 +145,8 @@ export const SolutionLayout = ({
   modal,
   modalPath
 }) => {
+  const { user, patchUserFromAPI} = useContext(UserContext);
+
   const solutionHeaderChildren = findChildByContainerType(
     children,
     SolutionHeaderRegion
@@ -170,6 +176,17 @@ export const SolutionLayout = ({
     ({ left: "66.66666%", right: "33.33333%" }) :
     ({ left: "60%", right: "40%" });
   const stack = useRef();
+  const [showTour, setshowTour] = useState(true);
+  const closeTour = () =>{
+    setshowTour(false);
+    patchUserFromAPI({
+      ...user,
+      meta: {
+        ...user.meta,
+        hasOnboarded: true
+      }
+    });
+  }
   return (
     <>
       <Stack direction="row" h="100%">
@@ -222,6 +239,12 @@ export const SolutionLayout = ({
           {solutionCardModal}
         </SolutionCardModal>
       )}
+      <Tour
+      steps={steps}
+      isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
+      closeWithMask={false}
+      onRequestClose={() => closeTour()}
+        CustomHelper={ Tourtooltip } />
     </>
   );
 };

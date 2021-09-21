@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext , useState} from "react";
 import { useSelector } from "react-redux";
 import store from "redux/store";
 import {
@@ -21,11 +21,15 @@ import {
 } from "@chakra-ui/react";
 
 import { UserContext } from "services/user";
+import steps from "../redux/reducers/tour/TourstepsWorkbookClone";
+import Tourtooltip from "../components/Tourtooltip"
+import Tour from 'reactour'
 
 const CloneWorkbookPage = () => {
-  const { user } = useContext(UserContext);
+  const { user, patchUserFromAPI } = useContext(UserContext);
   const params = useParams();
   const history = useHistory();
+  const [showTour, setshowTour] = useState(true);
 
   const loadingStatus = useSelector(state => state.workbook.status);
 
@@ -76,11 +80,11 @@ const CloneWorkbookPage = () => {
         {props => (
           <Form>
             <VStack spacing={4}>
-              <Field name="name" validate={validateName}>
+              <Field name="name" validate={validateName} >
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.name && form.touched.name}
-                  >
+                    className="first-workbook-step">
                     <FormLabel htmlFor="name">Workbook Name</FormLabel>
                     <Input {...field} id="name" placeholder="ex. My Workbook" />
                     <FormErrorMessage>{form.errors.name}</FormErrorMessage>
@@ -102,7 +106,7 @@ const CloneWorkbookPage = () => {
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.description && form.touched.description}
-                  >
+                  className="second-workbook-step">
                     <FormLabel htmlFor="description">Workbook Description</FormLabel>
                     <Textarea {...field} id="description" placeholder="My Workbook Description" />
                     <FormErrorMessage>{form.errors.description}</FormErrorMessage>
@@ -113,6 +117,7 @@ const CloneWorkbookPage = () => {
               {/*   <Text as="label" for="notes">Workbook Name</Text> */}
               {/*   <Textarea name="notes" placeholder="Description of this workbook for later reference." /> */}
               {/* </Field> */}
+                <div className="third-workbook-step">
               <Box>
                 <Button
                   colorScheme="brand.blue"
@@ -122,10 +127,18 @@ const CloneWorkbookPage = () => {
                   Next
                 </Button>
               </Box>
+              </div>
             </VStack>
           </Form>
         )}
       </Formik>
+      <Tour
+      steps={steps}
+      isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
+      closeWithMask={false}
+      onRequestClose={() => setshowTour(false)}
+        CustomHelper={ Tourtooltip } />
+      <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </PageLayout>
   );
 };

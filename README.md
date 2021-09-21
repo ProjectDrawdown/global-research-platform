@@ -1,4 +1,4 @@
-# Project Drawdown Model Engine Hello
+# Project Drawdown Model Engine
 [Project Drawdown](https://www.drawdown.org/) is the most comprehensive plan yet published for how to solve Global Warming. Project Drawdown entered the climate conversation with the [publication of the 2017 book](https://www.drawdown.org/the-book). With [The Drawdown Review in 2020](https://drawdown.org/drawdown-framework/drawdown-review-2020), the project continues its mission to inspire and communicate solutions.
 
 <img align="right" src="data/images/DrawdownReview2020.gif" />
@@ -109,7 +109,7 @@ $ docker-compose up
 
 You will need [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Python 3](https://docs.python.org/3/using/index.html) (>= 3.8) installed. You will need [Postgres](https://www.postgresql.org/) and [Redis](https://redis.io/) running.
 
-Python 3.8
+Python 3.9
 ```sh
 $ cd service
 

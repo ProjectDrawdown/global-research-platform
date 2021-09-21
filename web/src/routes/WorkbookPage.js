@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext,useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import store from "redux/store";
 import { fetchWorkbooksThunk } from "redux/reducers/workbook/workbookListSlice";
@@ -10,9 +10,14 @@ import WorkbookCardGrid from "components/workbook/cardGrid";
 import { Icon, Input, InputGroup, InputRightAddon, Text, Heading, VStack, Box } from "@chakra-ui/react";
 import { IoIosAddCircleOutline as PlusIcon } from "react-icons/io";
 import { SearchIcon } from "@chakra-ui/icons";
+
 // import { FaPlusCircle as PlusIcon } from "react-icons/fa"
 import { updateFilter } from "redux/reducers/filterQuery/filterQuerySlice";
 import LoadingSpinner from "components/LoadingSpinner";
+import steps from "../redux/reducers/tour/TourstepsWorkbookpage";
+import Tourtooltip from "../components/Tourtooltip"
+import Tour from 'reactour'
+import { UserContext } from "services/user"
 
 const CreateWorkbookCard = () => {
   return (
@@ -56,6 +61,9 @@ export const WorkbookPage = () => {
   const workbooks = useSelector(state => state.workbooks);
   const loadingStatus = useSelector(state => state.workbooks.status);
   const filterQuery = useSelector(state => state.filterQuery);
+  const { user } = useContext(UserContext);
+  const [showTour, setshowTour] = useState(true);
+
 
   useEffect(() => {
     // TODO refactor so we update the list on change and don't need to reload
@@ -92,7 +100,7 @@ export const WorkbookPage = () => {
           <Heading as="h2" mb={2}>
             My Workbooks
           </Heading>
-
+          <div className="fourth-workbook-step">
           <WorkbookCardGrid>
             {workbooks &&
               workbooks.workbooks &&
@@ -107,28 +115,40 @@ export const WorkbookPage = () => {
                   />
                 ))}
           </WorkbookCardGrid>
+          </div>
         </Box>
         <Box>
           <Heading as="h2" mb={2}>
             Browse <FilterInput />
           </Heading>
           <WorkbookCardGrid>
-            <CreateWorkbookCard />
+          <div className="second-workbook-step">
+            <CreateWorkbookCard/>
+          </div>
             {workbooks &&
               workbooks.workbooks &&
               typeof workbooks.workbooks.map === "function" &&
               workbooks.workbooks
                 .filter(filterFunc)
                 .map(workbook => (
+                  <div className="third-workbook-step">
                   <WorkbookCard
                     key={workbook.id}
                     workbook={workbook}
                     to={`/workbook/${workbook.id}`}
                   />
+                  </div>
                 ))}
           </WorkbookCardGrid>
         </Box>
       </VStack>
+      <Tour
+      steps={steps}
+      isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
+      closeWithMask={false}
+      onRequestClose={() => setshowTour(false)}
+        CustomHelper={ Tourtooltip } />
+      <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </PageLayout>
   );
 };

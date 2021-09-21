@@ -1,28 +1,20 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { doFetchTechnologyVMAMappingsThunk, useTechnologyVMAMappingSelector } from "redux/reducers/vmaMappingsSlice.js";
 import { doFetchVMACalculationThunk, varpathFullVMACalculationSelector } from "redux/reducers/vmaCalculationsSlice.js";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInoutAddon } from "../../theme/icons";
 import {
-  WorkbookContext,
-  getVariableValue,
-  setVariableValue
-} from "../../services/workbook";
-import {
-  Box,
-  Grid,
-  GridItem,
   Heading,
   Flex,
-  Divider,
   Stack,
-  Switch,
-  Text
+  Switch
 } from "@chakra-ui/react";
 import { useTheme } from "@chakra-ui/react";
 import { InputWithAddons, Select } from "../Input";
+import { UploadResource } from "components/tools/upload"
+import styled from "styled-components"
+
+const ResizedButton = styled.div`
+  transform: scale(0.75);
+`
 
 const VMAInput = props => {
   return (
@@ -79,7 +71,9 @@ const VMA = ({
   source,
   vmaSourceOptions,
   color = 'grey',
-  ...inputProps
+  enableUpload = true,
+  varpath,
+  ...props
 }) => {
   const leftAddon = dataType === "USD" ? "$" : "";
   const rightAddon = dataType === "percent" ? "%" : "";
@@ -112,6 +106,12 @@ const VMA = ({
               options={vmaSourceOptions}
               value={source}
             />
+            {
+              enableUpload &&
+              <ResizedButton>
+                <UploadResource name="vma" />
+              </ResizedButton>
+            }
           </VMAFormItem>
           <VMAFormItem
             label="Use Corrected?"
@@ -187,9 +187,12 @@ const VMAWithState = ({ varpath, varpathFull, target, technologyId, ...props }) 
     source: vmaCalculationData.source
   };
 
+  console.log(varpathFull)
+
   return <VMA
            {...props}
            vmaSourceOptions={vmaSourceOptions}
+           varpath={varpathFull}
            {...vmaValues}
          />;
 };
