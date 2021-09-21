@@ -206,7 +206,7 @@ export const EditPortfolioPane = props => {
         technologyIDs={allSolutions}
         cols={props.cols}
         keyString="nonportfolio-soln-"
-        makeOnClickFn={technologyID => () => portfolioSolutions.includes(technologyID) ?
+        makeOnClickFn={technologyID => () => () => portfolioSolutions.includes(technologyID) ?
           handlePortfolioTechnologyClick(technologyID) :
           handleNonportfolioTechnologyClick(technologyID)}
         isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
