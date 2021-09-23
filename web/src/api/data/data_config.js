@@ -22,6 +22,7 @@ const dataConfig = {
     "Ocean Sinks": "coastal",
     Ocean: "coastal",
     "Buildings and Cities": "buildings",
+    "Health and Education": "health",
     Materials: "materials",
     "Women and Girls": "women"
   },
@@ -137,6 +138,10 @@ const dataConfig = {
     ],
     "Oceans": [
       "bottomtrawling"
+    ],
+    "Health and Education Clusters": [
+      "heelectricity",
+      "hespaceheating",
     ]
   },
   technologyMetadata: {
@@ -426,7 +431,17 @@ const dataConfig = {
       sector: "Oceans",
       type: "Sink"
     },
-    hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" }
+    hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" },
+    heelectricity: {
+      name: "Electriity",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hespaceheating: {
+      name: "Space Heating",
+      sector: "Health and Education",
+      type: "HE"
+    }
   },
   technologyImages: {
     "abandoned-farmland-restoration": "solution_farmlandrestoration01.jpg",

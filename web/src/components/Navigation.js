@@ -1,5 +1,9 @@
-import React, { useRef, createRef, useState } from "react";
+import React, { useRef, useContext, createRef, useState } from "react";
+import { Button} from "@chakra-ui/react";
 import { Link, useParams, useLocation, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {showHelpMode} from "../redux/reducers/workbook/workbookUISlice"
+import { UserContext } from "services/user"
 import {
   useTheme,
   useDisclosure,
@@ -34,7 +38,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { GlobeOutline, AddCircleOutline } from "react-ionicons";
 import { ArrowRightIcon, ArrowLeftIcon, QuestionIcon } from "@chakra-ui/icons";
-
 import styled from "styled-components";
 
 import { getPathByHash } from "../util/component-utilities";
@@ -107,6 +110,7 @@ const SideNavigation = ({
   navRef,
   showAgencyFilters = false
 }) => {
+  const {HelpMode} = useSelector(state=>state.workbookUI);
   return (
     <StyledNavigationStack
       direction="column"
@@ -122,14 +126,14 @@ const SideNavigation = ({
       {isOpen ? (
         <ButtonSector
           variant="ghost"
-          icon={<ArrowLeftIcon />}
+          icon={<ArrowLeftIcon className="first-step"/>}
           as={Link}
           to="#"
         />
       ) : (
         <ButtonSector
           variant="ghost"
-          icon={<ArrowRightIcon />}
+          icon={<ArrowRightIcon className="first-step"/>}
           as={Link}
           to="#nav/portfolio"
         />
@@ -144,7 +148,9 @@ const SideNavigation = ({
       <ButtonSector
         brandColor="electricity"
         selected={activeItem === "electricity"}
-        icon={<FontAwesomeIcon icon={faBolt} />}
+        icon={
+          <FontAwesomeIcon className="second-step"  icon={faBolt}/>
+        }
         to="#nav/sector/electricity"
       />
       <ButtonSector
@@ -157,7 +163,9 @@ const SideNavigation = ({
         brandColor="industry"
         selected={activeItem === "industry"}
         to="#nav/sector/industry"
-        icon={<FontAwesomeIcon icon={faIndustry} />}
+        icon={
+        <FontAwesomeIcon className="third-step" icon={faIndustry} />
+      }
       />
       <ButtonSector
         brandColor="transport"
@@ -224,7 +232,7 @@ const SideNavigation = ({
       <ButtonSector
         to={`/workbook/${workbookId}#show-onboarding`}
         variant="ghost"
-        icon={<QuestionIcon/>}
+        icon={<QuestionIcon className="fourth-step"/>}
       />
     </StyledNavigationStack>
   );
@@ -237,6 +245,9 @@ export const Navigation = () => {
   const history = useHistory();
   const activeTechnology = params.technologyId;
   const workbookId = params.id;
+  const {HelpMode} = useSelector(state=>state.workbookUI);
+  const dispatch = useDispatch();
+
 
   const navigationPath = getPathByHash("nav", location.hash);
   const portfolioPath = getPathByHash("portfolio", "#" + navigationPath);
@@ -257,7 +268,6 @@ export const Navigation = () => {
       history.push({ hash: "" });
     }
   });
-
   let navContent;
   if (!!navigationPath) {
     switch (true) {
@@ -279,6 +289,7 @@ export const Navigation = () => {
             <EditPortfolioPane
               cols={3}
               viewLocation="#nav/portfolio"
+              onClose={onClose}
             />
           );
         } else {

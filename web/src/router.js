@@ -10,10 +10,12 @@ import LogoutPage from "routes/LogoutPage";
 import WorkbookPage from "routes/WorkbookPage";
 import CloneChooseWorkbookPage from "routes/CloneChooseWorkbookPage";
 import CloneWorkbookPage from "routes/CloneWorkbookPage";
+import EditWorkbookPage from "routes/EditWorkbookPage";
 import PostClonePage from "routes/PostClonePage";
 import MainPage from "routes/MainPage";
 import NotFoundPage from "routes/NotFoundPage";
 import { UserContext } from "services/user";
+import UserSignupPage from "routes/UserSignupPage";
 
 const ProtectedRoute = ({ component: Component, ...rest}) => {
   const { user, fetched } = useContext(UserContext);
@@ -37,6 +39,7 @@ const Router = () => {
           component={CloneChooseWorkbookPage}
         />
         <ProtectedRoute exact path="/workbook/:id/clone" component={CloneWorkbookPage} />
+        <ProtectedRoute exact path="/workbook/:id/edit" component={EditWorkbookPage} />
         <ProtectedRoute exact path="/workbook/:id" component={PortfolioViewPage} />
         <ProtectedRoute exact path="/workbook/:id/postclone" component={PostClonePage} />
         <ProtectedRoute
@@ -52,6 +55,7 @@ const Router = () => {
         />
         <Route exact path="/login" component={LoginPage} />
         <ProtectedRoute exact path="/workbooks" component={WorkbookPage} />
+        <ProtectedRoute exact path="/signup" component={UserSignupPage} />
         <Route exact path="/logout" component={LogoutPage} />
         <Route exact path="/auth/:provider" component={MainPage} />
         <Route path="*" component={NotFoundPage} />

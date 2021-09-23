@@ -109,7 +109,7 @@ $ docker-compose up
 
 You will need [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), [Python 3](https://docs.python.org/3/using/index.html) (>= 3.8) installed. You will need [Postgres](https://www.postgresql.org/) and [Redis](https://redis.io/) running.
 
-Python 3.8
+Python 3.9
 ```sh
 $ cd service
 

@@ -22,7 +22,8 @@ router = APIRouter()
 default_provider = settings.default_provider
 
 @router.get("/vma/mappings/{technology}",
-        summary="Get VMA mappings for a given technology"
+        summary="Get VMA mappings for a given technology",
+        tags=["VMA"]
         )
 async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
   paths = varProjectionNamesPaths + varRefNamesPaths
@@ -34,7 +35,7 @@ async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
     for title in vma_titles:
       vma_file = m.VMAs.get(title)
       if vma_file and vma_file.filename:
-        db_file = get_entity_by_name(db, f'solution/{technology}/{vma_file.filename.name}', models.VMA)
+        db_file = get_entity_by_name(db, vma_file.filename.name, technology, models.VMA)
         if db_file:
           result.append({
             'var': path[0],
@@ -46,13 +47,15 @@ async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
   return result
 
 @router.get("/vma_csv/{id}",
-        summary="Retrieve a VMA CSV with the given id"
+        summary="Retrieve a VMA CSV with the given id",
+        tags=["VMA"]
         )
 async def get_vma_csv(id: str, db: Session = Depends(get_db)):
   return db.query(models.VMA_CSV).get(id)
 
 @router.post("/vma_csv",
-        summary="Upload a custom VMA CSV"
+        summary="Upload a custom VMA CSV",
+        tags=["VMA"]
         )
 async def post_vma_csv(
   name: str = Form(...),
@@ -76,7 +79,8 @@ async def post_vma_csv(
 @router.put('/vma_csv/{input_id}/publish',
   summary='publish VMA CSV to be public',
   description='publishing VMA CSV to be public, if public, the VMA CSV ' +
-    'are then accessable for other users')
+    'are then accessable for other users',
+    tags=["VMA"])
 async def publish_vma_by_id(input_id: int, database: Session = Depends(get_db),
   db_active_user: models.User = Depends(get_current_active_user)):
   """
@@ -98,7 +102,8 @@ async def publish_vma_by_id(input_id: int, database: Session = Depends(get_db),
 
 @router.delete('/vma_csv/{input_id}/publish',
   summary='unpublish VMA CSV to make it private',
-  description='unpublish a VMA CSV to private and make it accessable only to author')
+  description='unpublish a VMA CSV to private and make it accessable only to author',
+  tags=["VMA"])
 async def unpublish_vma_by_id(input_id: int, database: Session = Depends(get_db),
   db_active_user: models.User = Depends(get_current_active_user)):
   """
@@ -120,7 +125,9 @@ async def unpublish_vma_by_id(input_id: int, database: Session = Depends(get_db)
   
 @router.get("/vma/calculation",
         summary="Get VMA calculation",
-        description="For a given variable, calculate the VMA values from the corresponding CSVs. This will return low, mean, and high values for the variable, as well as the source name and path"
+        description="For a given variable, calculate the VMA values from the corresponding CSVs. " +
+        "This will return low, mean, and high values for the variable, as well as the source name and path",
+        tags=["VMA"]
         )
 async def calculate_vma_groupings(
   variable: str,

@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useConfigContext } from "contexts/ConfigContext";
+import { usePortfolioSolutions } from "helpers";
 
 import styled from "styled-components";
 
@@ -212,6 +213,7 @@ export const TechnologyCardGrid = ({
           const techData = technologyMetadata[technologyID];
           const techImgFilename = technologyImages[technologyID];
           const techSectorID = techMap[techData.sector];
+          const techSectorType = techData.type;
           const color = techSectorID || techMap.default;
           const icon = iconMap[technologyID] || iconMap.default;
           const techImg = techImgFilename
@@ -228,13 +230,78 @@ export const TechnologyCardGrid = ({
               changed={isChangedFn(technologyID)}
               title={techData.name}
               technologyImage={techImg}
-              onClick={makeOnClickFn(technologyID)}
+              onClick={makeOnClickFn(technologyID)(techSectorType)}
               selected={isSelectedFn(technologyID)}
             />
           );
         })}
       </Wrap>
     </>
+  );
+};
+
+export const SectorGrid = ({
+  isEditingPortfolio,
+  technologyMetadata,
+  sectorName,
+  makeOnClickFn,
+  isSelectedFn,
+  isFeaturedFn,
+  keyString,
+  cols
+}) => {
+  const {
+    sectorTechnologyIDsInPortfolio,
+    sectorTechnologyIDsNotInPortfolio,
+  } = usePortfolioSolutions(technologyMetadata, sectorName);
+  
+  // add these constants here for ease of making sense of 
+  // what to display when
+  const hasSolutionsInSector = sectorTechnologyIDsInPortfolio.length > 0 || sectorTechnologyIDsNotInPortfolio.length > 0;
+  
+  const shouldDisplayHeader = isEditingPortfolio 
+    ? hasSolutionsInSector 
+    : sectorTechnologyIDsInPortfolio.length > 0
+  const shouldDisplaySelected = sectorTechnologyIDsInPortfolio.length > 0;
+  const shouldDisplayNotSelected = (isEditingPortfolio && sectorTechnologyIDsNotInPortfolio.length > 0);
+
+  return (
+    <React.Fragment>
+      {shouldDisplayHeader && (
+        <Heading as="h3" textStyle={"portfolioTech"}>
+          {sectorName}
+        </Heading>
+      )}
+      {shouldDisplaySelected && ( 
+        <TechnologyCardGrid
+            {...{
+              isEditingCards: isEditingPortfolio,
+              technologyIDs: sectorTechnologyIDsInPortfolio,
+              makeOnClickFn,
+              isSelectedFn,
+              isFeaturedFn,
+              sectorName,
+              keyString,
+              cols
+            }}
+        />
+      )}  
+      {shouldDisplayNotSelected && (
+        <TechnologyCardGrid
+          {...{
+            isEditingCards: isEditingPortfolio,
+            technologyIDs: sectorTechnologyIDsNotInPortfolio,
+            makeOnClickFn,
+            isSelectedFn,
+            isFeaturedFn,
+            sectorName,
+            keyString,
+            cols
+          }}
+        />
+        )
+      }
+    </React.Fragment>
   );
 };
 
@@ -250,28 +317,17 @@ export const SortedTechnologyCardGrid = ({
   const {
     settings: { technologyMetadata, techMap }
   } = useConfigContext();
-  return Object.keys(techMap).map(sectorName => {
-    const sectorSolutions = technologyIDs.filter(
-      technologyID => technologyMetadata[technologyID].sector === sectorName
-    );
-    return sectorSolutions.length !== 0 ? (
-      <React.Fragment key={sectorName}>
-        <Heading as="h3" textStyle={"portfolioTech"}>
-          {sectorName}
-        </Heading>
-        <TechnologyCardGrid
-          {...{
-            isEditingCards: isEditingPortfolio,
-            technologyIDs: sectorSolutions,
-            makeOnClickFn,
-            isSelectedFn,
-            isFeaturedFn,
-            sectorName,
-            keyString,
-            cols
-          }}
-        />
-      </React.Fragment>
-    ) : null;
-  });
+  return Object.keys(techMap).map(sectorName => 
+    <SectorGrid  
+      key={sectorName}
+      isEditingPortfolio={isEditingPortfolio}
+      technologyMetadata={technologyMetadata}
+      sectorName={sectorName}
+      makeOnClickFn={makeOnClickFn}
+      isSelectedFn={isSelectedFn}
+      isFeaturedFn={isFeaturedFn}
+      keyString={keyString}
+      cols={cols}
+    />
+  );
 };

@@ -5,7 +5,8 @@ import {
   patchWorkbook,
   fetchData,
   updateVariation,
-  runCalculation
+  runCalculation,
+  fetchResources
 } from "../../../api/api";
 import objectPath from "object-path";
 import { errorAdded } from "../util/errorSlice";
@@ -79,6 +80,18 @@ export const doCloneAndPatchWorkbookThunk = createAsyncThunk(
     try {
       const cloneResponse = await cloneWorkbook(parseInt(id));
       const patchResponse = await patchWorkbook(cloneResponse.id, data);
+      return patchResponse;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const doEditDetailsPatchWorkbookThunk = createAsyncThunk(
+  "workbook/editDetailsPatch",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const patchResponse = await patchWorkbook(id, data);
       return patchResponse;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -183,6 +196,12 @@ const workbookSlice = createSlice({
       };
     },
     [doCloneAndPatchWorkbookThunk.fulfilled]: (state, action) => {
+      return {
+        status: "idle",
+        workbook: action.payload
+      };
+    },
+    [doEditDetailsPatchWorkbookThunk.fulfilled]: (state, action) => {
       return {
         status: "idle",
         workbook: action.payload
@@ -537,11 +556,16 @@ export const calculateThunk = (
       techData = {...techData, hash: techValue.hash};
     }
 
+    const reference = await fetchResources(id, 'reference');
+    const vma = await fetchResources(id, 'vma');
+
     const summaryData = await fetchData(res.meta.summary_path);
 
     dispatch(
       calculationLoaded({
         projection: res,
+        references: reference,
+        vmas: vma,
         techData,
         summaryData
       })

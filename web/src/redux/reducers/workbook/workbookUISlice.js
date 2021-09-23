@@ -4,8 +4,11 @@ import objectPath from "object-path";
 import { errorAdded } from "redux/reducers/util/errorSlice";
 
 const initialState = {
-  activeFormRow: null
+  activeFormRow: null,
+  HelpMode:false,
+  showTour:true,
 };
+
 
 const workbookUISlice = createSlice({
   name: "workbookUI",
@@ -13,6 +16,15 @@ const workbookUISlice = createSlice({
   extraReducers: {
   },
   reducers: {
+    hideshowTour: (state, action) => {
+      return { ...state, showTour:false}
+    },
+    showHelpMode: (state, action) => {
+      return { ...state, HelpMode:true}
+    },
+    hideHelpMode: (state, action) => {
+      return { ...state, HelpMode:false}
+    },
     setActiveFormRow: (state, action) => {
       state.activeFormRow = action.payload;
     }
@@ -20,7 +32,10 @@ const workbookUISlice = createSlice({
 });
 
 export const {
-  setActiveFormRow
+  setActiveFormRow,
+  hideshowTour,
+  showHelpMode,
+  hideHelpMode,
 } = workbookUISlice.actions;
 
 export default workbookUISlice.reducer;

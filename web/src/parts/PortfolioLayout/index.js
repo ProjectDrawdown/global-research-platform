@@ -18,6 +18,7 @@ const PortfolioLayout = ({
         flex="1"
         maxW="none"
         position="fixed"
+        ml={navMargin ? "3rem" : 0}
         mb="6rem"
         h={showFooter ? `calc(${maxW} - 50px)` : maxW}
       >
