@@ -1,9 +1,5 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLink
-} from "@fortawesome/free-solid-svg-icons";
 import {
   doAddPortfolioTechnologyPatchThunk,
   doRemovePortfolioTechnologyPatchThunk
@@ -25,9 +21,10 @@ import { useConfigContext } from "contexts/ConfigContext";
 import {
   TechnologyCard,
   TechnologyCardGrid,
-  SortedTechnologyCardGrid
+  SortedTechnologyCardGrid,
+  TechnologyMetadataButtonGrid
 } from "components/cards/TechnologyCards";
-import { usePortfolioSolutions } from "helpers";
+import { usePortfolioSolutions, useSolutionMetaData } from "helpers";
 
 import styled from "styled-components";
 
@@ -129,29 +126,6 @@ export const TechnologyCardPaneWrapper = props => {
           )}
         </Flex>
       </Stack>
-
-      {props.currentSector === "health" &&
-        <Stack>
-          <Flex>
-            <Button 
-              leftIcon={<FontAwesomeIcon icon={faLink} />}
-              color={`brand.electricity.900`}
-              variant="outline"
-              mr="2">
-              Population
-            </Button>
-            <Button 
-              leftIcon={<FontAwesomeIcon icon={faLink} />}
-              color={`brand.electricity.900`}
-              variant="outline">
-              Emissions Factors
-            </Button>
-          </Flex>
-          <Flex>
-            Clusters
-          </Flex>
-        </Stack>
-      }
       
       <Stack spacing={4}>
         {props.children}
@@ -206,7 +180,7 @@ export const EditPortfolioPane = props => {
         technologyIDs={allSolutions}
         cols={props.cols}
         keyString="nonportfolio-soln-"
-        makeOnClickFn={technologyID => () => portfolioSolutions.includes(technologyID) ?
+        makeOnClickFn={technologyID => () => () => portfolioSolutions.includes(technologyID) ?
           handlePortfolioTechnologyClick(technologyID) :
           handleNonportfolioTechnologyClick(technologyID)}
         isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
@@ -286,7 +260,7 @@ export const TechnologyPane = ({
   const editLocation = `#nav/sector/${currentSector}/edit`;
   const viewLocation = `#nav/sector/${currentSector}`;
   const {
-    settings: { technologyMetadata, techMap }
+    settings: { technologyMetadata, techMap, technologyStaticMetaData }
   } = useConfigContext();
   const history = useHistory();
   const params = useParams();
@@ -309,6 +283,10 @@ export const TechnologyPane = ({
     sectorTechnologyIDsInPortfolio,
     sectorTechnologyIDsNotInPortfolio,
   } = usePortfolioSolutions(technologyMetadata, sectorName);
+
+  const {
+    metadataIDsInSector
+  } = useSolutionMetaData(technologyStaticMetaData, sectorName)
 
   const handlePortfolioTechnologyClick = async id => {
     const result = await dispatch(
@@ -336,6 +314,15 @@ export const TechnologyPane = ({
       viewLocation={viewLocation}
       currentSector={currentSector}
       color={`brand.${currentSector}.900`}>
+      {
+        metadataIDsInSector.length > 0 &&
+        <TechnologyMetadataButtonGrid 
+          metadataIDs={metadataIDsInSector}
+          makeOnClickFn={technologyID => () => {
+            gotoAndClose(`/workbook/${params.id}/metadata/${technologyID}`)
+          }}
+        />
+      }
       {sectorTechnologyIDsInPortfolio.length > 0 ? (
         <TechnologyCardGrid
           mb="0"
@@ -343,7 +330,7 @@ export const TechnologyPane = ({
           technologyIDs={sectorTechnologyIDsInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
-          makeOnClickFn={technologyID => () => sectorEdit ?
+          makeOnClickFn={technologyID => () => () => sectorEdit ?
             handlePortfolioTechnologyClick(technologyID) :
             gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
           isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
@@ -386,7 +373,7 @@ export const TechnologyPane = ({
           technologyIDs={sectorTechnologyIDsNotInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
-          makeOnClickFn={technologyID => () => sectorEdit ?
+          makeOnClickFn={technologyID => () => () => sectorEdit ?
             handleNonportfolioTechnologyClick(technologyID) :
             gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
           isSelectedFn={() => false}

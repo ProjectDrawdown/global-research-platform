@@ -112,3 +112,17 @@ export function usePortfolioSolutions(technologyMetadata, sectorName){
     sectorTechnologyIDsNotInPortfolio, // technology solution IDS in given sector NOT selected
   }
 }
+
+export function useSolutionMetaData(technologyStaticMetaData, sectorName) {
+  const metadataIDsInSector = useMemo(
+    () =>
+      Object.keys(technologyStaticMetaData).filter(
+        (techologyID) => technologyStaticMetaData[techologyID].sector === sectorName
+      ),
+    [technologyStaticMetaData, sectorName]
+  );
+
+  return {
+    metadataIDsInSector
+  }
+}

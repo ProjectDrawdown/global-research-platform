@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTheme, Box, Heading, Wrap, WrapItem, Text } from "@chakra-ui/react";
+import { useTheme, Box, Heading, Wrap, WrapItem, Text, Stack, Flex } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolder,
@@ -9,6 +9,7 @@ import {
   faLink
 } from "@fortawesome/free-solid-svg-icons";
 
+import ButtonIcon from "components/tools/ButtonIcon";
 import { useConfigContext } from "contexts/ConfigContext";
 import { usePortfolioSolutions } from "helpers";
 
@@ -54,20 +55,6 @@ const StyledSpan = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   float: left;
-`;
-
-const StyledText = styled(Text)`
-  margin: 5px;
-  margin-right: auto;
-  padding: 8px 16px;
-  background: #FFFFFF;
-  text-decoration: underline;
-  box-shadow: 0.5px 1px 1px rgba(0, 0, 0, 0.25);
-`;
-
-const StyledLinkIcon = styled(FontAwesomeIcon)`
-  margin-right: 10px;
-  font-size: 16px
 `;
 
 export const TechnologyCard = ({
@@ -331,3 +318,33 @@ export const SortedTechnologyCardGrid = ({
     />
   );
 };
+
+export const TechnologyMetadataButtonGrid = ({
+  metadataIDs,
+  makeOnClickFn
+}) => {
+  const {
+    settings: { technologyStaticMetaData }
+  } = useConfigContext();
+  makeOnClickFn =
+    makeOnClickFn ||
+    (technologyID => {
+      return () => null;
+    });
+
+  return (
+    <Stack>
+      <Flex>
+        {
+          metadataIDs.map(sectorName =>
+            <ButtonIcon
+              IconEl={<FontAwesomeIcon icon={faLink} />}
+              text={technologyStaticMetaData[sectorName].name}
+              onClick={makeOnClickFn(sectorName)}
+            />
+          )
+        }
+      </Flex>
+    </Stack>
+  )
+}
