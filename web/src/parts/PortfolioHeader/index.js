@@ -1,5 +1,6 @@
 import React from "react"
-import { Box, Heading, Center, HStack, Grid, GridItem, Button, Text, IconButton, EditIcon } from "@chakra-ui/react"
+import { EditIcon } from "@chakra-ui/icons";
+import { Box, Heading, Center, HStack, Grid, GridItem, Button, Text, IconButton } from "@chakra-ui/react"
 import { Link as DomLink, useParams, useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import styled from "styled-components"
@@ -93,7 +94,7 @@ export default function PortfolioHeader({ technologyId }) {
         </GridItem>
         {/* TODO: investirage for websocket */}
         {/* {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? ( */}
-        { workbookState.summaryData ? (
+        { technologyId && workbookState.summaryData ? (
           <StyledRunWrapper>
             <> 
               <RunButton /> 
