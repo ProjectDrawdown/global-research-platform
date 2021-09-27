@@ -1,16 +1,25 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom"
 import { useHistory, useLocation } from "react-router-dom"
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure } from "@chakra-ui/react"
+import { useDisclosure } from "@chakra-ui/react"
+import { useSelector } from "react-redux";
 import { useConfigContext } from "contexts/ConfigContext";
 import { getPathByHash } from "util/component-utilities";
+import {
+  fetchWorkbookThunk,
+  calculateMockThunk
+} from "redux/reducers/workbook/workbookSlice";
+import store from "redux/store";
+import { useWorkbookIsFullyLoadedSelector } from "redux/selectors.js";
 import {
   SolutionLayout,
   SolutionHeaderRegion,
   SolutionCardsStack,
 } from "components/solution";
-import DataTableCard from "components/cards/DataTableCard"
+import TabbedDatatable from "components/solution/TabbedDatatable"
 import SolutionHeader from "components/solution/SolutionHeader";
 import WorkbookHeader from "components/workbook/header";
+import LoadingSpinner from "components/LoadingSpinner";
 import DashboardLayout from "parts/DashboardLayout";
 
 const HealthAndEducationViewPage = () => {
@@ -18,11 +27,15 @@ const HealthAndEducationViewPage = () => {
   const location = useLocation();
   const params = useParams();
   const configState = useConfigContext();
+  const workbook = useSelector(state => state.workbook);
+  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector();
 
   const { name, sector } = configState.settings.technologyStaticMetaData[
     params.technologyId
   ];
   const color = configState.settings.techMap[sector];
+
+  console.log(sector)
 
   const drawerPath = getPathByHash("drawer", location.hash);
   const modalPath = getPathByHash("modal", location.hash);
@@ -37,6 +50,31 @@ const HealthAndEducationViewPage = () => {
     onClose: () => history.push({ hash: "" })
   });
 
+  useEffect(() => {
+    store.dispatch(fetchWorkbookThunk(params.id));
+    // NOTE: this is calling mock data
+    store.dispatch(calculateMockThunk(params.id, 0, params.technologyId));
+  }, [params.technologyId, params.id]);
+
+  // TODO implement full skeletons of children in layout instead of here.
+  if (!workbookIsFullyLoaded) {
+    return (
+      <DashboardLayout showFooter={false}>
+        <SolutionHeaderRegion key="header">
+          <WorkbookHeader technologyId={params.technologyId} />
+        </SolutionHeaderRegion>
+        <SolutionCardsStack stack="max" mb="0.75rem">
+          <SolutionHeader
+            color={color}
+            title={name}
+            technologyId={params.technologyId}
+          />
+        </SolutionCardsStack>
+        <LoadingSpinner />
+      </DashboardLayout>
+    );
+  }
+  
   return (
     <DashboardLayout showFooter={false}>
       <SolutionLayout
@@ -48,34 +86,17 @@ const HealthAndEducationViewPage = () => {
         technologyId={params.technologyId}
       >
         <SolutionHeaderRegion key="header">
-            <WorkbookHeader technologyId={params.technologyId} />
+            <WorkbookHeader technologyId={params.technologyId} disableCalculate/>
         </SolutionHeaderRegion>
         <SolutionCardsStack stack="max" mb="0.75rem">
           <SolutionHeader
             color={color}
-            title={name}
+            title={`${sector}: ${name}`}
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
         <SolutionCardsStack stack="max" mb="0.75rem">
-          {/*
-            TODO: once API structure is finalize
-              * Tab loops through from object type
-          */}
-          <Tabs 
-            orientation="vertical">
-            <TabPanels>
-              <TabPanel>
-                <DataTableCard />
-              </TabPanel>
-            </TabPanels>
-            <TabList>
-              <Tab>
-                Sample
-              </Tab>
-
-            </TabList>
-          </Tabs>
+          <TabbedDatatable sourceListObjectpath="workbook.techData.data" />
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

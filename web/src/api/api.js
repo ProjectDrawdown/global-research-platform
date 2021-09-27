@@ -1,4 +1,5 @@
 import dataConfig from "./data/data_config";
+import mockPopulationData from "./data/mock/mock_population"
 import { API_URL } from "config";
 
 const WORKBOOK_API_URL = API_URL + "/workbook";
@@ -249,4 +250,7 @@ export const fetchResources = async (id, entity) => {
   }
 };
 
-export { dataConfig };
+export { 
+  dataConfig,
+  mockPopulationData
+};

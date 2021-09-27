@@ -9,7 +9,7 @@ import {
   SolutionFormRegion,
 } from "../solution";
 
-import { useDisclosure, Skeleton, Text } from "@chakra-ui/react";
+import { useDisclosure, Text } from "@chakra-ui/react";
 
 import EmissionInputs from "../solution/EmissionInputs";
 import FinanceInputs from "../solution/FinanceInputs";
@@ -32,7 +32,7 @@ import {
 import MarketChart from "../charts/MarketChart";
 import EmissionsChart from "../charts/EmissionsChart";
 import SavingsChart from "../charts/SavingsChart";
-import AdoptionChart from "../charts/AdoptionChart";
+// import AdoptionChart from "../charts/AdoptionChart";
 import StreamChart from "../charts/StreamChart";
 
 import TAMDashboardCard from "components/cards/TAMDashboardCard.js";
@@ -43,7 +43,7 @@ import {
   prettyFormatBigWeight
 } from "../../util/number-utils.js";
 
-import { objectHasAll, getPathByHash } from "../../util/component-utilities";
+import { getPathByHash } from "../../util/component-utilities";
 import { useWorkbookIsFullyLoadedSelector, useStringVarpathSelector } from "redux/selectors.js";
 
 import {

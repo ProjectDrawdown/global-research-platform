@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTheme, Box, Heading, Wrap, WrapItem, Text, Stack, Flex } from "@chakra-ui/react";
+import { useTheme, Box, Heading, Wrap, WrapItem, Stack, Flex } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolder,

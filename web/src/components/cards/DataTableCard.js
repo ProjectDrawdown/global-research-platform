@@ -8,46 +8,65 @@ import {
 } from "@chakra-ui/react"
 import DataTable from 'react-data-table-component'
 
+import {
+  useObjectPathSelector,
+} from "redux/selectors.js";
 
-// TODO: data to be loaded from state and injected into component
-const columns = [
-    {
-        name: 'Title',
-        selector: row => row.title,
-    },
-    {
-        name: 'Year',
-        selector: row => row.year,
-    },
-];
 
-const data = [
+const generateData = (sourceObj) => {
+  const objKeys = Object.keys(sourceObj)
+  const column = [
     {
-        id: 1,
-        title: 'Beetlejuice',
-        year: '1988',
-    },
-    {
-        id: 2,
-        title: 'Ghostbusters',
-        year: '1984',
-    },
-]
+      name: ' ',
+      selector: row => row.year,
+    }
+  ]
+  const row = []
 
-export default function render() {
+  objKeys.forEach(source => {
+    column.push({
+      name: source,
+      selector: row => row[source]
+    })
+
+    for (const [key, value] of Object.entries(sourceObj[source])) {
+      const item = {
+        [source]: value
+      }
+      const index = row.findIndex(el => el.year === key)
+      
+      if (index > -1) {
+        Object.assign(row[index], item)
+      } else {
+        item['year'] = key
+        row.push(item)
+      }
+    }
+  })
+
+  return {
+    column,
+    row
+  }
+}
+
+export default function Render({
+  title,
+  sourceListObjectpath
+}) {
+  const sourceObj = useObjectPathSelector(
+    sourceListObjectpath,
+    {}
+  );
+
+  const { column, row } = generateData(sourceObj)
+
   return (
     <>
-      <Heading>Title</Heading>
-      <Button 
-        leftIcon={<FontAwesomeIcon icon={faLink} />}
-        color={`brand.electricity.900`}
-        variant="outline"
-        mr="2">
-        Download Dataset
-      </Button>
+      <Heading>{title}</Heading>
       <DataTable
-        columns={columns}
-        data={data}
+        columns={column}
+        data={row}
       />
     </>
   )

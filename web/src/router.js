@@ -62,7 +62,7 @@ const Router = () => {
         />
         <ProtectedRoute
           exact
-          path="/workbook/:id/metdata/:technologyId"
+          path="/workbook/:id/metadata/:technologyId"
           component={MetadataViewPage}
         />
         <Route exact path="/login" component={LoginPage} />
