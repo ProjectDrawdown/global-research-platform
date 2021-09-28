@@ -330,9 +330,13 @@ export const TechnologyPane = ({
           technologyIDs={sectorTechnologyIDsInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
-          makeOnClickFn={technologyID => () => () => sectorEdit ?
+          makeOnClickFn={technologyID => techSectorType => () => sectorEdit ?
             handlePortfolioTechnologyClick(technologyID) :
-            gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
+            techSectorType === 'HE' ? 
+              gotoAndClose(`/workbook/${params.id}/cluster/${technologyID}`)
+              :
+              gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)
+            }
           isSelectedFn={technologyID => portfolioSolutions.includes(technologyID)}
           isFeaturedFn={() => true}
         >
@@ -373,9 +377,13 @@ export const TechnologyPane = ({
           technologyIDs={sectorTechnologyIDsNotInPortfolio}
           keyString="technology-soln-"
           sectorName={sectorName}
-          makeOnClickFn={technologyID => () => () => sectorEdit ?
+          makeOnClickFn={technologyID => techSectorType => () => sectorEdit ?
             handleNonportfolioTechnologyClick(technologyID) :
-            gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)}
+            techSectorType === 'HE' ? 
+              gotoAndClose(`/workbook/${params.id}/cluster/${technologyID}`)
+              :
+              gotoAndClose(`/workbook/${params.id}/technologies/${technologyID}`)
+            }
           isSelectedFn={() => false}
           isFeaturedFn={() => true}>
         </TechnologyCardGrid>

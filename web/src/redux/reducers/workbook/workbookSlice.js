@@ -8,7 +8,7 @@ import {
   runCalculation,
   fetchResources,
   // Mock data for Health and Education
-  mockPopulationData
+  HEMock
 } from "../../../api/api";
 import objectPath from "object-path";
 import { errorAdded } from "../util/errorSlice";
@@ -584,14 +584,18 @@ export const calculateMockThunk = (
 ) =>  (dispatch, getState) => {
   dispatch(calculationLoading());
 
-  let techData = {};
+  const techData = {...HEMock[activeTechnology]};
   // Dumb switch case because its mock data 
-  switch(activeTechnology) {
-    case "hepopulation":
-      techData = {...mockPopulationData};
-      break;
-    default:
-  }
+  // switch(activeTechnology) {
+  //   case "hepopulation":
+  //     techData = {...mockPopulationData};
+  //     break;
+  //   case "heemissionfactor":
+  //     techData = {...mockEmissionData};
+  //   case "heelectricity":
+  //     techData = {...mockElectricityData};
+  //   default:
+  // }
 
   const state = getState();
   let summaryData = objectPath.get(state, "workbook.summaryData")

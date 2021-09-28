@@ -1,6 +1,7 @@
 import dataConfig from "./data/data_config";
-import mockPopulationData from "./data/mock/mock_population"
 import { API_URL } from "config";
+// TODO: delete once integrated
+import HEMock from "api/data/mock"
 
 const WORKBOOK_API_URL = API_URL + "/workbook";
 const CALCULATIONS_API_URL = API_URL + "/calculate";
@@ -252,5 +253,6 @@ export const fetchResources = async (id, entity) => {
 
 export { 
   dataConfig,
-  mockPopulationData
+  // TODO: this is mock data, deleted when integrated
+  HEMock
 };

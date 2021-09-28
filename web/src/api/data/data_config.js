@@ -447,17 +447,7 @@ const dataConfig = {
       name: "Space Heating",
       sector: "Health and Education",
       type: "HE"
-    },
-    // hepopulation: {
-    //   name: "Population",
-    //   sector: "Health and Education",
-    //   type: "HE"
-    // },
-    // heemissionfactor: {
-    //   name: "Emission Factor",
-    //   sector: "Health and Education",
-    //   type: "HE"
-    // }
+    }
   },
   technologyStaticMetaData: {
     hepopulation: {

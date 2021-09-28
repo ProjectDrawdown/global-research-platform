@@ -1,10 +1,9 @@
-import { useEffect } from "react";
+import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useHistory, useLocation } from "react-router-dom"
 import { useDisclosure } from "@chakra-ui/react"
-import { useSelector } from "react-redux";
-import { useConfigContext } from "contexts/ConfigContext";
-import { getPathByHash } from "util/component-utilities";
+import { useConfigContext } from "contexts/ConfigContext"
+import { getPathByHash } from "util/component-utilities"
 import {
   fetchWorkbookThunk,
   calculateMockThunk
@@ -27,15 +26,12 @@ const HealthAndEducationViewPage = () => {
   const location = useLocation();
   const params = useParams();
   const configState = useConfigContext();
-  const workbook = useSelector(state => state.workbook);
   const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector();
 
   const { name, sector } = configState.settings.technologyStaticMetaData[
     params.technologyId
   ];
   const color = configState.settings.techMap[sector];
-
-  console.log(sector)
 
   const drawerPath = getPathByHash("drawer", location.hash);
   const modalPath = getPathByHash("modal", location.hash);
