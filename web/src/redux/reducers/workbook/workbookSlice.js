@@ -6,7 +6,9 @@ import {
   fetchData,
   updateVariation,
   runCalculation,
-  fetchResources
+  fetchResources,
+  // Mock data for Health and Education
+  HEMock
 } from "../../../api/api";
 import objectPath from "object-path";
 import { errorAdded } from "../util/errorSlice";
@@ -497,6 +499,12 @@ export const fetchWorkbookThunk = id => async dispatch => {
   const reference = await fetchData(
     workbook.variations[0].reference_parent_path
   );
+
+  // TODO: remove mock append technology
+  // change in scenario.data.technologies
+  scenario['heelectricity'] = {}
+  // End Mock
+
   const obj = {
     ...workbook,
     scenario,
@@ -574,3 +582,28 @@ export const calculateThunk = (
     dispatch(calculationFail(e));
   }
 };
+
+export const calculateMockThunk = (
+  id,
+  variationIndex,
+  activeTechnology
+) =>  (dispatch, getState) => {
+  dispatch(calculationLoading());
+
+  const techData = {...HEMock[activeTechnology]};
+
+  const state = getState();
+  let summaryData = objectPath.get(state, "workbook.summaryData")
+  if (!summaryData) {
+    summaryData = {
+      data: "mock"
+    }
+  }
+
+  dispatch(
+    calculationLoaded({
+      techData,
+      summaryData
+    })
+  );
+}

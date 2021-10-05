@@ -52,6 +52,7 @@ const dataConfig = {
   ],
   // FIXME rename `sector` to `sectorName`
   // FIXME include this at compile time instead of as a context
+  // Currently not in use
   technologiesBySector: {
     "Materials": [
       "refrigerants",
@@ -433,12 +434,29 @@ const dataConfig = {
     },
     hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" },
     heelectricity: {
-      name: "Electriity",
+      name: "Electricity",
       sector: "Health and Education",
       type: "HE"
     },
     hespaceheating: {
       name: "Space Heating",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hespaceheating: {
+      name: "Space Heating",
+      sector: "Health and Education",
+      type: "HE"
+    }
+  },
+  technologyStaticMetaData: {
+    hepopulation: {
+      name: "Population",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    heemissionfactor: {
+      name: "Emission Factor",
       sector: "Health and Education",
       type: "HE"
     }

@@ -56,7 +56,7 @@ const StyledButton = styled.div`
  * @param {*} param0
  * @returns components
  */
-export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
+export default function WorkbookHeader({ logoWidth = 105, technologyId, disableCalculate = false }) {
   const workbookState = useSelector(state => state.workbook);
   const params = useParams();
   const calculate = () =>
@@ -124,7 +124,7 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId }) {
             }
           </HStack>
         </GridItem>
-        {technologyId && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
+        {technologyId && !disableCalculate && ( !workbookState?.workbook?.loading || workbookState?.workbook?.error ) ? (
           <StyledRunWrapper onClick={calculate} loading={workbookState?.calculationLoading} className="first-workbook-solution-tour">
             <StyledButton loading={workbookState?.calculationLoading}>
               <RunButton/>

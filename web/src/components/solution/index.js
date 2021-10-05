@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useMemo, useContext, useState } from "react";
+import React, { useRef, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Box, Grid, Flex, Stack } from "@chakra-ui/react";
 import Tour from 'reactour';

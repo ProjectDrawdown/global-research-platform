@@ -1,14 +1,11 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
   GridItem,
-  Heading,
-  VStack,
 } from "@chakra-ui/react";
 import { Row } from "./row";
 import TAMChart from "components/charts/TAMChart.js";
-import IfIn from "components/IfIn.js";
 import { BoundSourceSelect } from "components/forms/form-elements.js";
 
 import {
@@ -22,8 +19,6 @@ export const TAMHeader = () => (
 
 const TAMForm = (props) => {
   const params = useParams();
-  const activeTechnology = params.technologyId;
-  const scenarioBasisVarpath = `technologies.${activeTechnology}.adoption_basis`;
 
   return (
     <GridItem px={3}>
