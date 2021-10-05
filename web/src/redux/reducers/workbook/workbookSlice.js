@@ -499,6 +499,12 @@ export const fetchWorkbookThunk = id => async dispatch => {
   const reference = await fetchData(
     workbook.variations[0].reference_parent_path
   );
+
+  // TODO: remove mock append technology
+  // change in scenario.data.technologies
+  scenario['heelectricity'] = {}
+  // End Mock
+
   const obj = {
     ...workbook,
     scenario,
@@ -585,17 +591,6 @@ export const calculateMockThunk = (
   dispatch(calculationLoading());
 
   const techData = {...HEMock[activeTechnology]};
-  // Dumb switch case because its mock data 
-  // switch(activeTechnology) {
-  //   case "hepopulation":
-  //     techData = {...mockPopulationData};
-  //     break;
-  //   case "heemissionfactor":
-  //     techData = {...mockEmissionData};
-  //   case "heelectricity":
-  //     techData = {...mockElectricityData};
-  //   default:
-  // }
 
   const state = getState();
   let summaryData = objectPath.get(state, "workbook.summaryData")

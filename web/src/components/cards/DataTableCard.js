@@ -1,16 +1,12 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLink
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  Heading,
-  Button
+  Heading
 } from "@chakra-ui/react"
 import DataTable from 'react-data-table-component'
 
 import {
   useObjectPathSelector,
 } from "redux/selectors.js";
+import { Card, CardBody } from "components/Card"
 
 
 const generateData = (sourceObj) => {
@@ -29,19 +25,19 @@ const generateData = (sourceObj) => {
       selector: row => row[source]
     })
 
-    for (const [key, value] of Object.entries(sourceObj[source])) {
+    sourceObj[source].forEach((obj) => {
       const item = {
-        [source]: value
+        [source]: obj['value']
       }
-      const index = row.findIndex(el => el.year === key)
-      
+
+      const index = row.findIndex(el => el.year === obj['year'])
       if (index > -1) {
         Object.assign(row[index], item)
       } else {
-        item['year'] = key
+        item['year'] = obj['year']
         row.push(item)
       }
-    }
+    })
   })
 
   return {
@@ -64,10 +60,14 @@ export default function Render({
   return (
     <>
       <Heading>{title}</Heading>
-      <DataTable
-        columns={column}
-        data={row}
-      />
+      <Card size="max">
+        <CardBody>
+          <DataTable
+            columns={column}
+            data={row}
+          />
+        </CardBody>
+      </Card>
     </>
   )
 }

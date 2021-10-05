@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useHistory, useLocation } from "react-router-dom"
-import { useDisclosure } from "@chakra-ui/react"
+import { useDisclosure, Heading } from "@chakra-ui/react"
 import { useConfigContext } from "contexts/ConfigContext"
 import store from "redux/store"
 import { getPathByHash } from "util/component-utilities"
@@ -15,11 +15,13 @@ import {
   calculateMockThunk
 } from "redux/reducers/workbook/workbookSlice";
 import { useWorkbookIsFullyLoadedSelector } from "redux/selectors.js"
+import DashboardLayout from "parts/DashboardLayout"
 import SolutionHeader from "components/solution/SolutionHeader"
 import TabbedDatatable from "components/solution/TabbedDatatable"
 import WorkbookHeader from "components/workbook/header"
-import DashboardLayout from "parts/DashboardLayout"
 import LoadingSpinner from "components/LoadingSpinner"
+import TamMix from "components/solution/TAMMix"
+import ClusterResult from "components/solution/ClusterResult"
 
 const HealthAndEducationViewPage = () => {
   const history = useHistory();
@@ -61,7 +63,7 @@ const HealthAndEducationViewPage = () => {
         <SolutionCardsStack stack="max" mb="0.75rem">
           <SolutionHeader
             color={color}
-            title={name}
+            title={`Health and Education: ${name}`}
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
@@ -86,12 +88,23 @@ const HealthAndEducationViewPage = () => {
         <SolutionCardsStack stack="max" mb="0.75rem">
           <SolutionHeader
             color={color}
-            title={name}
+            title={`Health and Education: ${name}`}
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
+        <SolutionCardsStack stack="max">
+          <SolutionCardsStack col={true} size="md" mb="2rem">
+            <TamMix />
+          </SolutionCardsStack>
+          <SolutionCardsStack col={true} size="md" mb="2rem">
+            <ClusterResult />
+          </SolutionCardsStack>
+        </SolutionCardsStack>
         <SolutionCardsStack stack="max" mb="0.75rem">
-          <TabbedDatatable sourceListObjectpath="workbook.techData.data" />
+          <TabbedDatatable
+            title="Calculation Outputs and Integration Data Tables" 
+            withTableTitle={false}
+            sourceListObjectpath="workbook.techData.data.data" />
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

@@ -1,29 +1,98 @@
 export default {
   name: "HE: SpaceHeating",
   data: {
-    "ref 1 population": {
-      world: {
-        '2014': 1000,
-        '2015': 2000,
-        '2016': 123456
+    data: {
+      "ref 1 population": {
+        world: [
+          {
+            year: "2014",
+            value: 1000
+          },
+          {
+            year: "2015",
+            value: 2000
+          },
+          {
+            year: "2016",
+            value: 1000
+          }
+        ],
+        OECD90: [
+          {
+            year: "2014",
+            value: 2000
+          },
+          {
+            year: "2015",
+            value: 2000
+          },
+          {
+            year: "2016",
+            value: 2000
+          }
+        ]
       },
-      OECD90: {
-        '2014': 2000,
-        '2015': 2000,
-        '2016': 2000
+      "ref 2 population": {
+        world: [
+          {
+            year: "2014",
+            value: 1000
+          },
+          {
+            year: "2015",
+            value: 2000
+          },
+          {
+            year: "2016",
+            value: 1000
+          }
+        ],
+        OECD90: [
+          {
+            year: "2014",
+            value: 2000
+          },
+          {
+            year: "2015",
+            value: 2000
+          },
+          {
+            year: "2016",
+            value: 2000
+          }
+        ]
+      }
+    }
+  },
+  technologies: {
+    hespaceheating: {
+      tam_mix: {
+        coal: {
+          adoption: 10,
+          in_solution: false,
+          in_convetional: false
+        },
+        natural_gas: {
+          adoption: 22,
+          in_solution: false,
+          in_convetional: false
+        },
+        nuclear: {
+          adoption: 15.8,
+          in_solution: false,
+          in_convetional: false
+        },
+        oil: {
+          adoption: 70,
+          in_solution: false,
+          in_convetional: false
+        },
       },
-    },
-    "ref 2 population": {
-      world: {
-        '2014': 5000,
-        '2015': 5000,
-        '2016': 5000
-      },
-      OECD90: {
-        '2014': 3000,
-        '2015': 3000,
-        '2016': 3000
-      },
+      assumption: {
+        fixed_weighting_factor: 0,
+        use_fixed_weight: 0,
+        impact_of_ed_attainment: 0
+      }
     }
   }
 }
