@@ -64,9 +64,9 @@ export function ChildrenByContainer({ children, container }) {
   return findChildByContainerType(children, container) || [];
 }
 
-export function objectHasAll(obj, arrayOfProps) {
+export function objectHasAll(obj, arrayOfProps, checkUndefined = false) {
   return arrayOfProps.reduce((acc, prop) => {
-    return acc && objectPath.has(obj, prop);
+    return acc && objectPath.has(obj, prop) && (checkUndefined ? obj[prop] !== undefined : true);
   }, true);
 }
 

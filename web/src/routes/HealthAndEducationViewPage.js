@@ -14,12 +14,10 @@ import {
   fetchWorkbookThunk,
   calculateMockThunk
 } from "redux/reducers/workbook/workbookSlice";
-import { useWorkbookIsFullyLoadedSelector } from "redux/selectors.js"
 import DashboardLayout from "parts/DashboardLayout"
 import SolutionHeader from "components/solution/SolutionHeader"
 import TabbedDatatable from "components/solution/TabbedDatatable"
 import WorkbookHeader from "components/workbook/header"
-import LoadingSpinner from "components/LoadingSpinner"
 import TamMix from "components/solution/TAMMix"
 import ClusterResult from "components/solution/ClusterResult"
 
@@ -28,7 +26,6 @@ const HealthAndEducationViewPage = () => {
   const location = useLocation();
   const params = useParams();
   const configState = useConfigContext();
-  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector();
 
   const { name, sector } = configState.settings.technologyMetadata[
     params.technologyId
@@ -54,24 +51,6 @@ const HealthAndEducationViewPage = () => {
     store.dispatch(calculateMockThunk(params.id, 0, params.technologyId));
   }, [params.technologyId, params.id]);
 
-  if (!workbookIsFullyLoaded) {
-    return (
-      <DashboardLayout showFooter={false}>
-        <SolutionHeaderRegion key="header">
-          <WorkbookHeader technologyId={params.technologyId} />
-        </SolutionHeaderRegion>
-        <SolutionCardsStack stack="max" mb="0.75rem">
-          <SolutionHeader
-            color={color}
-            title={`Health and Education: ${name}`}
-            technologyId={params.technologyId}
-          />
-        </SolutionCardsStack>
-        <LoadingSpinner />
-      </DashboardLayout>
-    );
-  }
-
   return (
     <DashboardLayout showFooter={false}>
       <SolutionLayout
@@ -92,19 +71,23 @@ const HealthAndEducationViewPage = () => {
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
-        <SolutionCardsStack stack="max">
-          <SolutionCardsStack col={true} size="md" mb="2rem">
-            <TamMix />
+        <SolutionCardsStack margin={true} mb="0.75rem">
+          <SolutionCardsStack col={true} size="sm">
+            <TamMix 
+              color={color}/>
           </SolutionCardsStack>
-          <SolutionCardsStack col={true} size="md" mb="2rem">
-            <ClusterResult />
+          <SolutionCardsStack col={true} size="md">
+            <ClusterResult 
+              color={color}/>
           </SolutionCardsStack>
         </SolutionCardsStack>
+        {/* TODO: remove this data set */}
         <SolutionCardsStack stack="max" mb="0.75rem">
           <TabbedDatatable
+            color={color}
             title="Calculation Outputs and Integration Data Tables" 
             withTableTitle={false}
-            sourceListObjectpath="workbook.techData.data.data" />
+            sourceListObjectpath="workbook.techData.data" />
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

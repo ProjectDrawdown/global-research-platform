@@ -18,7 +18,6 @@ import {
 import TabbedDatatable from "components/solution/TabbedDatatable"
 import SolutionHeader from "components/solution/SolutionHeader";
 import WorkbookHeader from "components/workbook/header";
-import LoadingSpinner from "components/LoadingSpinner";
 import DashboardLayout from "parts/DashboardLayout";
 
 const HealthAndEducationViewPage = () => {
@@ -26,7 +25,7 @@ const HealthAndEducationViewPage = () => {
   const location = useLocation();
   const params = useParams();
   const configState = useConfigContext();
-  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector();
+  // const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector();
 
   const { name, sector } = configState.settings.technologyStaticMetaData[
     params.technologyId
@@ -53,23 +52,23 @@ const HealthAndEducationViewPage = () => {
   }, [params.technologyId, params.id]);
 
   // TODO implement full skeletons of children in layout instead of here.
-  if (!workbookIsFullyLoaded) {
-    return (
-      <DashboardLayout showFooter={false}>
-        <SolutionHeaderRegion key="header">
-          <WorkbookHeader technologyId={params.technologyId} />
-        </SolutionHeaderRegion>
-        <SolutionCardsStack stack="max" mb="0.75rem">
-          <SolutionHeader
-            color={color}
-            title={name}
-            technologyId={params.technologyId}
-          />
-        </SolutionCardsStack>
-        <LoadingSpinner />
-      </DashboardLayout>
-    );
-  }
+  // if (!workbookIsFullyLoaded) {
+  //   return (
+  //     <DashboardLayout showFooter={false}>
+  //       <SolutionHeaderRegion key="header">
+  //         <WorkbookHeader technologyId={params.technologyId} />
+  //       </SolutionHeaderRegion>
+  //       <SolutionCardsStack stack="max" mb="0.75rem">
+  //         <SolutionHeader
+  //           color={color}
+  //           title={name}
+  //           technologyId={params.technologyId}
+  //         />
+  //       </SolutionCardsStack>
+  //       <LoadingSpinner />
+  //     </DashboardLayout>
+  //   );
+  // }
   
   return (
     <DashboardLayout showFooter={false}>
@@ -92,7 +91,9 @@ const HealthAndEducationViewPage = () => {
           />
         </SolutionCardsStack>
         <SolutionCardsStack stack="max" mb="0.75rem">
-          <TabbedDatatable sourceListObjectpath="workbook.techData.data" />
+          <TabbedDatatable
+            color={color}
+            sourceListObjectpath="workbook.techData.data" />
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

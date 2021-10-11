@@ -4,14 +4,22 @@ import { objectHasAll } from "util/component-utilities.js";
 // TODO: Do proper conversion for all the values
 
 export const calculateMarketCapture = (summaryData, techData, technologies) => {
-  const tamPerRegionLast = techData.data.pds_tam_per_region["World"][techData.data.pds_tam_per_region["World"].length - 1];
-  const solnPdfUnitsAdoptedLast = techData.data.soln_pds_funits_adopted["World"][techData.data.pds_tam_per_region["World"].length - 1];
-  return (solnPdfUnitsAdoptedLast.value / tamPerRegionLast.value * 100).toFixed(0);
+  if (techData.data.pds_tam_per_region) {
+    const tamPerRegionLast = techData.data.pds_tam_per_region["World"][techData.data.pds_tam_per_region["World"].length - 1];
+    const solnPdfUnitsAdoptedLast = techData.data.soln_pds_funits_adopted["World"][techData.data.pds_tam_per_region["World"].length - 1];
+    return (solnPdfUnitsAdoptedLast.value / tamPerRegionLast.value * 100).toFixed(0);
+  }
+
+  return 0
 }
 
 export const calculateEmissionsReduction = (techData) => {
-  const total = techData.data.co2_mmt_reduced["World"].filter(p => p.value !== 0).reduce((acc, item) => item.value + acc, 0);
-  return total;
+  if (techData.data.co2_mmt_reduced) {
+    const total = techData.data.co2_mmt_reduced["World"].filter(p => p.value !== 0).reduce((acc, item) => item.value + acc, 0);
+    return total;
+  }
+
+  return 0
 }
 
 export const calculateLifetimeSavings = (techData) => {

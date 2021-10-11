@@ -1,6 +1,6 @@
 export default {
-  name: "HE: SpaceHeating",
   data: {
+    name: "HE: SpaceHeating",
     data: {
       "ref 1 population": {
         world: [
@@ -70,22 +70,22 @@ export default {
         coal: {
           adoption: 10,
           in_solution: false,
-          in_convetional: false
+          in_conventional: false
         },
         natural_gas: {
           adoption: 22,
           in_solution: false,
-          in_convetional: false
+          in_conventional: false
         },
         nuclear: {
           adoption: 15.8,
           in_solution: false,
-          in_convetional: false
+          in_conventional: false
         },
         oil: {
           adoption: 70,
           in_solution: false,
-          in_convetional: false
+          in_conventional: false
         },
       },
       assumption: {

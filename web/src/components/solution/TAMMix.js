@@ -3,15 +3,19 @@ import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import { humanize } from "util/component-utilities"
 import {
-  useObjectPathSelector,
+  useStringVarpathSelector
 } from "redux/selectors.js"
-import { Card, CardBody } from "components/Card"
+import { Card, 
+  CardBody, 
+  CardTitle,
+  CardHeader
+} from "components/Card"
 import {
   SolutionCardsStack,
 } from "components/solution"
 import { Row } from "components/solution/row"
 import {
-  BoundBooleanSwitch,
+  BoundSelect,
 } from "components/forms/form-elements.js"
 
 
@@ -23,10 +27,6 @@ const StyledHeaderGridItem = styled(GridItem)`
 
 const BoldText = styled(Text)`
   font-weight: bold;
-`
-
-const TamContainer = styled.div`
-  margin-right: 1rem;
 `
 
 const TamMixHeader = () => {
@@ -43,10 +43,7 @@ const TamMixHeader = () => {
         <BoldText>Adoption %</BoldText>
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={3}>
-        <BoldText>In Solution?</BoldText>
-      </StyledHeaderGridItem>
-      <StyledHeaderGridItem colSpan={3}>
-        <BoldText>In Conventional?</BoldText>
+        <BoldText>Integration</BoldText>
       </StyledHeaderGridItem>
     </Grid>
   )
@@ -65,101 +62,96 @@ const TamMixContent = ({title, data}) => {
       <StyledHeaderGridItem colSpan={3}>
         {data['adoption']} %
       </StyledHeaderGridItem>
-      {/* TODO: bind data switching here */}
       <StyledHeaderGridItem colSpan={3}>
-        <BoundBooleanSwitch />
-      </StyledHeaderGridItem>
-      <StyledHeaderGridItem colSpan={3}>
-        <BoundBooleanSwitch />
+        <BoundSelect
+            varpath="adoption_prognostication_growth"
+            options={{
+              ignore: "Ignore",
+              solution: "In Solution",
+              convention: "In Convention"
+            }}
+            size="sm"
+          />
       </StyledHeaderGridItem>
     </Grid>
   )
 }
 
-const TamMix = () => {
-  const params = useParams();
-  const activeTechnology = params.technologyId;
-  // TODO: change this to grab from scenario object
-  const sourceObj = useObjectPathSelector(
-    `workbook.techData.technologies.${activeTechnology}.tam_mix`,
-    {}
-  );
+const TamMix = ({
+  color,
+  activeTechnology
+}) => {
+  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}.tam_mix`, 'clusters');
 
-  const mixes = Object.keys(sourceObj)
+  const mixes = varValue ? Object.keys(varValue) : []
 
   return (
-    <>
-      <Heading size="lg" mb="0.75rem">TAM Mix</Heading>
-      <SolutionCardsStack stack="sm" mb="0.75rem">
-        <Card size="max" h="100%">
-          <CardBody>
-            <Grid minW="100%">
-              <GridItem px={3}>
-                <TamMixHeader />
-                {
-                  mixes.map((item, index) => 
-                    <TamMixContent
-                      key={`tam_mix_${index}`} 
-                      title={item}
-                      data={sourceObj[item]}
-                    />)
-                }
-              </GridItem>
-            </Grid>
-          </CardBody>
-        </Card>
-      </SolutionCardsStack>
-    </>
+    <Card size="xl" h="100%">
+      <CardHeader color={color}>
+        <CardTitle>TAM Mix</CardTitle>
+      </CardHeader>
+      <CardBody>
+        <Grid minW="100%">
+          <GridItem px={3}>
+            <TamMixHeader />
+            {
+              mixes.map((item, index) => 
+                <TamMixContent
+                  key={`tam_mix_${index}`} 
+                  title={item}
+                  data={varValue[item]}
+                />)
+            }
+          </GridItem>
+          <TamResult 
+            activeTechnology={activeTechnology}/>
+        </Grid>
+      </CardBody>
+    </Card>
   )
 }
 
-const TamResult = () => {
-  const params = useParams();
-  const activeTechnology = params.technologyId;
-  // TODO: change this to grab from scenario object
-  const sourceObj = useObjectPathSelector(
-    `workbook.techData.technologies.${activeTechnology}.assumption`,
-    {}
-  );
-
-  const assumptions = Object.keys(sourceObj)
+const TamResult = ({
+  activeTechnology
+}) => {
+  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}.assumption`, 'clusters');
+  const assumptions = varValue ? Object.keys(varValue) : []
 
   return (
-    <>
-      <Heading size="lg" mb="0.75rem">Assumptions</Heading>
+    <GridItem px={3}>
+      <Heading size="sm" mb="0.75rem">Assumptions</Heading>
       <SolutionCardsStack stack="sm" mb="0.75rem">
-        {/* TODO: TAM MIX */}
-        <Card size="max" h="100%">
-          <CardBody>
-          <Grid minW="100%">
-           {
-              assumptions.map((item, index) => 
-              
-                <Row
-                   key={`assumptions_${index}`}
-                  label={humanize(item)}
-                  // todo: fix this mapping
-                  varpath="emissions_per_funit.value"
-                  dataType="numeric"/>
-              )
-            }
-            </Grid>
-          </CardBody>
-        </Card>
+        <Grid minW="100%">
+          {
+            assumptions.map((item, index) => 
+            
+              <Row
+                key={`assumptions_${index}`}
+                label={humanize(item)}
+                // todo: fix this mapping
+                varpath="emissions_per_funit.value"
+                dataType="numeric"/>
+            )
+          }
+          </Grid>
         <SolutionCardsStack stack="sm" mb="0.75rem">
           <span>{' '}</span>
         </SolutionCardsStack>
       </SolutionCardsStack>
-    </>
+    </GridItem>
   )
 }
 
-const TamMixSection = () => {
+const TamMixSection = ({
+  color
+}) => {
+  const params = useParams();
+  const activeTechnology = params.technologyId;
+
   return (
-    <TamContainer>
-      <TamMix />
-      <TamResult />
-    </TamContainer>
+    <TamMix 
+      color={color}
+      activeTechnology={activeTechnology}/>
   )
 }
 

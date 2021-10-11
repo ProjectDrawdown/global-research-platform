@@ -25,19 +25,22 @@ const generateData = (sourceObj) => {
       selector: row => row[source]
     })
 
-    sourceObj[source].forEach((obj) => {
-      const item = {
-        [source]: obj['value']
-      }
-
-      const index = row.findIndex(el => el.year === obj['year'])
-      if (index > -1) {
-        Object.assign(row[index], item)
-      } else {
-        item['year'] = obj['year']
-        row.push(item)
-      }
-    })
+    // Checking for array in case wrong format is passed
+    if (Array.isArray(sourceObj[source])) {
+      sourceObj[source].forEach((obj) => {
+        const item = {
+          [source]: obj['value']
+        }
+  
+        const index = row.findIndex(el => el.year === obj['year'])
+        if (index > -1) {
+          Object.assign(row[index], item)
+        } else {
+          item['year'] = obj['year']
+          row.push(item)
+        }
+      })
+    }
   })
 
   return {
