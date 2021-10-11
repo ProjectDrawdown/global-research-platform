@@ -1,10 +1,7 @@
 import React from "react";
 
-import { VictoryChart, VictoryArea, VictoryAxis, VictoryStack } from "victory";
-import { objToArrayOfObjs } from "../../helpers";
+import { VictoryChart, VictoryArea, VictoryAxis } from "victory";
 import objectPath from "object-path";
-import { Skeleton } from "@chakra-ui/react";
-import { useWorkbookIsLoadedSelector } from 'redux/selectors.js';
 
 function MarketChart({ summaryData, techData, technologies }) {
   const tamPerRegion = techData.data.pds_tam_per_region["World"].map(p => {

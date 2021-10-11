@@ -125,6 +125,11 @@ export function useWorkbookIsFullyLoadedSelector() {
       "workbook",
       "techData",
       "summaryData"
-    ]);
+    ], true)
+    &&
+    // race condition when "techData" is repurposed for clusters/metadata
+    objectHasAll(state.workbook.techData?.data, [
+      "pds_tam_per_region",
+    ], true);
   });
 }

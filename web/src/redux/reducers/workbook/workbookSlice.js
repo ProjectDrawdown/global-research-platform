@@ -500,15 +500,22 @@ export const fetchWorkbookThunk = id => async dispatch => {
     workbook.variations[0].reference_parent_path
   );
 
-  // TODO: remove mock append technology
-  // change in scenario.data.technologies
-  scenario['heelectricity'] = {}
-  // End Mock
+  // START MOCK, TODO: replace for result from API
+  const clusters = {
+    data: {
+      technologies: {
+        ...HEMock['heelectricity'].technologies,
+        ...HEMock['hespaceheating'].technologies
+      }
+    }
+  }
+  // END MOCK
 
   const obj = {
     ...workbook,
     scenario,
-    reference
+    reference,
+    clusters
   };
   dispatch(workbookLoaded(obj));
 };
@@ -590,20 +597,13 @@ export const calculateMockThunk = (
 ) =>  (dispatch, getState) => {
   dispatch(calculationLoading());
 
-  const techData = {...HEMock[activeTechnology]};
+  const techData = {...HEMock[activeTechnology].data};
 
-  const state = getState();
-  let summaryData = objectPath.get(state, "workbook.summaryData")
-  if (!summaryData) {
-    summaryData = {
-      data: "mock"
-    }
-  }
 
   dispatch(
     calculationLoaded({
       techData,
-      summaryData
+      // summaryData
     })
   );
 }

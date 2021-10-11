@@ -60,6 +60,7 @@ const EnergyTechnology = () => {
   const location = useLocation();
   const params = useParams();
   const workbook = useSelector(state => state.workbook);
+  // TODO: maybe fix this to make sure techData == technology
   const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector();
 
   const drawerPath = getPathByHash("drawer", location.hash);
@@ -75,6 +76,7 @@ const EnergyTechnology = () => {
     onClose: () => history.push({ hash: "" })
   });
 
+  // TODO: Race condition if techData already exist. make sure it matches
   useEffect(() => {
     store.dispatch(fetchWorkbookThunk(params.id));
     store.dispatch(calculateThunk(params.id, 0, params.technologyId));

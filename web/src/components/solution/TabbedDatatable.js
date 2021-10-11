@@ -1,4 +1,9 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Heading, VStack } from "@chakra-ui/react"
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react"
+import { Card, 
+  CardBody, 
+  CardTitle,
+  CardHeader
+} from "components/Card"
 import {
   useObjectPathSelector,
 } from "redux/selectors.js"
@@ -6,16 +11,27 @@ import {
 import DataTableCard from "components/cards/DataTableCard"
 
 const TabbedDatatable = ({
+  color,
+  title = null,
   withTableTitle = true,
   sourceListObjectpath
 }) => {
   return (
-    <VStack>
-      <Heading size="lg">Calculation Outputs and Integration Data Tables</Heading>
-      <Render
-        withTitle={withTableTitle}
-        sourceListObjectpath={sourceListObjectpath} />
-    </VStack>
+    <Card size="max">
+      {
+        title ?
+        <CardHeader color={color}>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        :
+        <></>
+      }
+      <CardBody>
+        <Render
+          withTitle={withTableTitle}
+          sourceListObjectpath={sourceListObjectpath} />
+      </CardBody>
+    </Card>
   )
 }
 
@@ -31,15 +47,16 @@ const Render = ({
 
   return(
     <Tabs 
+      w="100%"
       orientation="vertical">
       <TabPanels>
         {
           allData.map((tableName, i) =>
-            <TabPanel>
+            <TabPanel
+              key={`tab_data_${i}`}>
               <DataTableCard
                 title={withTitle ? tableName : null}
                 sourceListObjectpath={`${sourceListObjectpath}.${tableName}`}
-                key={`tab_data_${i}`}
               />
             </TabPanel>
           )

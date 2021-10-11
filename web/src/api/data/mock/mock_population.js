@@ -1,6 +1,6 @@
 export default {
-  name: "Population Data",
   data: {
+    name: "Population Data",
     data: {
       "ref 1 population": {
         world: [

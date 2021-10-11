@@ -67,8 +67,10 @@ export default function WorkbookHeader({ logoWidth = 105, technologyId, disableC
 };
 
   const calculateMmtReduced = () => {
-    const value = workbookState.techData.data.co2_mmt_reduced['World'].reduce((acc, item) => acc + item.value, 0);
-    return prettyFormatBigNumber(value, 3, ['Mt', 'Gt']);
+    if (workbookState.techData.data.co2_mmt_reduced) {
+      const value = workbookState.techData.data.co2_mmt_reduced['World'].reduce((acc, item) => acc + item.value, 0);
+      return prettyFormatBigNumber(value, 3, ['Mt', 'Gt']);
+    }
   };
 
   const workbookID = useWorkbookIDSelector();
