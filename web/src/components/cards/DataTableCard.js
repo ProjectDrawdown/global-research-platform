@@ -9,6 +9,44 @@ import {
 import { Card, CardBody } from "components/Card"
 
 
+const generateDataLoop = (row, sourceObj, source, name = "") => {
+  if (Array.isArray(sourceObj[source])) {
+    sourceObj[source].forEach((obj) => {
+      const item = {
+        [name + source]: obj['value']
+      }
+
+      const index = row.findIndex(el => el.year === obj['year'])
+      if (index > -1) {
+        Object.assign(row[index], item)
+      } else {
+        item['year'] = obj['year']
+        row.push(item)
+      }
+    })
+  } else if (sourceObj[source] && typeof sourceObj[source] === 'object') {
+    const objKeys = Object.keys(sourceObj[source])
+    objKeys.forEach(objKey => {
+      generateDataLoop(row, sourceObj[source], objKey, `${source} `)
+    })
+  }
+}
+
+const generateColumnLoop = (column, sourceObj, source, name = "") => {
+  if (Array.isArray(sourceObj[source])) {
+    column.push({
+      name: name + source,
+      selector: row => row[name + source]
+    })
+  } else if (sourceObj[source] && typeof sourceObj[source] === 'object') {
+    const objKeys = Object.keys(sourceObj[source])
+    objKeys.forEach(objKey => {
+      generateColumnLoop(column, sourceObj[source], objKey, `${source} `)
+    })
+  }
+}
+
+
 const generateData = (sourceObj) => {
   const objKeys = Object.keys(sourceObj)
   const column = [
@@ -20,27 +58,14 @@ const generateData = (sourceObj) => {
   const row = []
 
   objKeys.forEach(source => {
+    generateColumnLoop(column, sourceObj, source)
+
     column.push({
-      name: source,
-      selector: row => row[source]
+      name: ' ',
     })
 
     // Checking for array in case wrong format is passed
-    if (Array.isArray(sourceObj[source])) {
-      sourceObj[source].forEach((obj) => {
-        const item = {
-          [source]: obj['value']
-        }
-  
-        const index = row.findIndex(el => el.year === obj['year'])
-        if (index > -1) {
-          Object.assign(row[index], item)
-        } else {
-          item['year'] = obj['year']
-          row.push(item)
-        }
-      })
-    }
+    generateDataLoop(row, sourceObj, source)
   })
 
   return {

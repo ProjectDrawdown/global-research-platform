@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useHistory, useLocation } from "react-router-dom"
-import { useDisclosure, Heading } from "@chakra-ui/react"
+import { useDisclosure } from "@chakra-ui/react"
 import { useConfigContext } from "contexts/ConfigContext"
 import store from "redux/store"
 import { getPathByHash } from "util/component-utilities"
@@ -13,7 +13,9 @@ import {
 import {
   fetchWorkbookThunk,
   calculateMockThunk
-} from "redux/reducers/workbook/workbookSlice";
+} from "redux/reducers/workbook/workbookSlice"
+import { useWorkbookIsFullyLoadedSelector } from "redux/selectors.js"
+import LoadingSpinner from "components/LoadingSpinner"
 import DashboardLayout from "parts/DashboardLayout"
 import SolutionHeader from "components/solution/SolutionHeader"
 import TabbedDatatable from "components/solution/TabbedDatatable"
@@ -26,6 +28,8 @@ const HealthAndEducationViewPage = () => {
   const location = useLocation();
   const params = useParams();
   const configState = useConfigContext();
+
+  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector("EMISSIONS ALLOCATIONS in LLDC", false);
 
   const { name, sector } = configState.settings.technologyMetadata[
     params.technologyId
@@ -51,6 +55,25 @@ const HealthAndEducationViewPage = () => {
     store.dispatch(calculateMockThunk(params.id, 0, params.technologyId));
   }, [params.technologyId, params.id]);
 
+  // TODO implement full skeletons of children in layout instead of here.
+  if (!workbookIsFullyLoaded) {
+    return (
+      <DashboardLayout showFooter={false}>
+        <SolutionHeaderRegion key="header">
+          <WorkbookHeader technologyId={params.technologyId} />
+        </SolutionHeaderRegion>
+        <SolutionCardsStack stack="max" mb="0.75rem">
+          <SolutionHeader
+            color={color}
+            title={name}
+            technologyId={params.technologyId}
+          />
+        </SolutionCardsStack>
+        <LoadingSpinner />
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout showFooter={false}>
       <SolutionLayout
@@ -59,6 +82,7 @@ const HealthAndEducationViewPage = () => {
         drawer={drawer}
         title={name}
         modalPath={modalPath}
+        modalSize="full"
         technologyId={params.technologyId}
       >
         <SolutionHeaderRegion key="header">
@@ -78,16 +102,15 @@ const HealthAndEducationViewPage = () => {
           </SolutionCardsStack>
           <SolutionCardsStack col={true} size="md">
             <ClusterResult 
-              color={color}/>
+              path="heresult"
+              color={color}>
+                <TabbedDatatable
+                  color={color}
+                  title="Calculation Outputs and Integration Data Tables" 
+                  withTableTitle={false}
+                  sourceListObjectpath="workbook.techData.data" />
+            </ClusterResult>
           </SolutionCardsStack>
-        </SolutionCardsStack>
-        {/* TODO: remove this data set */}
-        <SolutionCardsStack stack="max" mb="0.75rem">
-          <TabbedDatatable
-            color={color}
-            title="Calculation Outputs and Integration Data Tables" 
-            withTableTitle={false}
-            sourceListObjectpath="workbook.techData.data" />
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

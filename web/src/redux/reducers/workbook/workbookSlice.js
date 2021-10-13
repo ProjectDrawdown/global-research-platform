@@ -506,7 +506,11 @@ export const fetchWorkbookThunk = id => async dispatch => {
       technologies: {
         ...HEMock['heelectricity'].technologies,
         ...HEMock['hespaceheating'].technologies
-      }
+      },
+      report_start_year_a: 2020,
+      report_end_year_a: 2050,
+      report_start_year_b: 2015,
+      report_end_year_b: 2060,
     }
   }
   // END MOCK
@@ -597,8 +601,7 @@ export const calculateMockThunk = (
 ) =>  (dispatch, getState) => {
   dispatch(calculationLoading());
 
-  const techData = {...HEMock[activeTechnology].data};
-
+  const techData = {...HEMock[activeTechnology].data}
 
   dispatch(
     calculationLoaded({

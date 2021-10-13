@@ -12,3 +12,12 @@ code {
     monospace;
 }
 
+/*
+Manual Override
+*/
+
+.rdt_TableCol_Sortable div {
+  white-space: pre-line !important;
+  word-wrap: break-word;
+}
+

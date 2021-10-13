@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import { humanize } from "util/component-utilities"
 import {
-  useStringVarpathSelector
+  useStringVarpathSelector,
+  useArrayVarpathSelector
 } from "redux/selectors.js"
 import { Card, 
   CardBody, 
@@ -49,7 +50,11 @@ const TamMixHeader = () => {
   )
 }
 
-const TamMixContent = ({title, data}) => {
+const TamMixContent = ({
+  title,
+  data,
+  activeTechnology
+}) => {
   return (
     <Grid
       mt={3}
@@ -64,7 +69,8 @@ const TamMixContent = ({title, data}) => {
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={3}>
         <BoundSelect
-            varpath="adoption_prognostication_growth"
+            varpath={`tam_mix.${title}.in_integration`}
+            target="clusters"
             options={{
               ignore: "Ignore",
               solution: "In Solution",
@@ -100,6 +106,7 @@ const TamMix = ({
                   key={`tam_mix_${index}`} 
                   title={item}
                   data={varValue[item]}
+                  activeTechnology={activeTechnology}
                 />)
             }
           </GridItem>
@@ -114,25 +121,26 @@ const TamMix = ({
 const TamResult = ({
   activeTechnology
 }) => {
-  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}.assumption`, 'clusters');
-  const assumptions = varValue ? Object.keys(varValue) : []
-
   return (
     <GridItem px={3}>
       <Heading size="sm" mb="0.75rem">Assumptions</Heading>
       <SolutionCardsStack stack="sm" mb="0.75rem">
         <Grid minW="100%">
-          {
-            assumptions.map((item, index) => 
-            
-              <Row
-                key={`assumptions_${index}`}
-                label={humanize(item)}
-                // todo: fix this mapping
-                varpath="emissions_per_funit.value"
-                dataType="numeric"/>
-            )
-          }
+          <Row
+            label="Fixed Weighting Factor"
+            target="clusters"
+            varpath="fixed_weighting_factor"
+            dataType="numeric" />
+          <Row
+            label="Used Fixed Weight"
+            target="clusters"
+            varpath="use_fixed_weight"
+            dataType="numeric" />
+          <Row
+            label="Impact of Ed. Attainment"
+            target="clusters"
+            varpath="impact_of_ed_attainment"
+            dataType="numeric" />
           </Grid>
         <SolutionCardsStack stack="sm" mb="0.75rem">
           <span>{' '}</span>
