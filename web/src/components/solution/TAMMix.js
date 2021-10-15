@@ -3,14 +3,8 @@ import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import { humanize } from "util/component-utilities"
 import {
-  useStringVarpathSelector,
-  useArrayVarpathSelector
+  useStringVarpathSelector
 } from "redux/selectors.js"
-import { Card, 
-  CardBody, 
-  CardTitle,
-  CardHeader
-} from "components/Card"
 import {
   SolutionCardsStack,
 } from "components/solution"
@@ -53,7 +47,6 @@ const TamMixHeader = () => {
 const TamMixContent = ({
   title,
   data,
-  activeTechnology
 }) => {
   return (
     <Grid
@@ -84,7 +77,6 @@ const TamMixContent = ({
 }
 
 const TamMix = ({
-  color,
   activeTechnology
 }) => {
   const varValue = useStringVarpathSelector(`technologies.${activeTechnology}.tam_mix`, 'clusters');
@@ -92,35 +84,26 @@ const TamMix = ({
   const mixes = varValue ? Object.keys(varValue) : []
 
   return (
-    <Card size="xl" h="100%">
-      <CardHeader color={color}>
-        <CardTitle>TAM Mix</CardTitle>
-      </CardHeader>
-      <CardBody>
-        <Grid minW="100%">
-          <GridItem px={3}>
-            <TamMixHeader />
-            {
-              mixes.map((item, index) => 
-                <TamMixContent
-                  key={`tam_mix_${index}`} 
-                  title={item}
-                  data={varValue[item]}
-                  activeTechnology={activeTechnology}
-                />)
-            }
-          </GridItem>
-          <TamResult 
-            activeTechnology={activeTechnology}/>
-        </Grid>
-      </CardBody>
-    </Card>
+    <Grid minW="100%">
+      <GridItem px={3}>
+        <TamMixHeader />
+        {
+          mixes.map((item, index) => 
+            <TamMixContent
+              key={`tam_mix_${index}`} 
+              title={item}
+              data={varValue[item]}
+              activeTechnology={activeTechnology}
+            />)
+        }
+      </GridItem>
+      <TamResult 
+        activeTechnology={activeTechnology}/>
+    </Grid>
   )
 }
 
-const TamResult = ({
-  activeTechnology
-}) => {
+const TamResult = () => {
   return (
     <GridItem px={3}>
       <Heading size="sm" mb="0.75rem">Assumptions</Heading>

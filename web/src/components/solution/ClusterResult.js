@@ -156,7 +156,8 @@ const generateValue = (startYear, endYear, data) => {
 }
 
 const ClusterResult = ({
-  color
+  color,
+  path
 }) => {
   const history = useHistory();
   const startYearA = useStringVarpathSelector(`report_start_year_a`, 'clusters');
@@ -174,10 +175,10 @@ const ClusterResult = ({
       <CardHeader color={color}>
         <CardTitle
           icon={faQuestionCircle}
-            onClick={() => history.push({ hash: "#modal/heresult" })
+            onClick={() => history.push({ hash: `#modal/${path}` })
           }>
             Result
-          </CardTitle>
+        </CardTitle>
       </CardHeader>
       <CardBody>
         <Grid minW="100%">

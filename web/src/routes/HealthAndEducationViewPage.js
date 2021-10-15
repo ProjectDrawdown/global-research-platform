@@ -22,6 +22,8 @@ import TabbedDatatable from "components/solution/TabbedDatatable"
 import WorkbookHeader from "components/workbook/header"
 import TamMix from "components/solution/TAMMix"
 import ClusterResult from "components/solution/ClusterResult"
+import ClusterMarketChart from "components/charts/ClusterMarketChart"
+import BaseCard from "components/cards/BaseCard"
 
 const HealthAndEducationViewPage = () => {
   const history = useHistory();
@@ -95,10 +97,21 @@ const HealthAndEducationViewPage = () => {
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
+        <SolutionCardsStack col={true} size="max">
+          <BaseCard
+            size="max">
+            <ClusterMarketChart
+              sourceListObjectpath="workbook.techData.data" />
+          </BaseCard>
+        </SolutionCardsStack>
         <SolutionCardsStack margin={true} mb="0.75rem">
           <SolutionCardsStack col={true} size="sm">
-            <TamMix 
-              color={color}/>
+            <BaseCard
+              size="xl"
+              title="TAM Mix"
+              color={color}>
+              <TamMix />
+            </BaseCard>
           </SolutionCardsStack>
           <SolutionCardsStack col={true} size="md">
             <ClusterResult 
