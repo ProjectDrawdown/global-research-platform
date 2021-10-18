@@ -27,6 +27,7 @@ export function useArrayVarpathSelector(
     `${target}_vars`,
     ...varpath
   ];
+
   return useSelector(state => {
     let dataEntry = objectPath.get(state, variationVarpath);
     dataEntry =
@@ -34,7 +35,7 @@ export function useArrayVarpathSelector(
         ? dataEntry
         : objectPath.get(state, parentVarpath);
     return typeof dataEntry === "object" &&
-      typeof dataEntry.value !== "undefined "
+      typeof dataEntry.value !== "undefined"
       ? dataEntry.value
       : dataEntry;
   });
@@ -119,17 +120,16 @@ export function useWorkbookIsLoadedSelector() {
   );
 }
 
-export function useWorkbookIsFullyLoadedSelector() {
+export function useWorkbookIsFullyLoadedSelector(conditional = "pds_tam_per_region", checkUndefined = true) {
   return useSelector(state => {
     return objectHasAll(state.workbook, [
       "workbook",
       "techData",
       "summaryData"
-    ], true)
+    ], checkUndefined)
     &&
-    // race condition when "techData" is repurposed for clusters/metadata
     objectHasAll(state.workbook.techData?.data, [
-      "pds_tam_per_region",
-    ], true);
+      conditional,
+    ], true)
   });
 }

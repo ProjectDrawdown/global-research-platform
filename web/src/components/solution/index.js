@@ -122,9 +122,9 @@ const SolutionFormDrawer = ({ children, isOpen, onClose }) => {
   );
 };
 
-const SolutionCardModal = ({ children, isOpen, onClose }) => {
+const SolutionCardModal = ({ children, isOpen, onClose, size = "xl" }) => {
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose}>
+    <Modal size={size} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton zIndex="1500" />
@@ -143,7 +143,8 @@ export const SolutionLayout = ({
   children,
   drawer,
   modal,
-  modalPath
+  modalPath,
+  modalSize = "xl"
 }) => {
   const { user, patchUserFromAPI} = useContext(UserContext);
 
@@ -235,7 +236,7 @@ export const SolutionLayout = ({
         </SolutionFormDrawer>
       )}
       {modal.isOpen && (
-        <SolutionCardModal isOpen={modal.isOpen} onClose={modal.onClose}>
+        <SolutionCardModal isOpen={modal.isOpen} onClose={modal.onClose} size={modalSize}>
           {solutionCardModal}
         </SolutionCardModal>
       )}

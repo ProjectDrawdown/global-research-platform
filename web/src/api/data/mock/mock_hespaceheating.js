@@ -2,97 +2,216 @@ export default {
   data: {
     name: "HE: SpaceHeating",
     data: {
-      "ref 1 population": {
-        world: [
-          {
-            year: "2014",
-            value: 1000
-          },
-          {
-            year: "2015",
-            value: 2000
-          },
-          {
-            year: "2016",
-            value: 1000
-          }
-        ],
-        OECD90: [
-          {
-            year: "2014",
-            value: 2000
-          },
-          {
-            year: "2015",
-            value: 2000
-          },
-          {
-            year: "2016",
-            value: 2000
-          }
-        ]
+      "EMISSIONS ALLOCATIONS in LLDC": {
+        "Health and Education": {
+          conventional: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+          solution: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+        },
+        "Education": {
+          conventional: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+          solution: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+        },
+        "Family Planning": {
+          conventional: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+          solution: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+        },
       },
-      "ref 2 population": {
-        world: [
-          {
-            year: "2014",
-            value: 1000
-          },
-          {
-            year: "2015",
-            value: 2000
-          },
-          {
-            year: "2016",
-            value: 1000
-          }
-        ],
-        OECD90: [
-          {
-            year: "2014",
-            value: 2000
-          },
-          {
-            year: "2015",
-            value: 2000
-          },
-          {
-            year: "2016",
-            value: 2000
-          }
-        ]
+      "EMISSIONS ALLOCATIONS in MDC": {
+        "Health and Education": {
+          conventional: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+          solution: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+        },
+        "Education": {
+          conventional: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+          solution: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+        },
+        "Family Planning": {
+          conventional: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+          solution: [
+            {
+              year: "2014",
+              value: 1000
+            },
+            {
+              year: "2015",
+              value: 2000
+            },
+            {
+              year: "2016",
+              value: 1000
+            }
+          ],
+        },
       }
-    }
+    },
+    hash: null
   },
   technologies: {
     hespaceheating: {
       tam_mix: {
         coal: {
           adoption: 10,
-          in_solution: false,
-          in_conventional: false
+          in_integration: "ignore"
         },
         natural_gas: {
           adoption: 22,
-          in_solution: false,
-          in_conventional: false
+          in_integration: "ignore"
         },
         nuclear: {
           adoption: 15.8,
-          in_solution: false,
-          in_conventional: false
+          in_integration: "ignore"
         },
         oil: {
           adoption: 70,
-          in_solution: false,
-          in_conventional: false
+          in_integration: "ignore"
         },
       },
-      assumption: {
-        fixed_weighting_factor: 0,
-        use_fixed_weight: 0,
-        impact_of_ed_attainment: 0
-      }
+      fixed_weighting_factor: 0.094,
+      use_fixed_weight: 0.234,
+      impact_of_ed_attainment: 12,
     }
   }
 }
