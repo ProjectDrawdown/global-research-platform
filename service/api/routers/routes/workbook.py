@@ -30,7 +30,7 @@ from api.db.models import (
 
 from api.routers import schemas
 from api.routers.auth import get_current_active_user, get_current_workbook
-from api.calculate import calculate
+from api.calculate import calculate, calculateCluster
 
 from api.transforms.validate_variation import validate_full_schema
 
@@ -194,6 +194,7 @@ async def add_workbook_variation(
       'vma_sources': variation_patch.vma_sources,
       'scenario_vars': variation_patch.scenario_vars,
       'reference_vars': variation_patch.reference_vars,
+      'cluster_vars': variation_patch.cluster_vars,
       'scenario_parent_path': variation_patch.scenario_parent_path,
       'reference_parent_path': variation_patch.reference_parent_path
     }
@@ -315,6 +316,18 @@ async def get_calculate(
   cache: aioredis.Redis = Depends(fastapi_plugins.depends_redis)):
   return await calculate(workbook_id, workbook_version, variation_index, client, db, cache, run_async, do_diffs)
 
+@router.get("/calculate/cluster", summary="TODO: right now data is grabbed statically")
+async def get_cluster_calculate(
+  workbook_id: int,
+  variation_index: int,
+  do_diffs: Optional[bool] = False,
+  run_async: Optional[bool] = True,
+  workbook_version: Optional[int] = None,
+  client: AioWrap = Depends(AioWrap),
+  db: Session = Depends(get_db),
+  cache: aioredis.Redis = Depends(fastapi_plugins.depends_redis)):
+  return await calculateCluster(workbook_id, workbook_version, variation_index, client, db, cache, run_async, do_diffs)
+
 @router.websocket("/calculate/ws")
 async def get_calculat_ws(
   workbook_id: int,
@@ -329,4 +342,3 @@ async def get_calculat_ws(
   cache = app.state.REDIS.redis
   await websocket.accept()
   await calculate(workbook_id, workbook_version, variation_index, client, db, cache, run_async, do_diffs, websocket)
-

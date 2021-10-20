@@ -12,6 +12,8 @@ from api.transforms.variable_paths import varProjectionNamesPaths
 from api.transforms.reference_variable_paths import varRefNamesPaths
 from api.transforms.metadata import pythonFieldMetadataArray
 
+fileDir = os.path.dirname(os.path.realpath('__file__'))
+
 legacyDataFiles = {
   'drawdown-2020': [
 
@@ -148,6 +150,10 @@ legacyDataFiles = {
     # Buildings and Cities
     ["landfillmethane", "solution/landfillmethane/ac/PDS-0p2050-Optimum2020.json"],
   ],
+  'clusters': [
+    ["heelectricity", "api/data/clusters/heelectricity.json"],
+    ["hespaceheating", "api/data/clusters/hespaceheating.json"],
+  ]
 }
 
 pythonFieldMetadataObj = {}
@@ -178,6 +184,7 @@ def get_value_at(obj, path: str):
     if i == len(path_keys) - 1:
       return current_obj
 
+
 def transform():
   # # with open('solution/solarpvutil/ac/PDS-25p2050-Drawdown2020.json') as f:
 
@@ -203,6 +210,15 @@ def transform():
   }
   json_ref_data = {}
 
+  # currently data is 
+  json_cluster_data = {
+    'technologies': {},
+    'report_start_year_a': 2020,
+    'report_end_year_a': 2050,
+    'report_start_year_b': 2015,
+    'report_end_year_b': 2060,
+  }
+
   for [technology, filenameData] in legacyDataFiles['drawdown-2020']:
     libraryFilenameData = get_path_from_library(filenameData)
     with open(libraryFilenameData) as f:
@@ -225,8 +241,14 @@ def transform():
             #edge case scenario
             set_value_at(json_ref_data, technology_path, value)
 
+  # TODO: Cluster data is mocked, will need to retreive from proper source.
+  for [technology, filenameData] in legacyDataFiles['clusters']:
+    file_path = os.path.join(fileDir, filenameData)
+    with open(file_path) as f:
+      sample_cluster_data = json.load(f)
+      json_cluster_data['technologies'][technology] = sample_cluster_data
 
-  return [json_projection_data, json_ref_data]
+  return [json_projection_data, json_ref_data, json_cluster_data]
 
 def get_solution_file_paths(solution_name):
     path = f'solution/{solution_name}/ac/'

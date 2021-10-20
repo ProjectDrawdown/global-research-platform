@@ -45,9 +45,14 @@ const TamMixHeader = () => {
 }
 
 const TamMixContent = ({
-  title,
-  data,
+  name,
+  activeTechnology
 }) => {
+  const adoptionValue = useStringVarpathSelector(
+    `technologies.${activeTechnology}.tam_mix_adoption_${name}`,
+    'cluster'
+  );
+
   return (
     <Grid
       mt={3}
@@ -55,15 +60,18 @@ const TamMixContent = ({
       gap={4}
       templateColumns="repeat(12, 1fr)">
       <StyledHeaderGridItem colSpan={3}>
-        <BoldText>{humanize(title)}</BoldText>
+        <BoldText>{humanize(name)}</BoldText>
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={3}>
-        {data['adoption']} %
+        {
+          adoptionValue &&
+            <span>{adoptionValue} %</span>
+        }
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={3}>
         <BoundSelect
-            varpath={`tam_mix.${title}.in_integration`}
-            target="clusters"
+            varpath={`tam_mix_integration_${name}`}
+            target="cluster"
             options={{
               ignore: "Ignore",
               solution: "In Solution",
@@ -79,20 +87,29 @@ const TamMixContent = ({
 const TamMix = ({
   activeTechnology
 }) => {
-  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}.tam_mix`, 'clusters');
+  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}`, 'cluster', 0, false);
+  const keys = varValue ? Object.keys(varValue) : []
 
-  const mixes = varValue ? Object.keys(varValue) : []
+  console.log(varValue)
+
+  // loop through the selector to create the object
+  const data = []
+  keys.forEach((name) => {
+    if (name.includes("tam_mix_integration")) {
+      // getting the title
+      data.push(name.replace("tam_mix_integration_", ""))
+    }
+  })
 
   return (
     <Grid minW="100%">
       <GridItem px={3}>
         <TamMixHeader />
         {
-          mixes.map((item, index) => 
+          data.map((name, index) => 
             <TamMixContent
               key={`tam_mix_${index}`} 
-              title={item}
-              data={varValue[item]}
+              name={name}
               activeTechnology={activeTechnology}
             />)
         }
@@ -111,17 +128,17 @@ const TamResult = () => {
         <Grid minW="100%">
           <Row
             label="Fixed Weighting Factor"
-            target="clusters"
+            target="cluster"
             varpath="fixed_weighting_factor"
             dataType="numeric" />
           <Row
             label="Used Fixed Weight"
-            target="clusters"
+            target="cluster"
             varpath="use_fixed_weight"
             dataType="numeric" />
           <Row
             label="Impact of Ed. Attainment"
-            target="clusters"
+            target="cluster"
             varpath="impact_of_ed_attainment"
             dataType="numeric" />
           </Grid>

@@ -1,0 +1,13 @@
+{
+  "tam_mix_integration_coal": "ignore",
+  "tam_mix_integration_natural_gas": "ignore",
+  "tam_mix_integration_nuclear": "ignore",
+  "tam_mix_integration_oil": "ignore",
+  "tam_mix_adoption_coal": 10,
+  "tam_mix_adoption_natural_gas": 10,
+  "tam_mix_adoption_nuclear": 10,
+  "tam_mix_adoption_oil": 10,
+  "fixed_weighting_factor": 0.094,
+  "use_fixed_weight": 0.234,
+  "impact_of_ed_attainment": 12
+}

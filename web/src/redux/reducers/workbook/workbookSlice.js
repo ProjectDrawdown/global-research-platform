@@ -6,9 +6,8 @@ import {
   fetchData,
   updateVariation,
   runCalculation,
+  runClusterCalculation,
   fetchResources,
-  // Mock data for Health and Education
-  HEMock
 } from "../../../api/api";
 import objectPath from "object-path";
 import { errorAdded } from "../util/errorSlice";
@@ -23,10 +22,22 @@ export const doFetchWorkbookThunk = createAsyncThunk(
     const reference = await fetchData(
       workbook.variations[0].reference_parent_path
     );
+
+    // for legacy workbook
+    let cluster = {}
+    if (workbook.variations[0].cluster_parent_path) {
+      cluster = await fetchData(
+        workbook.variations[0].cluster_parent_path
+      );
+    }
+    
+
+
     const obj = {
       ...workbook,
       scenario,
-      reference
+      reference,
+      cluster
     };
     return obj;
   }
@@ -500,26 +511,20 @@ export const fetchWorkbookThunk = id => async dispatch => {
     workbook.variations[0].reference_parent_path
   );
 
-  // START MOCK, TODO: replace for result from API
-  const clusters = {
-    data: {
-      technologies: {
-        ...HEMock['heelectricity'].technologies,
-        ...HEMock['hespaceheating'].technologies
-      },
-      report_start_year_a: 2020,
-      report_end_year_a: 2050,
-      report_start_year_b: 2015,
-      report_end_year_b: 2060,
-    }
+  // Legacy workbook may not have cluster wired in yet
+  let cluster = {}
+  if (workbook.variations[0].cluster_parent_path) {
+    console.log('hello wolrd')
+    cluster = await fetchData(
+      workbook.variations[0].cluster_parent_path
+    );
   }
-  // END MOCK
-
+  
   const obj = {
     ...workbook,
     scenario,
     reference,
-    clusters
+    cluster
   };
   dispatch(workbookLoaded(obj));
 };
@@ -594,14 +599,20 @@ export const calculateThunk = (
   }
 };
 
+
+// TODO: create another thunk to load metadata - maybe we make it into one thunk later
 export const calculateMockThunk = (
   id,
   variationIndex,
   activeTechnology
-) =>  (dispatch, getState) => {
+) =>  async (dispatch, getState) => {
   dispatch(calculationLoading());
 
-  const techData = {...HEMock[activeTechnology].data}
+  const res = await runClusterCalculation(id, variationIndex);
+
+  if (res.detail) return dispatch(errorAdded(res));
+
+  const techData = {...res.results[activeTechnology]}
 
   dispatch(
     calculationLoaded({

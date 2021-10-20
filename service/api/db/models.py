@@ -20,6 +20,7 @@ class EntityName(str, enum.Enum):
     """
     scenario = "scenario"
     reference = "reference"
+    cluster = "cluster"
     variation = "variation"
     vma = "vma"
     ad = "adoption_data"
@@ -131,6 +132,12 @@ class Reference(Resource, Base):
         Represent the Reference Table
     """
     __tablename__ = 'reference'
+
+class Cluster(Resource, Base):
+    """
+        Represent the Cluster Table
+    """
+    __tablename__ = 'cluster'
 
 class Variation(Resource, Base):
     """

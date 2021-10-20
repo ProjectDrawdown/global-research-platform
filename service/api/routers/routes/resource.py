@@ -42,6 +42,7 @@ DATADIR = pathlib.Path(__file__).parents[0].joinpath('data')
 entity_mapping = {
   'scenario': models.Scenario,
   'reference': models.Reference,
+  'cluster': models.Cluster,
   'variation': models.Variation,
   'vma': models.VMA,
   'adoption_data': models.AdoptionData,
@@ -296,10 +297,14 @@ async def fork_variation(input_id: int, patch: schemas.VariationPatch, database:
     cloned_variation.data['scenario_parent_path'] = patch.scenario_parent_path
   if patch.scenario_parent_path is not None:
     cloned_variation.data['reference_parent_path'] = patch.reference_parent_path
+  if patch.cluster_parent_path is not None:
+    cloned_variation.data['cluster_parent_path'] = patch.cluster_parent_path
   if patch.scenario_vars is not None:
     cloned_variation.data['scenario_vars'] = patch.scenario_vars
   if patch.reference_vars is not None:
     cloned_variation.data['reference_vars'] = patch.reference_vars
+  if patch.cluster_vars is not None:
+    cloned_variation.data['cluster_vars'] = patch.cluster_vars
   if patch.vma_sources is not None:
     cloned_variation.data['vma_sources'] = patch.reference_vars
 
@@ -328,8 +333,10 @@ async def post_variation(variation: schemas.VariationIn, database: Session = Dep
   )
   new_variation.data['scenario_parent_path'] = variation.scenario_parent_path
   new_variation.data['reference_parent_path'] = variation.reference_parent_path
+  new_variation.data['cluster_parent_path'] = variation.cluster_parent_path
   new_variation.data['scenario_vars'] = variation.scenario_vars
   new_variation.data['reference_vars'] = variation.reference_vars
+  new_variation.data['cluster_vars'] = variation.cluster_vars
   new_variation.data['vma_sources'] = variation.vma_sources
   return save_variation(database, new_variation)
 
@@ -356,20 +363,23 @@ async def initialize(database: Session = Depends(get_db)):
 
     clear_all_tables(database)
 
-  [scenario_json, references_json] = transform()
+  [scenario_json, references_json, cluster_json] = transform()
 
   # create base scenario
   canonical_scenarios = ['drawdown-2020', 'plausible-2020', 'optimum-2020']
   for canonical_scenario in canonical_scenarios:
     scenario = save_entity(database, canonical_scenario, "n/a", scenario_json, models.Scenario)
     reference = save_entity(database, canonical_scenario, "n/a", references_json, models.Reference)
+    cluster = save_entity(database, canonical_scenario, "n/a", cluster_json, models.Cluster)
     variation = models.Variation(
       name='default',
       data={
         "scenario_parent_path": scenario.path,
         "reference_parent_path": reference.path,
+        "cluster_parent_path": cluster.path,
         "scenario_vars": {},
         "reference_vars": {},
+        "cluster_vars": {},
         "vma_sources": {}
       }
     )
