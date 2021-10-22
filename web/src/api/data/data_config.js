@@ -433,6 +433,7 @@ const dataConfig = {
       type: "Sink"
     },
     hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" },
+    // health and education
     heelectricity: {
       name: "Electricity",
       sector: "Health and Education",
@@ -443,11 +444,31 @@ const dataConfig = {
       sector: "Health and Education",
       type: "HE"
     },
-    hespaceheating: {
-      name: "Space Heating",
+    hespacecooling: {
+      name: "Space Cooling",
       sector: "Health and Education",
       type: "HE"
-    }
+    },
+    hecleancookstove: {
+      name: "Clean Cook Stove",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hecomlight: {
+      name: "Com Light",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hereslight: {
+      name: "Res Light",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hewaterheating: {
+      name: "Water Heating",
+      sector: "Health and Education",
+      type: "HE"
+    },
   },
   technologyStaticMetaData: {
     hepopulation: {

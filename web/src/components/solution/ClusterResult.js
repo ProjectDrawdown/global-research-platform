@@ -152,8 +152,8 @@ const generateValue = (startYear, endYear, data) => {
       result += entry.value
     }
   })
-
-  return result
+  
+  return result.toFixed(2)
 }
 
 const ClusterResult = ({

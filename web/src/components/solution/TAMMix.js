@@ -75,7 +75,7 @@ const TamMixContent = ({
             options={{
               ignore: "Ignore",
               solution: "In Solution",
-              convention: "In Convention"
+              convention: "In Conventional"
             }}
             size="sm"
           />
@@ -135,11 +135,21 @@ const TamResult = () => {
             label="Used Fixed Weight"
             target="cluster"
             varpath="use_fixed_weight"
-            dataType="numeric" />
+            dataType="boolean" />
           <Row
             label="Impact of Ed. Attainment"
             target="cluster"
             varpath="impact_of_ed_attainment"
+            dataType="numeric" />
+          <Row
+            label="Twh per TWH"
+            target="cluster"
+            varpath="Twh_per_TWH"
+            dataType="numeric" />
+          <Row
+            label="Fuel unit per TWH"
+            target="cluster"
+            varpath="fuel_unit_per_TWh"
             dataType="numeric" />
           </Grid>
         <SolutionCardsStack stack="sm" mb="0.75rem">

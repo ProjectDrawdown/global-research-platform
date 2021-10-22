@@ -47,7 +47,7 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
             style={{
               axis: { stroke: "#f2f2f2" },
               tickLabels: {
-                fontSize: 8,
+                fontSize: 2,
                 fill: "#a3a3a3"
               },
               ticks: { stroke: "#bababa", size: 2, verticalAnchor: "middle" },
@@ -68,7 +68,6 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
             }}
             label="TWh"
             fixLabelOverlap={true}
-            width="100%"
           />
           <VictoryArea
             data={lldcConventional}
@@ -94,10 +93,10 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
       </GridItem>
       <GridItem>
         <VictoryLegend
-          x={100} y={10}
+          x={125} y={5}
           orientation="horizontal"
           height={25}
-          style={{ labels: {fontSize: 6 } }}
+          style={{ labels: {fontSize: 4 } }}
           data={[
             { name: "LLDC in Convetional", symbol: { fill: "#edf2f7" } },
             { name: "LLDC in Solution", symbol: { fill: "#ffcdc2" } },
