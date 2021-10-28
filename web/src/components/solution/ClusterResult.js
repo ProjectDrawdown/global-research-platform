@@ -147,7 +147,8 @@ const generateValue = (startYear, endYear, data) => {
   let result = 0;
 
   data.forEach((entry) => {
-    if (startYear >= entry.year && endYear <= entry.year) {
+    if (startYear <= parseInt(entry.year) &&
+      endYear >= parseInt(entry.year)) {
       result += entry.value
     }
   })
@@ -160,10 +161,10 @@ const ClusterResult = ({
   path
 }) => {
   const history = useHistory();
-  const startYearA = useStringVarpathSelector(`report_start_year_a`, 'clusters');
-  const endYearA = useStringVarpathSelector(`report_end_year_a`, 'clusters');
-  const startYearB = useStringVarpathSelector(`report_start_year_b`, 'clusters');
-  const endYearB = useStringVarpathSelector(`report_end_year_b`, 'clusters');
+  const startYearA = useStringVarpathSelector(`report_start_year_a`, 'cluster');
+  const endYearA = useStringVarpathSelector(`report_end_year_a`, 'cluster');
+  const startYearB = useStringVarpathSelector(`report_start_year_b`, 'cluster');
+  const endYearB = useStringVarpathSelector(`report_end_year_b`, 'cluster');
 
   const data = useObjectPathSelector('workbook.techData.data')
 

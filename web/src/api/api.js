@@ -1,10 +1,9 @@
 import dataConfig from "./data/data_config";
 import { API_URL } from "config";
-// TODO: delete once integrated
-import HEMock from "api/data/mock"
 
 const WORKBOOK_API_URL = API_URL + "/workbook";
 const CALCULATIONS_API_URL = API_URL + "/calculate";
+const CLUSTER_CALCULATIONS_API_URL = API_URL + "/calculate/cluster";
 const WORKBOOKS_API_URL = API_URL + "/workbooks";
 const USER_INFO_URL = API_URL + "/me";
 const AUTH_API_URL = API_URL + "/login";
@@ -64,6 +63,18 @@ export const runCalculation = async (workbookId, variationIndex) => {
   const dataJson = await res.json();
   return dataJson;
 };
+
+export const runClusterCalculation = async (workbookId, variationIndex) => {
+  const res = await fetch(
+    CLUSTER_CALCULATIONS_API_URL +
+      "?run_async=true&workbook_id=" +
+      workbookId +
+      "&variation_index=" +
+      variationIndex
+  );
+  const dataJson = await res.json();
+  return dataJson;
+}
 
 export const fetchProjection = async id => {
   const res = await fetch(id);
@@ -253,6 +264,4 @@ export const fetchResources = async (id, entity) => {
 
 export { 
   dataConfig,
-  // TODO: this is mock data, deleted when integrated
-  HEMock
 };

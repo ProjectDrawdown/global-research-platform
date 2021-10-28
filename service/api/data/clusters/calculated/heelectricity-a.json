@@ -1,0 +1,190 @@
+{
+  "name": "HE: Electricity",
+  "data": {
+    "EMISSIONS ALLOCATIONS in LLDC": {
+      "Health and Education": {
+        "conventional": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ],
+        "solution": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ]
+      },
+      "Education": {
+        "conventional": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ],
+        "solution": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ]
+      },
+      "Family Planning": {
+        "conventional": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ],
+        "solution": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ]
+      }
+    },
+    "EMISSIONS ALLOCATIONS in MDC": {
+      "Health and Education": {
+        "conventional": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ],
+        "solution": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ]
+      },
+      "Education": {
+        "conventional": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ],
+        "solution": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ]
+      },
+      "Family Planning": {
+        "conventional": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ],
+        "solution": [
+          {
+            "year": "2014",
+            "value": 1000
+          },
+          {
+            "year": "2015",
+            "value": 2000
+          },
+          {
+            "year": "2016",
+            "value": 1000
+          }
+        ]
+      }
+    }
+  },
+  "hash": null
+}

@@ -44,14 +44,15 @@ export function useArrayVarpathSelector(
 export function useStringVarpathSelector(
   varpath,
   target = "scenario",
-  variationIndex = 0
+  variationIndex = 0,
+  fromVariation = true
 ) {
   const workbookPath = "workbook.workbook";
   const targetVarpath = `${target}_vars.${varpath}`;
   const parentVarpath = `${workbookPath}.${target}.data.${varpath.replace(/.value$/,"")}`;
   const variationVarpath = `${workbookPath}.variations.${variationIndex}.${target}_vars.${varpath.replace(/\.value$/, "")}`;
   return useSelector(state => {
-    let dataEntry = objectPath.get(state, variationVarpath);
+    let dataEntry = fromVariation ? objectPath.get(state, variationVarpath) : undefined;
     dataEntry =
       typeof dataEntry !== "undefined" && dataEntry !== null
         ? dataEntry
