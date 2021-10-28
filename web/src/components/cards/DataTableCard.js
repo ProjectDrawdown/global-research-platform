@@ -13,7 +13,7 @@ const generateDataLoop = (row, sourceObj, source, name = "") => {
   if (Array.isArray(sourceObj[source])) {
     sourceObj[source].forEach((obj) => {
       const item = {
-        [name + source]: obj['value']
+        [name + source]: typeof obj['value'] == "number" ? obj['value'].toFixed(2) : obj['value']
       }
 
       const index = row.findIndex(el => el.year === obj['year'])
@@ -60,10 +60,6 @@ const generateData = (sourceObj) => {
   objKeys.forEach(source => {
     generateColumnLoop(column, sourceObj, source)
 
-    column.push({
-      name: ' ',
-    })
-
     // Checking for array in case wrong format is passed
     generateDataLoop(row, sourceObj, source)
   })
@@ -93,6 +89,7 @@ export default function Render({
           <DataTable
             columns={column}
             data={row}
+            fixedHeader={true}
           />
         </CardBody>
       </Card>

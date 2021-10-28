@@ -477,7 +477,7 @@ const dataConfig = {
       type: "HE"
     },
     heemissionfactor: {
-      name: "Emission Factor",
+      name: "Emission Factors",
       sector: "Health and Education",
       type: "HE"
     }
