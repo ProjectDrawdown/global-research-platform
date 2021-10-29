@@ -21,6 +21,7 @@ import SolutionHeader from "components/solution/SolutionHeader"
 import TabbedDatatable from "components/solution/TabbedDatatable"
 import WorkbookHeader from "components/workbook/header"
 import TamMix from "components/solution/TAMMix"
+import TamMixAssumption from "components/solution/TamMixAssumption"
 import ClusterResult from "components/solution/ClusterResult"
 import ClusterMarketChart from "components/charts/ClusterMarketChart"
 import BaseCard from "components/cards/BaseCard"
@@ -97,13 +98,6 @@ const HealthAndEducationViewPage = () => {
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
-        <SolutionCardsStack col={true} size="max">
-          <BaseCard
-            size="max">
-            <ClusterMarketChart
-              sourceListObjectpath="workbook.techData.data" />
-          </BaseCard>
-        </SolutionCardsStack>
         <SolutionCardsStack margin={true} mb="0.75rem">
           <SolutionCardsStack col={true} size="sm">
             <BaseCard
@@ -111,6 +105,14 @@ const HealthAndEducationViewPage = () => {
               title="TAM Mix"
               color={color}>
               <TamMix />
+            </BaseCard>
+          </SolutionCardsStack>
+          <SolutionCardsStack col={true} size="sm">
+            <BaseCard
+              size="xl"
+              title="Assumptions"
+              color={color}>
+              <TamMixAssumption />
             </BaseCard>
           </SolutionCardsStack>
           <SolutionCardsStack col={true} size="md">
@@ -124,6 +126,13 @@ const HealthAndEducationViewPage = () => {
                   sourceListObjectpath="workbook.techData.data" />
             </ClusterResult>
           </SolutionCardsStack>
+        </SolutionCardsStack>
+        <SolutionCardsStack col={true} size="max">
+          <BaseCard
+            size="max">
+            <ClusterMarketChart
+              sourceListObjectpath="workbook.techData.data" />
+          </BaseCard>
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

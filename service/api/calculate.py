@@ -456,6 +456,11 @@ async def calculateCluster(
     'data': [
       ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-a.json', 'a'],
       ['heelectricity', 'api/data/clusters/calculated/heelectricity-a.json', 'a'],
+      ["hecleancookstove", "api/data/clusters/calculated/hecleancookstove-a.json", 'a'],
+      ["hecomlight", "api/data/clusters/calculated/hecomlight-a.json", 'a'],
+      ["hespacecooling", "api/data/clusters/calculated/hespacecooling-a.json", 'a'],
+      ["hewaterheating", "api/data/clusters/calculated/hewaterheating-a.json", 'a'],
+      ["hereslight", "api/data/clusters/calculated/hereslight-a.json", 'a'],
 
       # default metadata
       ['hepopulation', 'api/data/metadata/population.json', 'default'],

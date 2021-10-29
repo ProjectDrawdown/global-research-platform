@@ -1,0 +1,16 @@
+{
+  "tam_mix_integration_linear_fluorescent_lamp": "convention",
+  "tam_mix_integration_compact_flourescent_lamp": "convention",
+  "tam_mix_integration_incandescent_and_halogen_lamp": "convention",
+  "tam_mix_integration_high_intensity_discharge_lamp": "convention",
+
+  "tam_mix_adoption_linear_fluorescent_lamp": 75.00,
+  "tam_mix_adoption_compact_flourescent_lamp": 10.00,
+  "tam_mix_adoption_incandescent_and_halogen_lamp": 2.00,
+  "tam_mix_adoption_high_intensity_discharge_lamp": 10.00,
+
+  "fixed_weighting_factor": 0,
+  "use_fixed_weight": false,
+  "impact_of_ed_attainment": 50.00,
+  "Twh_per_TWH": 19.86
+}

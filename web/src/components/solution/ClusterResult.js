@@ -77,13 +77,13 @@ const ResultDataContainer = ({
 
 const ResultContainer = ({ type, color, data }) => {
   const primaryColor = `brand.${color}.100`
-  const secondaryColor = `brand.${color}.600`
+  const secondaryColor = `brand.${color}.400`
 
   return (
     <Grid
       w="100%"
       mt={3}
-      mb={3}
+      mb={8}
       templateColumns="repeat(12, 1fr)">
       <ResultContainerWrapper>
         <GridItem rowStart={1}>
@@ -100,9 +100,11 @@ const ResultContainer = ({ type, color, data }) => {
       <ResultContainerWrapper>
         <>
           <ResultDataContainer
+            color={primaryColor}
             text="SOLUTION"
           />
           <ResultDataContainer
+            color={secondaryColor}
             text="CONVENTIONAL"
           />
         </>
@@ -152,8 +154,8 @@ const generateValue = (startYear, endYear, data) => {
       result += entry.value
     }
   })
-
-  return result
+  
+  return result.toFixed(2)
 }
 
 const ClusterResult = ({
@@ -172,7 +174,7 @@ const ClusterResult = ({
   const data_b = calculateSolution(startYearB, endYearB, data)
 
   return (
-    <Card size="lg">
+    <Card size="xl">
       <CardHeader color={color}>
         <CardTitle
           icon={faQuestionCircle}
