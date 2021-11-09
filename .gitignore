@@ -17,7 +17,7 @@ geckodriver.log
 .env
 api/env-examples
 docker-compose.yml
-service/api/docker-compose.yml
+service/docker-compose.yml
 json_input.log
 
 node_modules
