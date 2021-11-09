@@ -3,6 +3,7 @@ import { API_URL } from "config";
 
 const WORKBOOK_API_URL = API_URL + "/workbook";
 const CALCULATIONS_API_URL = API_URL + "/calculate";
+const CLUSTER_CALCULATIONS_API_URL = API_URL + "/calculate/cluster";
 const WORKBOOKS_API_URL = API_URL + "/workbooks";
 const USER_INFO_URL = API_URL + "/me";
 const AUTH_API_URL = API_URL + "/login";
@@ -10,6 +11,8 @@ const REFRESH_TOKEN_URL = API_URL + "/refresh-token";
 const AUTHENTICATE_API_URL = API_URL + "/authorize";
 const VMA_CALCULATION_API_URL = API_URL + "/vma/calculation";
 const VMA_MAPPING_API_URL = API_URL + "/vma/mappings";
+const RESOURCE_URL = API_URL + "/resource";
+const VMA_CVS_URL = API_URL + "/vma_csv";
 
 const addAuth = headers => {
   const token = localStorage.getItem("token");
@@ -60,6 +63,18 @@ export const runCalculation = async (workbookId, variationIndex) => {
   const dataJson = await res.json();
   return dataJson;
 };
+
+export const runClusterCalculation = async (workbookId, variationIndex) => {
+  const res = await fetch(
+    CLUSTER_CALCULATIONS_API_URL +
+      "?run_async=true&workbook_id=" +
+      workbookId +
+      "&variation_index=" +
+      variationIndex
+  );
+  const dataJson = await res.json();
+  return dataJson;
+}
 
 export const fetchProjection = async id => {
   const res = await fetch(id);
@@ -204,4 +219,49 @@ export const fetchResourceURL = async resourceURL => {
   }
 };
 
-export { dataConfig };
+export const uploadResource = async (data, entity, technology) => {
+  const result = await fetch(`${RESOURCE_URL}/${entity}/${technology}`, {
+    method: 'POST',
+    headers: addAuth({}),
+    body: data
+  });
+
+  if (result.ok) {
+    const response = await result.json();
+    return response;
+  }else {
+    const response = await result.json();
+    return Promise.reject(response);
+  }
+}
+
+export const uploadVMA = async (data) => {
+  const result = await fetch(`${VMA_CVS_URL}`, {
+    method: 'POST',
+    headers: addAuth({}),
+    body: data
+  });
+
+  if (result.ok) {
+    const response = await result.json();
+    return response;
+  }else {
+    const response = await result.json();
+    return Promise.reject(response);
+  }
+}
+
+export const fetchResources = async (id, entity) => {
+  const result = await fetch(`${RESOURCE_URL}/${entity}s/paths`);
+  if (result.ok) {
+    const response = await result.json();
+    return response;
+  } else {
+    const response = await result.json();
+    return Promise.reject(response);
+  }
+};
+
+export { 
+  dataConfig,
+};

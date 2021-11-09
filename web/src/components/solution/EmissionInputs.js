@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Input from "../Input";
 import { useResizeDetector } from "react-resize-detector";
 import { GridItem, Grid, Flex, Text } from "@chakra-ui/react";
+import { Row } from "./row";
 
 import { useMultipleStringVarpathsSelector } from "redux/selectors.js";
 
@@ -72,18 +73,16 @@ const EmissionInputs = ({ color, technologyId }) => {
       <GridItem px={cols.xPadding} colSpan={cols.rightCol}>
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.directEmissions ? (
-            <Input
-              mr="0"
-              px="2"
-              size="md"
-              autoFocus
-              overflow="hidden"
-              rightAddon={"tCO2"}
-              color={`brand.${color}.900`}
-              onFocus={e => e.currentTarget.select()}
-              storeValue={values[map.directEmissions]}
-              onKeyDown={event => onKeyDown(event, map.directEmissions)}
-              onBlur={event => onBlur(event, map.directEmissions)}
+            <Row
+              varpath="emissions_per_funit.value"
+              dataType="numeric"
+              rightAddon="tCO2"
+              color={color}
+              chart={false}
+              helper={false}
+              question={false}
+              colSpanLeft={0}
+              colSpanRight={10}
             />
           ) : (
             <StyledText
@@ -106,18 +105,16 @@ const EmissionInputs = ({ color, technologyId }) => {
       <GridItem px={cols.xPadding} colSpan={cols.rightCol}>
         <Flex h="100%" alignItems="center" justifyContent={cols.align}>
           {inputState === map.indireectEmissions ? (
-            <Input
-              mr="0"
-              px="2"
-              size="md"
-              autoFocus
-              overflow="hidden"
-              rightAddon={"tCO2"}
-              color={`brand.${color}.900`}
-              onFocus={e => e.currentTarget.select()}
-              storeValue={values[map.indireectEmissions]}
-              onKeyDown={event => onKeyDown(event, map.indireectEmissions)}
-              onBlur={event => onBlur(event, map.indireectEmissions)}
+            <Row
+              varpath="indirect_co2_per_iunit.value"
+              dataType="numeric"
+              rightAddon="tCO2"
+              color={color}
+              chart={false}
+              helper={false}
+              question={false}
+              colSpanLeft={0}
+              colSpanRight={10}
             />
           ) : (
             <StyledText

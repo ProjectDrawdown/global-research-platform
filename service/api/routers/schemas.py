@@ -100,6 +100,16 @@ class VariationOut(ResourceOut):
               }
             }
           },
+          "cluster_vars": {
+            "technologies": {
+              "biogas": {
+                "fixed_oper_cost_per_iunit": {
+                  "value": 0,
+                  "statistic": "mean"
+                }
+              }
+            }
+          },
           "scenario_parent_path": get_resource_path('scenario', 0),
           "reference_parent_path": get_resource_path('reference', 0)
         },
@@ -113,22 +123,24 @@ class ResourceIn(BaseModel):
 class VariationIn(ResourceIn):
   scenario_parent_path: str
   reference_parent_path: str
+  cluster_parent_path: str
   scenario_vars: Dict[str, Any]
   reference_vars: Dict[str, Any]
+  cluster_vars: Dict[str, Any]
   vma_sources: Dict[str, Any]
   @validator('scenario_vars')
-  def validate_scenario(cls, v):
-    res = validate_scenario_vars(v, flatten_variation(v))
+  def validate_scenario(cls, value):
+    res = validate_scenario_vars(value, flatten_variation(value))
     if not res[0]:
       raise ValueError(res[1])
-    return v
+    return value
 
   @validator('reference_vars')
-  def validate_reference(cls, v):
-    res = validate_ref_vars(v, flatten_variation(v))
+  def validate_reference(cls, value):
+    res = validate_ref_vars(value, flatten_variation(value))
     if not res[0]:
       raise ValueError(res[1])
-    return v
+    return value
 
   class Config:
     schema_extra = {
@@ -160,8 +172,10 @@ class VariationIn(ResourceIn):
 class VariationPatch(ResourceIn):
   scenario_parent_path: Optional[str]
   reference_parent_path: Optional[str]
+  cluster_parent_path: Optional[str]
   scenario_vars: Optional[Dict[str, Any]]
   reference_vars: Optional[Dict[str, Any]]
+  cluster_vars: Optional[Dict[str, Any]]
   vma_sources: Optional[Dict[str, Any]]
   class Config:
     schema_extra = {
@@ -306,6 +320,16 @@ class WorkbookOut(BaseModel):
                 }
               },
               "reference_vars": {
+                "technologies": {
+                  "biogas": {
+                    "fixed_oper_cost_per_iunit": {
+                      "value": 0,
+                      "statistic": "mean"
+                    }
+                  }
+                }
+              },
+              "cluster_vars": {
                 "technologies": {
                   "biogas": {
                     "fixed_oper_cost_per_iunit": {

@@ -1,16 +1,13 @@
-import importlib
-import pathlib
-from fastapi import APIRouter, Depends, HTTPException, WebSocket, FastAPI
+"""
+	Route mapping for the Workbook API
+"""
+from typing import List, Optional, Any, Literal, Union
+from fastapi import APIRouter, Depends, HTTPException, WebSocket
 from sqlalchemy.orm import Session
-import json
-import urllib
-import uuid
+from sqlalchemy.orm.exc import NoResultFound
 import aioredis
 import fastapi_plugins
-from typing import List, Optional, Any, Literal, Union
-
-from api.config import get_settings, get_db, AioWrap, get_resource_path, get_app
-from api.queries.user_queries import get_user
+from api.config import get_settings, get_db, AioWrap, get_app
 from api.queries.workbook_queries import (
   workbook_by_id,
   workbooks_by_user_id,
@@ -18,30 +15,23 @@ from api.queries.workbook_queries import (
   all_workbooks,
   clone_workbook,
   save_workbook,
-  workbook_by_commit
 )
 
 from api.queries.resource_queries import (
-  get_entity_by_name,
-  save_variation
+  save_variation,
+  publish_entity
 )
 
 from api.db.models import (
   User as DBUser,
   Workbook as DBWorkbook,
   Variation as DBVariation,
-  VMA as DBVMA
 )
 
 from api.routers import schemas
-from api.routers.helpers import get_user_from_header
 from api.routers.auth import get_current_active_user, get_current_workbook
-from functools import lru_cache
-from api.calculate import calculate
+from api.calculate import calculate, calculateCluster
 
-from model.advanced_controls import AdvancedControls, get_vma_for_param
-from api.transforms.variable_paths import varProjectionNamesPaths
-from api.transforms.reference_variable_paths import varRefNamesPaths
 from api.transforms.validate_variation import validate_full_schema
 
 settings = get_settings()
@@ -90,27 +80,41 @@ async def fork_workbook(
   return saved_workbook
 
 @router.post("/workbook", response_model=schemas.WorkbookOut,
-        summary="Create a new workbook",
-        description="Note: the example request body needs to include scenario and reference paths that actually exist. Find this at `GET /resource/scenarios/paths`, and `GET /resource/references/paths`."
-        )
+  summary="Create a new workbook",
+  description="Note: the example request body needs to include scenario and reference paths that actually exist. " +
+    "Find this at `GET /resource/scenarios/paths`, and `GET /resource/references/paths`."
+  )
 async def create_workbook(
   workbook: schemas.WorkbookNew,
   db_active_user: DBUser = Depends(get_current_active_user),
-  db: Session = Depends(get_db)):
+  database: Session = Depends(get_db)):
+  """
+    Create a new workbook
+
+    Parameters:
+    ----
+    workbook: WorkbookNew
+      new workbook object
+    db_active_user: User
+      Currently logged in user
+    database: Session
+      Current DB Session
+  """
 
   dbworkbook = DBWorkbook(
-    name = workbook.name,
-    description = workbook.description,
-    author_id = db_active_user.id,
-    ui = workbook.ui,
-    regions = workbook.regions,
-    start_year = workbook.start_year,
-    end_year = workbook.end_year,
-    variations = [],
-    has_run = False
+    name=workbook.name,
+    description=workbook.description,
+    author_id=db_active_user.id,
+    ui=workbook.ui,
+    regions=workbook.regions,
+    start_year=workbook.start_year,
+    end_year=workbook.end_year,
+    variations=[],
+    has_run=False,
+    is_public=False
   )
 
-  saved_workbook = save_workbook(db, dbworkbook)
+  saved_workbook = save_workbook(database, dbworkbook)
   return saved_workbook
 
 @router.patch("/workbook/{id}", response_model=schemas.WorkbookOut,
@@ -190,6 +194,7 @@ async def add_workbook_variation(
       'vma_sources': variation_patch.vma_sources,
       'scenario_vars': variation_patch.scenario_vars,
       'reference_vars': variation_patch.reference_vars,
+      'cluster_vars': variation_patch.cluster_vars,
       'scenario_parent_path': variation_patch.scenario_parent_path,
       'reference_parent_path': variation_patch.reference_parent_path
     }
@@ -209,6 +214,52 @@ async def add_workbook_variation(
   response = schemas.WorkbookOut.from_orm(saved_db_workbook)
   response.warnings = warnings
   return response
+
+
+@router.put('/workbook/{input_id}/publish',
+  summary='publish Workbook to be public',
+  description='publishing workbook to be public, if public, the workbook ' +
+    'are then accessable for other users')
+async def publish_workbook_by_id(input_id: int, database: Session = Depends(get_db),
+  db_active_user: DBUser = Depends(get_current_active_user)):
+  """
+    Make workbook publically accessable
+
+    Parameters:
+    ----
+    input_id: int
+      workbook id
+    database: Session
+      current DB session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, DBWorkbook, input_id, db_active_user, True)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail="Workbook not found")
+  
+@router.delete('/workbook/{input_id}/publish',
+  summary='unpublish workbook to make it private',
+  description='unpublish a workbook to private and make it accessable only to author')
+async def unpublish_workbook_by_id(input_id: int, database: Session = Depends(get_db),
+  db_active_user: DBUser = Depends(get_current_active_user)):
+  """
+    Make workbook private
+
+    Parameters:
+    ----
+    input_id: int
+      workbook id
+    database: Session
+      current DB session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, DBWorkbook, input_id, db_active_user, False)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail="Workbook not found")
 
 def without(arr: List[Any], index: int):
   return arr[:index] + arr[index+1:]
@@ -265,6 +316,18 @@ async def get_calculate(
   cache: aioredis.Redis = Depends(fastapi_plugins.depends_redis)):
   return await calculate(workbook_id, workbook_version, variation_index, client, db, cache, run_async, do_diffs)
 
+@router.get("/calculate/cluster", summary="TODO: right now data is grabbed statically")
+async def get_cluster_calculate(
+  workbook_id: int,
+  variation_index: int,
+  do_diffs: Optional[bool] = False,
+  run_async: Optional[bool] = True,
+  workbook_version: Optional[int] = None,
+  client: AioWrap = Depends(AioWrap),
+  db: Session = Depends(get_db),
+  cache: aioredis.Redis = Depends(fastapi_plugins.depends_redis)):
+  return await calculateCluster(workbook_id, workbook_version, variation_index, client, db, cache, run_async, do_diffs)
+
 @router.websocket("/calculate/ws")
 async def get_calculat_ws(
   workbook_id: int,
@@ -279,4 +342,3 @@ async def get_calculat_ws(
   cache = app.state.REDIS.redis
   await websocket.accept()
   await calculate(workbook_id, workbook_version, variation_index, client, db, cache, run_async, do_diffs, websocket)
-

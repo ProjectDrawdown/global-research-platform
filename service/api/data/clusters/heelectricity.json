@@ -1,0 +1,35 @@
+{
+  "tam_mix_integration_coal": "convention",
+  "tam_mix_integration_natural_gas": "convention",
+  "tam_mix_integration_nuclear": "ignore",
+  "tam_mix_integration_oil": "convention",
+
+  "tam_mix_integration_hydroelectric": "convention",
+  "tam_mix_integration_solar_photovoltaic": "ignore",
+  "tam_mix_integration_wave_and_tidal": "ignore",
+  "tam_mix_integration_wind_onshore": "ignore",
+
+  "tam_mix_integration_wind_offshore": "ignore",
+  "tam_mix_integration_biomass_and_waste": "ignore",
+  "tam_mix_integration_concentrated_solar_power": "ignore",
+  "tam_mix_integration_geothermal": "ignore",
+
+  "tam_mix_adoption_hydroelectric": 15.52,
+  "tam_mix_adoption_solar_photovoltaic": 1.73,
+  "tam_mix_adoption_wave_and_tidal": 0.00,
+  "tam_mix_adoption_wind_onshore": 4.36,
+
+  "tam_mix_adoption_wind_offshore": 0.24,
+  "tam_mix_adoption_biomass_and_waste": 1.90,
+  "tam_mix_adoption_concentrated_solar_power": 0.05,
+  "tam_mix_adoption_geothermal": 0.34,
+
+  "tam_mix_adoption_coal": 39.28,
+  "tam_mix_adoption_natural_gas": 22.72,
+  "tam_mix_adoption_nuclear": 10.45,
+  "tam_mix_adoption_oil": 3.41,
+
+  "fixed_weighting_factor": 0,
+  "use_fixed_weight": false,
+  "impact_of_ed_attainment": 50.00
+}

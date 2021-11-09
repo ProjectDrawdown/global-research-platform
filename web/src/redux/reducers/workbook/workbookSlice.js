@@ -5,7 +5,9 @@ import {
   patchWorkbook,
   fetchData,
   updateVariation,
-  runCalculation
+  runCalculation,
+  runClusterCalculation,
+  fetchResources,
 } from "../../../api/api";
 import objectPath from "object-path";
 import { errorAdded } from "../util/errorSlice";
@@ -20,10 +22,22 @@ export const doFetchWorkbookThunk = createAsyncThunk(
     const reference = await fetchData(
       workbook.variations[0].reference_parent_path
     );
+
+    // for legacy workbook
+    let cluster = {}
+    if (workbook.variations[0].cluster_parent_path) {
+      cluster = await fetchData(
+        workbook.variations[0].cluster_parent_path
+      );
+    }
+    
+
+
     const obj = {
       ...workbook,
       scenario,
-      reference
+      reference,
+      cluster
     };
     return obj;
   }
@@ -79,6 +93,18 @@ export const doCloneAndPatchWorkbookThunk = createAsyncThunk(
     try {
       const cloneResponse = await cloneWorkbook(parseInt(id));
       const patchResponse = await patchWorkbook(cloneResponse.id, data);
+      return patchResponse;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const doEditDetailsPatchWorkbookThunk = createAsyncThunk(
+  "workbook/editDetailsPatch",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const patchResponse = await patchWorkbook(id, data);
       return patchResponse;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -183,6 +209,12 @@ const workbookSlice = createSlice({
       };
     },
     [doCloneAndPatchWorkbookThunk.fulfilled]: (state, action) => {
+      return {
+        status: "idle",
+        workbook: action.payload
+      };
+    },
+    [doEditDetailsPatchWorkbookThunk.fulfilled]: (state, action) => {
       return {
         status: "idle",
         workbook: action.payload
@@ -478,10 +510,21 @@ export const fetchWorkbookThunk = id => async dispatch => {
   const reference = await fetchData(
     workbook.variations[0].reference_parent_path
   );
+
+  // Legacy workbook may not have cluster wired in yet
+  let cluster = {}
+  if (workbook.variations[0].cluster_parent_path) {
+    console.log('hello wolrd')
+    cluster = await fetchData(
+      workbook.variations[0].cluster_parent_path
+    );
+  }
+  
   const obj = {
     ...workbook,
     scenario,
-    reference
+    reference,
+    cluster
   };
   dispatch(workbookLoaded(obj));
 };
@@ -537,11 +580,16 @@ export const calculateThunk = (
       techData = {...techData, hash: techValue.hash};
     }
 
+    const reference = await fetchResources(id, 'reference');
+    const vma = await fetchResources(id, 'vma');
+
     const summaryData = await fetchData(res.meta.summary_path);
 
     dispatch(
       calculationLoaded({
         projection: res,
+        references: reference,
+        vmas: vma,
         techData,
         summaryData
       })
@@ -550,3 +598,26 @@ export const calculateThunk = (
     dispatch(calculationFail(e));
   }
 };
+
+
+// TODO: create another thunk to load metadata - maybe we make it into one thunk later
+export const calculateMockThunk = (
+  id,
+  variationIndex,
+  activeTechnology
+) =>  async (dispatch, getState) => {
+  dispatch(calculationLoading());
+
+  const res = await runClusterCalculation(id, variationIndex);
+
+  if (res.detail) return dispatch(errorAdded(res));
+
+  const techData = {...res.results[activeTechnology]}
+
+  dispatch(
+    calculationLoaded({
+      techData,
+      // summaryData
+    })
+  );
+}

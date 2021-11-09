@@ -1,7 +1,11 @@
-import React, { useRef, useEffect, useCallback, useMemo } from "react";
+import React, { useRef, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Box, Grid, Flex, Stack } from "@chakra-ui/react";
+import Tour from 'reactour';
+import Tourtooltip from "components/Tourtooltip";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "services/user";
+import steps from "redux/reducers/tour/TourstepsWorkbookSolution";
 import {
   Drawer,
   DrawerOverlay,
@@ -21,7 +25,7 @@ import AdoptionForm, { AdoptionHeader } from "./Adoption";
 import EmissionForm, { EmissionHeader } from "./Emission";
 import FinanceForm, { FinanceHeader } from "./Finance";
 import RawDataForm, { RawDataHeader } from "./RawData";
-import WorkbookFooter from "components/WorkbookFooter";
+import WorkbookFooter from "components/workbook/footer";
 import { Navigation } from "../../components/Navigation";
 // Legacy default export requirements
 
@@ -118,9 +122,9 @@ const SolutionFormDrawer = ({ children, isOpen, onClose }) => {
   );
 };
 
-const SolutionCardModal = ({ children, isOpen, onClose }) => {
+const SolutionCardModal = ({ children, isOpen, onClose, size = "xl" }) => {
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose}>
+    <Modal size={size} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton zIndex="1500" />
@@ -139,8 +143,11 @@ export const SolutionLayout = ({
   children,
   drawer,
   modal,
-  modalPath
+  modalPath,
+  modalSize = "xl"
 }) => {
+  const { user, patchUserFromAPI} = useContext(UserContext);
+
   const solutionHeaderChildren = findChildByContainerType(
     children,
     SolutionHeaderRegion
@@ -170,6 +177,17 @@ export const SolutionLayout = ({
     ({ left: "66.66666%", right: "33.33333%" }) :
     ({ left: "60%", right: "40%" });
   const stack = useRef();
+  const [showTour, setshowTour] = useState(true);
+  const closeTour = () =>{
+    setshowTour(false);
+    patchUserFromAPI({
+      ...user,
+      meta: {
+        ...user.meta,
+        hasOnboarded: true
+      }
+    });
+  }
   return (
     <>
       <Stack direction="row" h="100%">
@@ -179,7 +197,7 @@ export const SolutionLayout = ({
           rounded="lg"
           overflowY="auto"
           w={isSidebar() ? getSidebarWidth().left : "100%"}>
-          <Box top="0" zIndex="1500" pos="sticky">
+          <Box top="0" pos="sticky">
             {solutionHeaderChildren && (
               <Box>{solutionHeaderChildren.props.children}</Box>
             )}
@@ -218,10 +236,16 @@ export const SolutionLayout = ({
         </SolutionFormDrawer>
       )}
       {modal.isOpen && (
-        <SolutionCardModal isOpen={modal.isOpen} onClose={modal.onClose}>
+        <SolutionCardModal isOpen={modal.isOpen} onClose={modal.onClose} size={modalSize}>
           {solutionCardModal}
         </SolutionCardModal>
       )}
+      <Tour
+      steps={steps}
+      isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
+      closeWithMask={false}
+      onRequestClose={() => closeTour()}
+        CustomHelper={ Tourtooltip } />
     </>
   );
 };

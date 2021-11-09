@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import DashboardLayout from "../DashboardLayout";
+import DashboardLayout from "../../parts/DashboardLayout";
 import { useSelector } from "react-redux";
 import {
   SolutionLayout,
@@ -9,7 +9,7 @@ import {
   SolutionFormRegion,
 } from "../solution";
 
-import { useDisclosure, Skeleton, Text } from "@chakra-ui/react";
+import { useDisclosure, Text } from "@chakra-ui/react";
 
 import EmissionInputs from "../solution/EmissionInputs";
 import FinanceInputs from "../solution/FinanceInputs";
@@ -20,7 +20,7 @@ import DrawerLinkCard from "components/cards/DrawerLinkCard";
 import MarketChartCard from "components/cards/MarketChartCard";
 
 import SolutionHeader from "components/solution/SolutionHeader";
-import WorkbookHeader from "components/WorkbookHeader";
+import WorkbookHeader from "components/workbook/header";
 import { useParams } from "react-router-dom";
 import store from "../../redux/store";
 
@@ -32,7 +32,7 @@ import {
 import MarketChart from "../charts/MarketChart";
 import EmissionsChart from "../charts/EmissionsChart";
 import SavingsChart from "../charts/SavingsChart";
-import AdoptionChart from "../charts/AdoptionChart";
+// import AdoptionChart from "../charts/AdoptionChart";
 import StreamChart from "../charts/StreamChart";
 
 import TAMDashboardCard from "components/cards/TAMDashboardCard.js";
@@ -43,7 +43,7 @@ import {
   prettyFormatBigWeight
 } from "../../util/number-utils.js";
 
-import { objectHasAll, getPathByHash } from "../../util/component-utilities";
+import { getPathByHash } from "../../util/component-utilities";
 import { useWorkbookIsFullyLoadedSelector, useStringVarpathSelector } from "redux/selectors.js";
 
 import {
@@ -60,6 +60,7 @@ const EnergyTechnology = () => {
   const location = useLocation();
   const params = useParams();
   const workbook = useSelector(state => state.workbook);
+  // TODO: maybe fix this to make sure techData == technology
   const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector();
 
   const drawerPath = getPathByHash("drawer", location.hash);
@@ -75,6 +76,7 @@ const EnergyTechnology = () => {
     onClose: () => history.push({ hash: "" })
   });
 
+  // TODO: Race condition if techData already exist. make sure it matches
   useEffect(() => {
     store.dispatch(fetchWorkbookThunk(params.id));
     store.dispatch(calculateThunk(params.id, 0, params.technologyId));

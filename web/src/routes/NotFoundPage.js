@@ -1,6 +1,6 @@
 import React from "react";
 import { VStack, Box, Heading, Text } from "@chakra-ui/react";
-import PageLayout from "components/PageLayout";
+import PageLayout from "parts/PageLayout";
 
 const NotFoundPage = () => {
   return (

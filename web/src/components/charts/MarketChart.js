@@ -1,10 +1,7 @@
 import React from "react";
 
-import { VictoryChart, VictoryArea, VictoryAxis, VictoryStack } from "victory";
-import { objToArrayOfObjs } from "../../helpers";
+import { VictoryChart, VictoryArea, VictoryAxis } from "victory";
 import objectPath from "object-path";
-import { Skeleton } from "@chakra-ui/react";
-import { useWorkbookIsLoadedSelector } from 'redux/selectors.js';
 
 function MarketChart({ summaryData, techData, technologies }) {
   const tamPerRegion = techData.data.pds_tam_per_region["World"].map(p => {
@@ -55,7 +52,7 @@ function MarketChart({ summaryData, techData, technologies }) {
   }));
 
   return (
-    <VictoryChart padding={{ left: 60, right: 20, bottom: 30, top: 10 }}>
+    <VictoryChart padding={{ left: 80, right: 20, bottom: 30, top: 10 }}>
       <VictoryAxis
         tickFormat={(v) => v.toString()}
         style={{
@@ -72,6 +69,7 @@ function MarketChart({ summaryData, techData, technologies }) {
       <VictoryAxis
         dependentAxis
         style={{
+          axisLabel: {fontSize: 15, padding: 60, fill: "#bababa"},
           axis: { stroke: "#f2f2f2" },
           tickLabels: {
             stroke: "#bababa",
@@ -81,6 +79,8 @@ function MarketChart({ summaryData, techData, technologies }) {
           ticks: { stroke: "#bababa", size: 2, verticalAnchor: "middle" },
           grid: { stroke: "#f2f2f2", strokeWidth: 0.5 }
         }}
+        label="TWh"
+        fixLabelOverlap={true}
       />
       <VictoryArea
         data={tamPerRegion}

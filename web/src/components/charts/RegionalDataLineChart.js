@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { useTheme, GridItem, Heading } from "@chakra-ui/react";
-import { VictoryChart, VictoryLine, VictoryAxis } from "victory";
+import { VictoryChart, VictoryLine, VictoryAxis, VictoryVoronoiContainer, VictoryTooltip } from "victory";
 
 const RegionalDataLineChart = ({ dataCollections, tam }) => {
   const chakraTheme = useTheme();
@@ -23,7 +23,15 @@ const RegionalDataLineChart = ({ dataCollections, tam }) => {
     }, {});
   });
   return (
-    <VictoryChart>
+    <VictoryChart
+    containerComponent={
+        	<VictoryVoronoiContainer
+          voronoiDimension="x,y"
+          labels={({ datum }) => datum["childName"] == "chart-line-0"?`Reference Source`:`Scenario Source`} />
+        }
+        labelComponent={<VictoryTooltip cornerRadius={0} flyoutStyle={{fill: "white"}}/>}
+    >
+
       {dataCollections.map((datasetCollection, colIdx) =>
         Object.entries(datasetCollection).map(([region, dataset], setIdx) => {
           return (
@@ -45,11 +53,13 @@ const RegionalDataLineChart = ({ dataCollections, tam }) => {
         tickFormat={t => (t % 10 === 0 ? `${Math.round(t)}` : null)}
       />
       <VictoryAxis
-        style={{
+          style={{
+          axisLabel: { fontSize: 10 }, 
           tickLabels: { fontSize: 10 },
           grid: { stroke: "#f0f0f0" }
         }}
         dependentAxis
+        label="TWh"
       />
     </VictoryChart>
   );

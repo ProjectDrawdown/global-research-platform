@@ -27,6 +27,7 @@ export function useArrayVarpathSelector(
     `${target}_vars`,
     ...varpath
   ];
+
   return useSelector(state => {
     let dataEntry = objectPath.get(state, variationVarpath);
     dataEntry =
@@ -34,7 +35,7 @@ export function useArrayVarpathSelector(
         ? dataEntry
         : objectPath.get(state, parentVarpath);
     return typeof dataEntry === "object" &&
-      typeof dataEntry.value !== "undefined "
+      typeof dataEntry.value !== "undefined"
       ? dataEntry.value
       : dataEntry;
   });
@@ -43,14 +44,15 @@ export function useArrayVarpathSelector(
 export function useStringVarpathSelector(
   varpath,
   target = "scenario",
-  variationIndex = 0
+  variationIndex = 0,
+  fromVariation = true
 ) {
   const workbookPath = "workbook.workbook";
   const targetVarpath = `${target}_vars.${varpath}`;
   const parentVarpath = `${workbookPath}.${target}.data.${varpath.replace(/.value$/,"")}`;
   const variationVarpath = `${workbookPath}.variations.${variationIndex}.${target}_vars.${varpath.replace(/\.value$/, "")}`;
   return useSelector(state => {
-    let dataEntry = objectPath.get(state, variationVarpath);
+    let dataEntry = fromVariation ? objectPath.get(state, variationVarpath) : undefined;
     dataEntry =
       typeof dataEntry !== "undefined" && dataEntry !== null
         ? dataEntry
@@ -119,12 +121,16 @@ export function useWorkbookIsLoadedSelector() {
   );
 }
 
-export function useWorkbookIsFullyLoadedSelector() {
+export function useWorkbookIsFullyLoadedSelector(conditional = "pds_tam_per_region", checkUndefined = true) {
   return useSelector(state => {
     return objectHasAll(state.workbook, [
       "workbook",
       "techData",
       "summaryData"
-    ]);
+    ], checkUndefined)
+    &&
+    objectHasAll(state.workbook.techData?.data, [
+      conditional,
+    ], true)
   });
 }

@@ -22,6 +22,7 @@ const dataConfig = {
     "Ocean Sinks": "coastal",
     Ocean: "coastal",
     "Buildings and Cities": "buildings",
+    "Health and Education": "health",
     Materials: "materials",
     "Women and Girls": "women"
   },
@@ -51,6 +52,7 @@ const dataConfig = {
   ],
   // FIXME rename `sector` to `sectorName`
   // FIXME include this at compile time instead of as a context
+  // Currently not in use
   technologiesBySector: {
     "Materials": [
       "refrigerants",
@@ -137,6 +139,10 @@ const dataConfig = {
     ],
     "Oceans": [
       "bottomtrawling"
+    ],
+    "Health and Education Clusters": [
+      "heelectricity",
+      "hespaceheating",
     ]
   },
   technologyMetadata: {
@@ -426,7 +432,55 @@ const dataConfig = {
       sector: "Oceans",
       type: "Sink"
     },
-    hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" }
+    hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" },
+    // health and education
+    heelectricity: {
+      name: "Electricity",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hespaceheating: {
+      name: "Space Heating",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hespacecooling: {
+      name: "Space Cooling",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hecleancookstove: {
+      name: "Clean Cook Stove",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hecomlight: {
+      name: "Com Light",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hereslight: {
+      name: "Res Light",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hewaterheating: {
+      name: "Water Heating",
+      sector: "Health and Education",
+      type: "HE"
+    },
+  },
+  technologyStaticMetaData: {
+    hepopulation: {
+      name: "Population",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    heemissionfactor: {
+      name: "Emission Factors",
+      sector: "Health and Education",
+      type: "HE"
+    }
   },
   technologyImages: {
     "abandoned-farmland-restoration": "solution_farmlandrestoration01.jpg",

@@ -1,27 +1,29 @@
+"""
+	Route mapping for the VMA API
+"""
+import importlib
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
-import fastapi_plugins
-import aioredis
-import json
-import importlib
-import math
-
-from api.config import get_settings, get_db, AioWrap, get_resource_path
+from sqlalchemy.orm.exc import NoResultFound
+from model.vma2 import VMA
+from model.advanced_controls import get_vma_for_param
+from api.config import get_settings, get_db
 from api.transforms.variable_paths import varProjectionNamesPaths
 from api.transforms.reference_variable_paths import varRefNamesPaths
-from model.advanced_controls import AdvancedControls, get_vma_for_param
 from api.routers.auth import get_current_active_user
-from api.routers import schemas
-from api.queries.resource_queries import get_entity_by_name
+from api.queries.resource_queries import (
+  get_entity_by_name,
+  publish_entity
+)
 from api.db import models
-from model.vma2 import VMA
 
 settings = get_settings()
 router = APIRouter()
 default_provider = settings.default_provider
 
 @router.get("/vma/mappings/{technology}",
-        summary="Get VMA mappings for a given technology"
+        summary="Get VMA mappings for a given technology",
+        tags=["VMA"]
         )
 async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
   paths = varProjectionNamesPaths + varRefNamesPaths
@@ -33,7 +35,7 @@ async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
     for title in vma_titles:
       vma_file = m.VMAs.get(title)
       if vma_file and vma_file.filename:
-        db_file = get_entity_by_name(db, f'solution/{technology}/{vma_file.filename.name}', models.VMA)
+        db_file = get_entity_by_name(db, vma_file.filename.name, technology, models.VMA)
         if db_file:
           result.append({
             'var': path[0],
@@ -45,13 +47,15 @@ async def get_vma_mappings(technology: str, db: Session = Depends(get_db)):
   return result
 
 @router.get("/vma_csv/{id}",
-        summary="Retrieve a VMA CSV with the given id"
+        summary="Retrieve a VMA CSV with the given id",
+        tags=["VMA"]
         )
 async def get_vma_csv(id: str, db: Session = Depends(get_db)):
   return db.query(models.VMA_CSV).get(id)
 
 @router.post("/vma_csv",
-        summary="Upload a custom VMA CSV"
+        summary="Upload a custom VMA CSV",
+        tags=["VMA"]
         )
 async def post_vma_csv(
   name: str = Form(...),
@@ -72,9 +76,58 @@ async def post_vma_csv(
   db.refresh(vma_csv)
   return vma_csv
 
+@router.put('/vma_csv/{input_id}/publish',
+  summary='publish VMA CSV to be public',
+  description='publishing VMA CSV to be public, if public, the VMA CSV ' +
+    'are then accessable for other users',
+    tags=["VMA"])
+async def publish_vma_by_id(input_id: int, database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
+  """
+    Make VMA CSV publically accessable
+
+    Parameters:
+    ----
+    input_id: int
+      VMA CSV id
+    database: Session
+      current DB session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, models.VMA_CSV, input_id, db_active_user, True)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail="VMA CSV not found")
+
+@router.delete('/vma_csv/{input_id}/publish',
+  summary='unpublish VMA CSV to make it private',
+  description='unpublish a VMA CSV to private and make it accessable only to author',
+  tags=["VMA"])
+async def unpublish_vma_by_id(input_id: int, database: Session = Depends(get_db),
+  db_active_user: models.User = Depends(get_current_active_user)):
+  """
+    Make VMA CSV private
+
+    Parameters:
+    ----
+    input_id: int
+      VMA CSV id
+    database: Session
+      current DB session
+    db_active_user: User
+      logged in user
+  """
+  try:
+    return publish_entity(database, models.VMA_CSV, input_id, db_active_user, False)
+  except NoResultFound:
+    raise HTTPException(status_code=404, detail="VMA CSV not found")
+  
 @router.get("/vma/calculation",
         summary="Get VMA calculation",
-        description="For a given variable, calculate the VMA values from the corresponding CSVs. This will return low, mean, and high values for the variable, as well as the source name and path"
+        description="For a given variable, calculate the VMA values from the corresponding CSVs. " +
+        "This will return low, mean, and high values for the variable, as well as the source name and path",
+        tags=["VMA"]
         )
 async def calculate_vma_groupings(
   variable: str,
@@ -83,7 +136,7 @@ async def calculate_vma_groupings(
   db: Session = Depends(get_db)):
 
   vma_csvs = db.query(models.VMA_CSV).filter(
-    models.VMA_CSV.variable==variable
+    models.VMA_CSV.variable == variable
   ).all()
   results = []
   for csv in vma_csvs:

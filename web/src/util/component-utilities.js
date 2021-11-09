@@ -64,9 +64,9 @@ export function ChildrenByContainer({ children, container }) {
   return findChildByContainerType(children, container) || [];
 }
 
-export function objectHasAll(obj, arrayOfProps) {
+export function objectHasAll(obj, arrayOfProps, checkUndefined = false) {
   return arrayOfProps.reduce((acc, prop) => {
-    return acc && objectPath.has(obj, prop);
+    return acc && objectPath.has(obj, prop) && (checkUndefined ? obj[prop] !== undefined : true);
   }, true);
 }
 
@@ -115,4 +115,12 @@ export function inputsPaneResizeSettings(width) {
     offset: 0,
     width
   };
+}
+
+export function humanize(str) {
+  var i, frags = str.split('_');
+  for (i=0; i<frags.length; i++) {
+    frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+  }
+  return frags.join(' ');
 }

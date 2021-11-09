@@ -1,0 +1,24 @@
+{
+  "tam_mix_integration_LPG": "ignore",
+  "tam_mix_integration_electricity": "ignore",
+  "tam_mix_integration_firewood_incld_crop_residue_and_dung": "conventional",
+  "tam_mix_integration_biogas": "ignore",
+  "tam_mix_integration_coal": "ignore",
+  "tam_mix_integration_natural_gas": "ignore",
+  "tam_mix_integration_kerosene": "ignore",
+  "tam_mix_integration_coal_gas": "ignore",
+
+  "tam_mix_adoption_LPG": 23.77,
+  "tam_mix_adoption_electricity": 3.09,
+  "tam_mix_adoption_firewood_incld_crop_residue_and_dung": 44.51,
+  "tam_mix_adoption_biogas": 1.00,
+  "tam_mix_adoption_coal": 15.40,
+  "tam_mix_adoption_natural_gas": 2.92,
+  "tam_mix_adoption_kerosene": 2.30,
+  "tam_mix_adoption_coal_gas": 2.92,
+
+  "fixed_weighting_factor": 0,
+  "use_fixed_weight": false,
+  "impact_of_ed_attainment": 50.00,
+  "fuel_unit_per_TWh": 16997.56
+}

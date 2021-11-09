@@ -1,0 +1,16 @@
+{
+  "tam_mix_integration_incandescent": "convention",
+  "tam_mix_integration_halogen": "convention",
+  "tam_mix_integration_LFL": "convention",
+  "tam_mix_integration_CFL": "convention",
+
+  "tam_mix_adoption_incandescent": 19.12,
+  "tam_mix_adoption_halogen": 31.86,
+  "tam_mix_adoption_LFL": 14.16,
+  "tam_mix_adoption_CFL": 31.86,
+
+  "fixed_weighting_factor": 0,
+  "use_fixed_weight": false,
+  "impact_of_ed_attainment": 50.00,
+  "Twh_per_TWH": 42.34
+}

@@ -1,0 +1,21 @@
+{
+  "tam_mix_integration_coal": "convention",
+  "tam_mix_integration_oil_products": "convention",
+  "tam_mix_integration_natural_gas": "convention",
+  "tam_mix_integration_electricity": "convention",
+  "tam_mix_integration_biomass_waste_and_other_renewables": "ignore",
+  "tam_mix_integration_commercial_heat": "convention",
+
+  "tam_mix_adoption_coal": 7.02,
+  "tam_mix_adoption_oil_products": 12.51,
+  "tam_mix_adoption_natural_gas": 36.85,
+  "tam_mix_adoption_electricity": 13.96,
+  "tam_mix_adoption_biomass_waste_and_other_renewables": 13.69,
+  "tam_mix_adoption_commercial_heat": 15.97,
+
+  "fixed_weighting_factor": 0,
+  "use_fixed_weight": false,
+  "impact_of_ed_attainment": 50.00,
+  "Twh_per_TWH": 0.20,
+  "fuel_unit_per_TWh": 2885.39
+}

@@ -1,16 +1,18 @@
-import React, { useEffect, useContext, useState } from "react";
-import { useParams, useLocation, useHistory } from "react-router-dom";
+import React, { useEffect, useContext, useState } from "react"
+import { useParams, useLocation, useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
-import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice";
-import { useConfigContext } from "contexts/ConfigContext";
-import { Stack, Box } from "@chakra-ui/react";
-import PortfolioLayout from "components/PortfolioLayout";
-import { Navigation } from "components/Navigation";
+import { fetchWorkbookThunk } from "redux/reducers/workbook/workbookSlice"
+import {showHelpMode,hideHelpMode} from "../redux/reducers/workbook/workbookUISlice"
+import { useConfigContext } from "contexts/ConfigContext"
+import { Stack, Box } from "@chakra-ui/react"
+import PortfolioLayout from "parts/PortfolioLayout"
+import { Navigation } from "components/Navigation"
+import steps from "../redux/reducers/tour/Toursteps";
+import Tourtooltip from "components/Tourtooltip"
+import Tour from 'reactour'
 import {
-  TechnologyPane,
   ViewPortfolioPane,
-  EditPortfolioPane
-} from "components/TechnologyCardPanes";
+} from "components/TechnologyCardPanes"
 import {
   Modal,
   ModalOverlay,
@@ -18,14 +20,12 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
   useDisclosure,
   Button,
-  Lorem,
-} from "@chakra-ui/react";
-import { Image } from "@chakra-ui/react";
+} from "@chakra-ui/react"
+import { Image } from "@chakra-ui/react"
 import tour from "../tour.png"
-import { UserContext } from "services/user";
+import { UserContext } from "services/user"
 
 const ViewPortfolioPage = () => {
   const params = useParams();
@@ -35,6 +35,7 @@ const ViewPortfolioPage = () => {
   const configState = useConfigContext();
   const [ width, setWidth ] = useState(window.innerWidth);
   const { user, patchUserFromAPI } = useContext(UserContext);
+  const {HelpMode} = useSelector(state=>state.workbookUI)
   const resetOnboarding = async () => {
     const result = await patchUserFromAPI({
       ...user,
@@ -56,7 +57,7 @@ const ViewPortfolioPage = () => {
       history.push("#");
     },
   });
-    
+
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth)
     window.addEventListener('resize', handleResize)
@@ -76,35 +77,26 @@ const ViewPortfolioPage = () => {
   React.useEffect(
     () => {
       if (location.hash === "#show-onboarding") {
+        dispatch(showHelpMode());
         onOpen();
+        if (HelpMode === true){
+          dispatch(hideHelpMode());
+        }
+        history.push("#");
       }
     }, [location.hash]);
 
+  const [showTour, setshowTour] = useState(true);
+
   return (
     <PortfolioLayout showFooter={false}>
-
-      <Modal isOpen={isOpen} size="full" nClose={onClose}>
-        <ModalOverlay />
-        <ModalContent mx={16}>
-          <ModalHeader>Workbook Tour</ModalHeader>
-
-          <ModalBody>
-            <Box overflowY="scroll" maxHeight="70vh"> 
-              <Image
-                src={tour}
-                h="100%"
-              />
-            </Box>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close and don't show me again
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
+    <Tour
+    steps={steps}
+    isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
+    closeWithMask={false}
+    onRequestClose={() => setshowTour(false)}
+      CustomHelper={ Tourtooltip } />
+    <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
       <Stack direction="row" h="100%" mx="auto">
         <ViewPortfolioPane
           onClose={() => null}
@@ -115,8 +107,8 @@ const ViewPortfolioPage = () => {
           w="100%"
         />
       </Stack>
-      <Box mr="3" flex="1" bg="white">
-        <Navigation />
+      <Box mr="3" flex="1" bg="white" >
+        <Navigation/>
       </Box>
     </PortfolioLayout>
   );

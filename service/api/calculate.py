@@ -4,6 +4,7 @@ import asyncio
 import json
 import hashlib
 import logging
+import os
 from logging.config import dictConfig
 from fastapi import HTTPException, WebSocket
 from pandas import DataFrame, Series
@@ -26,6 +27,7 @@ import api.transforms.validate_variation
 dictConfig(LogSettings().dict())
 logger = logging.getLogger("solutions")
 settings = get_settings()
+fileDir = os.path.dirname(os.path.realpath('__file__'))
 
 def map_to_json(mapping):
   if mapping is None:
@@ -246,6 +248,8 @@ async def setup_calculations(jsons, regions, prev_data, cache, websocket: WebSoc
     hashed_json_input = hashlib.md5(json.dumps(copied_json_input).encode('utf-8')).hexdigest()
 
     cached_result = await cache.get(hashed_json_input)
+    # TODO: load the VMA/resource/etc from database
+    # https://github.com/ProjectDrawdown/global-research-platform/issues/56
     if cached_result is None:
       tasks.append((
         name,
@@ -416,7 +420,7 @@ async def calculate(
   jsons = build_json(workbook.start_year, workbook.end_year, *input_data)
   if settings.input_logs:
     with open(f"json_input.log", 'a') as f:
-        f.write(f"\n\n\n{json.dumps(jsons)}\n\n\n")
+      f.write(f"\n\n\n{json.dumps(jsons)}\n\n\n")
   [tasks, key_list, _] = await setup_calculations(jsons, regions, prev_data, cache, websocket, do_diffs)
 
   perform_func = perform_calculations_async if run_async else perform_calculations_sync
@@ -433,5 +437,55 @@ async def calculate(
   db.commit()
 
   result["warnings"] = warnings
+
+  return result
+
+async def calculateCluster(
+  workbook_id: int,
+  workbook_version: Optional[int],
+  variation_index: int,
+  client,
+  db,
+  cache,
+  run_async: bool,
+  do_diffs: bool,
+  websocket: WebSocket = None):
+
+  # TODO: no actual calculation is currently done, data is currently hardcoded
+  mock_cluster_result = {
+    'data': [
+      ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-a.json', 'a'],
+      ['heelectricity', 'api/data/clusters/calculated/heelectricity-a.json', 'a'],
+      ["hecleancookstove", "api/data/clusters/calculated/hecleancookstove-a.json", 'a'],
+      ["hecomlight", "api/data/clusters/calculated/hecomlight-a.json", 'a'],
+      ["hespacecooling", "api/data/clusters/calculated/hespacecooling-a.json", 'a'],
+      ["hewaterheating", "api/data/clusters/calculated/hewaterheating-a.json", 'a'],
+      ["hereslight", "api/data/clusters/calculated/hereslight-a.json", 'a'],
+
+      # default metadata
+      ['hepopulation', 'api/data/metadata/population.json', 'default'],
+      ['heemissionfactor', 'api/data/metadata/emission.json', 'default']
+    ]
+  }
+
+  result = {
+    'results': {}
+  }
+
+  # loop and right now hard code to 'a' for the mock calculation. later if there is a different result, can be set there
+  for [technology, filename_data, version] in mock_cluster_result['data']:
+    # TODO: Version swapping based on variation input
+    if version == 'a':
+      file_path = os.path.join(fileDir, filename_data)
+      with open(file_path) as f:
+        sample_cluster_data = json.load(f)
+        result['results'][technology] = sample_cluster_data
+    
+    # load metadata
+    if version == 'default':
+      file_path = os.path.join(fileDir, filename_data)
+      with open(file_path) as f:
+        sample_cluster_data = json.load(f)
+        result['results'][technology] = sample_cluster_data
 
   return result

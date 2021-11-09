@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useContext, useState } from "react"
+import { useSelector } from "react-redux"
 // import { unwrapResult } from '@reduxjs/toolkit'
-import store from "redux/store";
-import { unsetWorkbookThunk } from "redux/reducers/workbook/workbookSlice";
-import { fetchWorkbooksThunk } from "redux/reducers/workbook/workbookListSlice";
-import { Link } from "react-router-dom";
-import { Text, Heading, VStack, Box, Icon } from "@chakra-ui/react";
-import PageLayout from "components/PageLayout";
-import { ProgressBar } from "components/ProgressBar";
-import { WorkbookCard, WorkbookCardWrapper } from "components/WorkbookCard";
-import WorkbookCardGrid from "components/WorkbookCardGrid";
-import { IoIosAddCircleOutline as PlusIcon } from "react-icons/io";
-import LoadingSpinner from "components/LoadingSpinner";
+import store from "redux/store"
+import { unsetWorkbookThunk } from "redux/reducers/workbook/workbookSlice"
+import { fetchWorkbooksThunk } from "redux/reducers/workbook/workbookListSlice"
+import { Heading, VStack, Box } from "@chakra-ui/react"
+import PageLayout from "parts/PageLayout"
+import { ProgressBar } from "components/ProgressBar"
+import { WorkbookCard } from "components/workbook/card"
+import WorkbookCardGrid from "components/workbook/cardGrid"
+import LoadingSpinner from "components/LoadingSpinner"
+
+import { UserContext } from "services/user";
+import steps from "../redux/reducers/tour/TourstepsChooseWorkbookClone";
+import Tourtooltip from "../components/Tourtooltip"
+import Tour from 'reactour'
 
 export const CloneChooseWorkbookPage = () => {
   const workbooks = useSelector(state => state.workbooks);
   const loadingStatus = useSelector(state => state.workbooks.status);
+  const { user } = useContext(UserContext);
+  const [showTour, setshowTour] = useState(true);
 
   useEffect(() => {
     store.dispatch(fetchWorkbooksThunk());
@@ -35,6 +40,7 @@ export const CloneChooseWorkbookPage = () => {
             Choose Workbook
           </Heading>
           <ProgressBar progressState={0} />
+          <div className="first-workbook-step">
           <WorkbookCardGrid>
             {workbooks &&
               workbooks.workbooks &&
@@ -47,6 +53,7 @@ export const CloneChooseWorkbookPage = () => {
                 />
               ))}
           </WorkbookCardGrid>
+          </div>
         </Box>
         <Box>
           <WorkbookCardGrid>
@@ -56,6 +63,13 @@ export const CloneChooseWorkbookPage = () => {
           </WorkbookCardGrid>
         </Box>
       </VStack>
+      <Tour
+      steps={steps}
+      isOpen={user.meta.hasOnboarded?!user.meta.hasOnboarded:showTour}
+      closeWithMask={false}
+      onRequestClose={() => setshowTour(false)}
+        CustomHelper={ Tourtooltip } />
+      <div className="start-tour" style={{ position: "absolute", top: "0" }}></div>
     </PageLayout>
   );
 };

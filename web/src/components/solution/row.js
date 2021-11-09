@@ -230,18 +230,18 @@ export const Row = ({
               TooltipWidget={TooltipWidget}
             />
           )}
-          <Text
-            w={question && ( isActive || isHovered ) ? "calc(100% - 36px - 1rem)" : "100%"}
-            d="inline-block"
-            fontSize="14px"
-            lineHeight="40px"
-            fontWeight="700"
-            verticalAlign="middle"
-            whiteSpace="nowrap"
-            overflow="hidden"
-            textOverflow="ellipsis">
-            {label}
-          </Text>
+           <Text
+              w={question && ( isActive || isHovered ) ? "calc(100% - 36px - 1rem)" : "100%"}
+              d="inline-block"
+              fontSize="14px"
+              lineHeight="40px"
+              fontWeight="700"
+              verticalAlign="middle"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis">
+              {label}
+            </Text>
         </GridItem>
         <GridItem colSpan={miniChart() ? ( colSpanRight / 2 ) : colSpanRight} my={2}>
           <InputWidget
