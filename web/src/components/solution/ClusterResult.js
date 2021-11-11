@@ -117,11 +117,11 @@ const ResultContainer = ({ type, color, data }) => {
             <>
               <ResultDataContainer
                 color={primaryColor}
-                text={result.lldc_solution}
+                text={result[`${type.toLowerCase()}_solution`]}
               />
               <ResultDataContainer
                 color={secondaryColor}
-                text={result.lldc_conventional}
+                text={result[`${type.toLowerCase()}_conventional`]}
               />
             </>
           </ResultContainerWrapper>
@@ -141,7 +141,9 @@ const calculateSolution = (startYear, endYear, data) => {
     lldc_conventional,
     lldc_solution,
     mdc_conventional,
-    mdc_solution
+    mdc_solution,
+    total_conventional: parseFloat(lldc_conventional) + parseFloat(mdc_conventional),
+    total_solution: parseFloat(lldc_solution) + parseFloat(mdc_solution)
   }
 }
 
@@ -155,7 +157,7 @@ const generateValue = (startYear, endYear, data) => {
     }
   })
   
-  return result.toFixed(2)
+  return (result / 1000).toFixed(2)
 }
 
 const ClusterResult = ({
