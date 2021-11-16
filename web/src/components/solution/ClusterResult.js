@@ -132,18 +132,18 @@ const ResultContainer = ({ type, color, data }) => {
 }
 
 const calculateSolution = (startYear, endYear, data) => {
-  const lldc_conventional = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in LLDC"]["Health and Education"].conventional)
-  const lldc_solution = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in LLDC"]["Health and Education"].solution)
-  const mdc_conventional = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in MDC"]["Health and Education"].conventional)
-  const mdc_solution = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in MDC"]["Health and Education"].solution)
+  const lldc_conventional = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in LLDC"]["data"]["Health and Education"].conventional)
+  const lldc_solution = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in LLDC"]["data"]["Health and Education"].solution)
+  const mdc_conventional = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in MDC"]["data"]["Health and Education"].conventional)
+  const mdc_solution = generateValue(startYear, endYear, data["EMISSIONS ALLOCATIONS in MDC"]["data"]["Health and Education"].solution)
 
   return {
     lldc_conventional,
     lldc_solution,
     mdc_conventional,
     mdc_solution,
-    total_conventional: parseFloat(lldc_conventional) + parseFloat(mdc_conventional),
-    total_solution: parseFloat(lldc_solution) + parseFloat(mdc_solution)
+    total_conventional: (parseFloat(lldc_conventional) + parseFloat(mdc_conventional)).toFixed(2),
+    total_solution: (parseFloat(lldc_solution) + parseFloat(mdc_solution)).toFixed(2)
   }
 }
 

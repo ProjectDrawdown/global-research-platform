@@ -49,31 +49,39 @@ const Render = ({
     <Tabs 
       w="100%"
       orientation="vertical">
-      <TabPanels>
+      <TabPanels maxWidth={"80%"}>
         {
-          allData.map((tableName, i) =>
-            <TabPanel
-              key={`tab_data_${i}`}>
-              <DataTableCard
-                title={withTitle ? tableName : null}
-                sourceListObjectpath={`${sourceListObjectpath}.${tableName}`}
-              />
-            </TabPanel>
+          allData.map((tableName, i) => {
+            
+            const fullTableName = sourceObj[tableName].name ? sourceObj[tableName].name : tableName
+            return (
+              <TabPanel
+                key={`tab_data_${i}`}>
+                <DataTableCard
+                  title={withTitle ? fullTableName : null}
+                  sourceListObjectpath={`${sourceListObjectpath}.${tableName}.data`}
+                />
+              </TabPanel>
+              )
+            }
           )
         }
       </TabPanels>
-      <TabList>
+      <TabList maxWidth={"20%"}>
         {
-          allData.map((tableName, i) =>
-            <Tab key={`tab_${i}`}>
-              {tableName}
-            </Tab>
+          allData.map((tableName, i) => {
+            const fullTableName = sourceObj[tableName].name ? sourceObj[tableName].name : tableName
+            return (
+              <Tab key={`tab_${i}`}>
+                {fullTableName}
+              </Tab>
+              )
+            }
           )
         }
       </TabList>
     </Tabs>
   )
-  
 }
 
 export default TabbedDatatable

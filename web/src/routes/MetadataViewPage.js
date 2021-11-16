@@ -78,6 +78,7 @@ const HealthAndEducationViewPage = () => {
         drawer={drawer}
         title={name}
         modalPath={modalPath}
+        modalSize="L"
         technologyId={params.technologyId}
       >
         <SolutionHeaderRegion key="header">
@@ -91,6 +92,7 @@ const HealthAndEducationViewPage = () => {
           />
         </SolutionCardsStack>
         <SolutionCardsStack stack="max" mb="0.75rem">
+          {/* TODO: theres still some errors when it comes to big string key */}
           <TabbedDatatable
             color={color}
             sourceListObjectpath="workbook.techData.data" />
