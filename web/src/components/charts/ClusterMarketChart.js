@@ -25,8 +25,8 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
     {}
   );
 
-  const lldc = sourceObj["EMISSIONS ALLOCATIONS in LLDC"]["Health and Education"]
-  const mdc = sourceObj["EMISSIONS ALLOCATIONS in MDC"]["Health and Education"]
+  const lldc = sourceObj["EMISSIONS ALLOCATIONS in LLDC"]["data"]["Health and Education"]
+  const mdc = sourceObj["EMISSIONS ALLOCATIONS in MDC"]["data"]["Health and Education"]
 
 
   const lldcConventional = generateAxis(lldc, "conventional")

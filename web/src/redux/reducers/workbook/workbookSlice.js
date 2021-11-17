@@ -514,7 +514,6 @@ export const fetchWorkbookThunk = id => async dispatch => {
   // Legacy workbook may not have cluster wired in yet
   let cluster = {}
   if (workbook.variations[0].cluster_parent_path) {
-    console.log('hello wolrd')
     cluster = await fetchData(
       workbook.variations[0].cluster_parent_path
     );

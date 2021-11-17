@@ -126,7 +126,7 @@ const SolutionCardModal = ({ children, isOpen, onClose, size = "xl" }) => {
   return (
     <Modal size={size} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mx={ size == "full" ? "4rem" : 0 } height={"auto"}>
         <ModalCloseButton zIndex="1500" />
         <ModalBody p={2} mt={10}>
           {children}
