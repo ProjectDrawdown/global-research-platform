@@ -98,6 +98,11 @@ const EnergyTechnology = () => {
 
   const technologies = useStringVarpathSelector('technologies');
 
+  const studyYear = {
+    start_year: workbook?.workbook?.start_year || 2014,
+    end_year: workbook?.workbook?.end_year || 2060
+  }
+
   // TODO implement full skeletons of children in layout instead of here.
   if (!workbookIsFullyLoaded) {
     return (
@@ -116,7 +121,6 @@ const EnergyTechnology = () => {
       </DashboardLayout>
     );
   }
-
 
   return (
     <DashboardLayout showFooter={false}>
@@ -215,7 +219,8 @@ const EnergyTechnology = () => {
               >
                 <SavingsChart
                   color={color}
-                  techData={workbook.techData} />
+                  techData={workbook.techData}
+                  studyYear={studyYear}/>
                 <Overlay marginLeft="">
                   <Text fontSize="3vw" fontWeight="bold"> ${prettyFormatBigNumber(calculateLifetimeSavings(workbook.techData))} </Text>
                   <Text fontSize="1vw">  Saved </Text>
