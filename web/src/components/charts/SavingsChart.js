@@ -1,13 +1,18 @@
 import React from "react";
 import { objectHasAll } from "util/component-utilities.js";
-import { VictoryChart, VictoryBar, VictoryArea, VictoryAxis, VictoryStack } from "victory";
+import { VictoryChart, VictoryBar, VictoryAxis, VictoryStack } from "victory";
+import { parseDataDuration } from "helpers"
 
-function SavingsChart({ techData }) {
+function SavingsChart({ techData, studyYear }) {
   if (!objectHasAll(techData,["data.soln_marginal_operating_cost_savings"])) {
     return "There's no data.";
   }
 
-  const data = techData.data.soln_marginal_operating_cost_savings;
+  const data = parseDataDuration(
+    studyYear.start_year,
+    studyYear.end_year,
+    techData.data.soln_marginal_operating_cost_savings
+  );
   
   if (!data) {
     return "There's no data.";
