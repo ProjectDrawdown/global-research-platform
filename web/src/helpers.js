@@ -126,3 +126,22 @@ export function useSolutionMetaData(technologyStaticMetaData, sectorName) {
     metadataIDsInSector
   }
 }
+
+// Parsing duration based on a perimeter. Current parsing set for:
+// - {year: 0000, value: 0000}
+export function parseDataDuration (startYear, endYear, data) {
+  if (!Array.isArray(data)) {
+    return []
+  }
+
+  return data.filter((point) => {
+    // check filtering for year/value
+    if ('year' in point && 'value' in point) {
+      if (point.year >= startYear && point.year <= endYear) {
+        return point
+      }
+    }
+
+    return null
+  })
+}
