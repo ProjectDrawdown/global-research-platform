@@ -1,5 +1,4 @@
-import { Heading, Grid, GridItem } from "@chakra-ui/react"
-import { useParams } from "react-router-dom"
+import { Grid, GridItem } from "@chakra-ui/react"
 import {
   SolutionCardsStack,
 } from "components/solution"

@@ -70,6 +70,7 @@ const ResultDataContainer = ({
         pt={2}
         pb={2}
         pl={1}
+        fontSize={["8px", "8px", "10px", "10px", "10px", "md"]}
       >{text}</Text>
     </GridItem>
   )

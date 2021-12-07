@@ -12,13 +12,30 @@ import {
 
 const StyledHeaderGridItem = styled(GridItem)`
   color: black;
-  font-size: 14px;
   line-height: 21px;
 `;
 
 const BoldText = styled(Text)`
   font-weight: bold;
 `
+
+const BoldTextWrap = ({ text }) => {
+  return ( 
+    <BoldText
+    fontSize={["8px", "8px", "10px", "10px", "10px", "md"]}>
+      {text}
+    </BoldText>
+  )
+}
+
+const TextWrap = ({ text }) => {
+  return ( 
+    <Text
+      fontSize={["8px", "8px", "10px", "10px", "10px", "md"]}>
+      {text}
+    </Text>
+  )
+}
 
 const TamMixHeader = () => {
   return (
@@ -28,13 +45,13 @@ const TamMixHeader = () => {
       gap={4}
       templateColumns="repeat(12, 1fr)">
       <StyledHeaderGridItem colSpan={4}>
-        <BoldText>Technology</BoldText>
+        <BoldTextWrap text="Technology" />
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={4}>
-        <BoldText>Adoption %</BoldText>
+        <BoldTextWrap text="Adoption %" />
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={4}>
-        <BoldText>Integration</BoldText>
+        <BoldTextWrap text="Integration" />
       </StyledHeaderGridItem>
     </Grid>
   )
@@ -56,12 +73,12 @@ const TamMixContent = ({
       gap={4}
       templateColumns="repeat(12, 1fr)">
       <StyledHeaderGridItem colSpan={4}>
-        <BoldText>{humanize(name)}</BoldText>
+        <BoldTextWrap text={humanize(name)}/>
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={4}>
         {
           adoptionValue &&
-            <span>{adoptionValue} %</span>
+            <TextWrap text={`${adoptionValue} %`} />
         }
       </StyledHeaderGridItem>
       <StyledHeaderGridItem colSpan={4}>
