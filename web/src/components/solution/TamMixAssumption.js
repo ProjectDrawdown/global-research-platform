@@ -13,7 +13,8 @@ const TamResult = () => {
             label="Fixed Weighting Factor"
             target="cluster"
             varpath="fixed_weighting_factor"
-            dataType="numeric" />
+            dataType="numeric"
+            chart={false} />
           <Row
             label="Used Fixed Weight"
             target="cluster"
@@ -23,17 +24,20 @@ const TamResult = () => {
             label="Impact of Ed. Attainment"
             target="cluster"
             varpath="impact_of_ed_attainment"
-            dataType="numeric" />
+            dataType="numeric"
+            chart={false}  />
           <Row
             label="Twh per TWH"
             target="cluster"
             varpath="Twh_per_TWH"
-            dataType="numeric" />
+            dataType="numeric"
+            chart={false}  />
           <Row
             label="Fuel unit per TWH"
             target="cluster"
             varpath="fuel_unit_per_TWh"
-            dataType="numeric" />
+            dataType="numeric"
+            chart={false} />
           </Grid>
         <SolutionCardsStack stack="sm" mb="0.75rem">
           <span>{' '}</span>

@@ -98,7 +98,7 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
           height={25}
           style={{ labels: {fontSize: 4 } }}
           data={[
-            { name: "LLDC in Convetional", symbol: { fill: "#edf2f7" } },
+            { name: "LLDC in Conventional", symbol: { fill: "#edf2f7" } },
             { name: "LLDC in Solution", symbol: { fill: "#ffcdc2" } },
             { name: "MDC in Conventional", symbol: { fill: "#ff8f75" } },
             { name: "MDC in Solution", symbol: { fill: "#FF542E" } }

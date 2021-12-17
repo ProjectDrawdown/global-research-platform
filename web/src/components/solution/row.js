@@ -32,6 +32,8 @@ function getTechnologyCategoryID(technologyID) {
   return "electricity_generation";
 }
 
+const dynamicFontSizes = ["8px", "8px", "10px", "10px", "10px", "md"]
+
 const MinichartDataType = (dataType) => {
   switch (dataType) {
     case "USD":
@@ -224,7 +226,7 @@ export const Row = ({
         gap={4}
         my={!spacings ? 0 : 1}
         templateColumns="repeat(12, 1fr)">
-        <GridItem colSpan={colSpanLeft} my={2} textAlign="right" whiteSpace="nowrap">
+        <GridItem colSpan={colSpanLeft} my={2} textAlign="right">
           {question && TooltipWidget && ( isActive || isHovered ) && (
             <QuestionBox
               TooltipWidget={TooltipWidget}
@@ -233,13 +235,11 @@ export const Row = ({
            <Text
               w={question && ( isActive || isHovered ) ? "calc(100% - 36px - 1rem)" : "100%"}
               d="inline-block"
-              fontSize="14px"
-              lineHeight="40px"
+              fontSize={dynamicFontSizes}
               fontWeight="700"
               verticalAlign="middle"
-              whiteSpace="nowrap"
               overflow="hidden"
-              textOverflow="ellipsis">
+              >
               {label}
             </Text>
         </GridItem>
