@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useHistory, useLocation } from "react-router-dom"
 import { useDisclosure } from "@chakra-ui/react"
+import { Grid, GridItem } from "@chakra-ui/react"
 import { useConfigContext } from "contexts/ConfigContext"
 import { getPathByHash } from "util/component-utilities"
 import {
@@ -9,7 +10,13 @@ import {
   calculateMockThunk
 } from "redux/reducers/workbook/workbookSlice";
 import store from "redux/store";
-import { useWorkbookIsFullyLoadedSelector } from "redux/selectors.js";
+import { 
+  useWorkbookIsFullyLoadedSelector,
+  useStringVarpathSelector
+ } from "redux/selectors.js";
+import {
+  BoundSelect,
+} from "components/forms/form-elements.js"
 import {
   SolutionLayout,
   SolutionHeaderRegion,
@@ -69,7 +76,12 @@ const HealthAndEducationViewPage = () => {
   //     </DashboardLayout>
   //   );
   // }
-  
+
+  const selectedPopulation = useStringVarpathSelector(
+      'technologies.hepopulation.population_set',
+      "population"
+    )
+
   return (
     <DashboardLayout showFooter={false}>
       <SolutionLayout
@@ -92,10 +104,31 @@ const HealthAndEducationViewPage = () => {
           />
         </SolutionCardsStack>
         <SolutionCardsStack stack="max" mb="0.75rem">
-          {/* TODO: theres still some errors when it comes to big string key */}
+          <Grid
+              mt={3}
+              mb={3}
+              gap={4}
+              templateColumns="repeat(12, 1fr)">
+              <GridItem colSpan={6}>
+                Population Data
+              </GridItem>
+              <GridItem colSpan={6}>
+                <BoundSelect
+                    varpath={`population_set`}
+                    target="population"
+                    options={{
+                      Core: "Core",
+                      WPP2015: "WPP2015"
+                    }}
+                    size="sm"
+                  />
+              </GridItem>
+            </Grid>
+        </SolutionCardsStack>
+        <SolutionCardsStack stack="max" mb="0.75rem">
           <TabbedDatatable
             color={color}
-            sourceListObjectpath="workbook.techData.data" />
+            sourceListObjectpath={`workbook.techData.${selectedPopulation}.data`} />
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

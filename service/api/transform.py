@@ -252,8 +252,16 @@ def transform():
     with open(file_path) as f:
       sample_cluster_data = json.load(f)
       json_cluster_data['technologies'][technology] = sample_cluster_data
+  # TODO: replace to dynamic population
+  json_population_data = {
+    'technologies': {
+      'hepopulation': {
+        'population_set': 'Core'
+      }
+    }
+  }
 
-  return [json_projection_data, json_ref_data, json_cluster_data]
+  return [json_projection_data, json_ref_data, json_cluster_data, json_population_data]
 
 def get_solution_file_paths(solution_name):
     path = f'solution/{solution_name}/ac/'
