@@ -30,6 +30,13 @@ export const doFetchWorkbookThunk = createAsyncThunk(
         workbook.variations[0].cluster_parent_path
       );
     }
+
+    let population = {}
+    if (workbook.variations[0].population_parent_path) {
+      population = await fetchData(
+        workbook.variations[0].population_parent_path
+      );
+    }
     
 
 
@@ -37,7 +44,8 @@ export const doFetchWorkbookThunk = createAsyncThunk(
       ...workbook,
       scenario,
       reference,
-      cluster
+      cluster,
+      population
     };
     return obj;
   }
@@ -518,12 +526,18 @@ export const fetchWorkbookThunk = id => async dispatch => {
       workbook.variations[0].cluster_parent_path
     );
   }
-  
+  let population = {}
+  if (workbook.variations[0].population_parent_path) {
+    population = await fetchData(
+      workbook.variations[0].population_parent_path
+    );
+  }
   const obj = {
     ...workbook,
     scenario,
     reference,
-    cluster
+    cluster,
+    population
   };
   dispatch(workbookLoaded(obj));
 };

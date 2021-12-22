@@ -9,6 +9,8 @@ export default {
     reference_parent_path:
       "https://stage.api.pdd.colab.coop/resource/reference/1/",
     cluster_parent_path:
+      "https://stage.api.pdd.colab.coop/resource/reference/1/",
+    population_parent_path:
       "https://stage.api.pdd.colab.coop/resource/reference/1/"
   },
   path: "https://stage.api.pdd.colab.coop/resource/variation/1/"

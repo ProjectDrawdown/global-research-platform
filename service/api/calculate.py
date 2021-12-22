@@ -454,17 +454,26 @@ async def calculateCluster(
   # TODO: no actual calculation is currently done, data is currently hardcoded
   mock_cluster_result = {
     'data': [
-      ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-a.json', 'a'],
-      ['heelectricity', 'api/data/clusters/calculated/heelectricity-a.json', 'a'],
-      ["hecleancookstove", "api/data/clusters/calculated/hecleancookstove-a.json", 'a'],
-      ["hecomlight", "api/data/clusters/calculated/hecomlight-a.json", 'a'],
-      ["hespacecooling", "api/data/clusters/calculated/hespacecooling-a.json", 'a'],
-      ["hewaterheating", "api/data/clusters/calculated/hewaterheating-a.json", 'a'],
-      ["hereslight", "api/data/clusters/calculated/hereslight-a.json", 'a'],
+      ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-a.json', 'a', ''],
+      ['heelectricity', 'api/data/clusters/calculated/heelectricity-a.json', 'a', ''],
+      ["hecleancookstove", "api/data/clusters/calculated/hecleancookstove-a.json", 'a', ''],
+      ["hecomlight", "api/data/clusters/calculated/hecomlight-a.json", 'a', ''],
+      ["hespacecooling", "api/data/clusters/calculated/hespacecooling-a.json", 'a', ''],
+      ["hewaterheating", "api/data/clusters/calculated/hewaterheating-a.json", 'a', ''],
+      ["hereslight", "api/data/clusters/calculated/hereslight-a.json", 'a', ''],
+
+      ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-b.json', 'b', ''],
+      ['heelectricity', 'api/data/clusters/calculated/heelectricity-b.json', 'b', ''],
+      ["hecleancookstove", "api/data/clusters/calculated/hecleancookstove-b.json", 'b', ''],
+      ["hecomlight", "api/data/clusters/calculated/hecomlight-b.json", 'b', ''],
+      ["hespacecooling", "api/data/clusters/calculated/hespacecooling-b.json", 'b', ''],
+      ["hewaterheating", "api/data/clusters/calculated/hewaterheating-b.json", 'b', ''],
+      ["hereslight", "api/data/clusters/calculated/hereslight-b.json", 'b', ''],
 
       # default metadata
-      ['hepopulation', 'api/data/metadata/population.json', 'default'],
-      ['heemissionfactor', 'api/data/metadata/emission.json', 'default']
+      ['hepopulation', 'api/data/metadata/population.json', 'default', 'Core'],
+      ['hepopulation', 'api/data/metadata/population-b.json', 'default', 'WPP2015'],
+      ['heemissionfactor', 'api/data/metadata/emission.json', 'default', 'default']
     ]
   }
 
@@ -472,10 +481,23 @@ async def calculateCluster(
     'results': {}
   }
 
-  # loop and right now hard code to 'a' for the mock calculation. later if there is a different result, can be set there
-  for [technology, filename_data, version] in mock_cluster_result['data']:
-    # TODO: Version swapping based on variation input
-    if version == 'a':
+  # super crude way to do this
+  selected_population = 'Core' # default
+  workbook: Workbook = workbook_by_id(db, workbook_id)
+  if workbook.variations[0]['population_vars']:
+    selected_population = workbook.variations[0]['population_vars']['technologies']['hepopulation']['population_set']
+
+  # loop and right now hard code to 'a' for the mock calculation.
+  # later if there is a different result, can be set there
+  for [technology, filename_data, version, name] in mock_cluster_result['data']:
+
+    if version == 'a' and selected_population == 'Core':
+      file_path = os.path.join(fileDir, filename_data)
+      with open(file_path) as f:
+        sample_cluster_data = json.load(f)
+        result['results'][technology] = sample_cluster_data
+
+    if version == 'b' and selected_population != 'Core':
       file_path = os.path.join(fileDir, filename_data)
       with open(file_path) as f:
         sample_cluster_data = json.load(f)
@@ -486,6 +508,9 @@ async def calculateCluster(
       file_path = os.path.join(fileDir, filename_data)
       with open(file_path) as f:
         sample_cluster_data = json.load(f)
-        result['results'][technology] = sample_cluster_data
+        if technology not in result['results']:
+          result['results'][technology] = {}
+
+        result['results'][technology][name] = sample_cluster_data
 
   return result

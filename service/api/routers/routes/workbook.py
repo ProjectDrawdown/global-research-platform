@@ -195,6 +195,7 @@ async def add_workbook_variation(
       'scenario_vars': variation_patch.scenario_vars,
       'reference_vars': variation_patch.reference_vars,
       'cluster_vars': variation_patch.cluster_vars,
+      'population_vars': variation_patch.population_vars,
       'scenario_parent_path': variation_patch.scenario_parent_path,
       'reference_parent_path': variation_patch.reference_parent_path
     }
