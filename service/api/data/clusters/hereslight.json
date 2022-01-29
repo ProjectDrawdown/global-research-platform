@@ -11,6 +11,6 @@
 
   "fixed_weighting_factor": 0,
   "use_fixed_weight": false,
-  "impact_of_ed_attainment": 50.00,
+  "impact_of_ed_attainment": 0.5,
   "Twh_per_TWH": 42.34
 }

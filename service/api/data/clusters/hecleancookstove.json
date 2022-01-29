@@ -19,6 +19,9 @@
 
   "fixed_weighting_factor": 0,
   "use_fixed_weight": false,
-  "impact_of_ed_attainment": 50.00,
-  "fuel_unit_per_TWh": 16997.56
+  "impact_of_ed_attainment": 0.5,
+  "fuel_unit_per_TWh": 16997.56,
+  "direct_emission_co2": 372991.9114,
+  "direct_emission_ch4_co2": 631.9963919,
+  "direct_emission_n2o_co2": 1238.688884
 }
