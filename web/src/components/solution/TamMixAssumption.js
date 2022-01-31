@@ -24,7 +24,7 @@ const TamResult = () => {
             label="Impact of Ed. Attainment"
             target="cluster"
             varpath="impact_of_ed_attainment"
-            dataType="numeric"
+            dataType="percent"
             chart={false}  />
           <Row
             label="Twh per TWH"
@@ -38,6 +38,24 @@ const TamResult = () => {
             varpath="fuel_unit_per_TWh"
             dataType="numeric"
             chart={false} />
+          <Row
+            label="Direct Emissions (CO2-eq per TWh (th) Final Energy)"
+            target="cluster"
+            varpath="direct_emission_co2"
+            dataType="numeric"
+            chart={false}/>
+          <Row
+            label="Direct Emissions (CH4-CO2eq per TWh (th) Final Energy (34 GWP))"
+            target="cluster"
+            varpath="direct_emission_ch4_co2"
+            dataType="numeric"
+            chart={false}/>
+          <Row
+            label="Direct Emissions (N2O-CO2eq per TWh (th) Final Energy (298 GWP))"
+            target="cluster"
+            varpath="direct_emission_n2o_co2"
+            dataType="numeric"
+            chart={false}/>
           </Grid>
         <SolutionCardsStack stack="sm" mb="0.75rem">
           <span>{' '}</span>

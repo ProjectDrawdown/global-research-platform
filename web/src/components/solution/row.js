@@ -22,6 +22,9 @@ import {
   BoundBooleanSwitch,
   BoundTextarea
 } from "components/forms/form-elements.js"
+import {
+  useStringVarpathSelector
+} from "redux/selectors.js";
 
 function getTechnologyCategoryID(technologyID) {
   // FIXME get category from technology dynamically
@@ -216,6 +219,13 @@ export const Row = ({
   const showHelper = () => helper && VVMADataType(dataType) && isActive;
   const bottomSpacing = () => !spacings ? 0 : ( showHelper() ? 1 : 1.5 );
   const onFocus = () => setAsActive();
+
+  // Hide row if value does not exist
+  const varValue = useStringVarpathSelector(varpathFull, inputProps.target || "scenario");
+  if (!varValue) {
+    return <></>
+  }
+
 
   return (
     <Grid
