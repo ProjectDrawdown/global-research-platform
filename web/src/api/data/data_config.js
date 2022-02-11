@@ -469,6 +469,36 @@ const dataConfig = {
       sector: "Health and Education",
       type: "HE"
     },
+    heair: {
+      name: "Air",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    henfreightkm: {
+      name: "Nautical Freight Demand",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hepaper: {
+      name: "Paper",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hepassengerkm: {
+      name: "Passenger Travel Demand",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    heplastic: {
+      name: "Plastic",
+      sector: "Health and Education",
+      type: "HE"
+    },
+    hewater: {
+      name: "Water",
+      sector: "Health and Education",
+      type: "HE"
+    },
   },
   technologyStaticMetaData: {
     hepopulation: {

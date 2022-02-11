@@ -461,6 +461,12 @@ async def calculateCluster(
       ["hespacecooling", "api/data/clusters/calculated/hespacecooling-a.json", 'a', ''],
       ["hewaterheating", "api/data/clusters/calculated/hewaterheating-a.json", 'a', ''],
       ["hereslight", "api/data/clusters/calculated/hereslight-a.json", 'a', ''],
+      ['heair', 'api/data/clusters/calculated/heair-a.json', 'a', ''],
+      ['henfreightkm', 'api/data/clusters/calculated/henfreightkm-a.json', 'a', ''],
+      ['hepaper', 'api/data/clusters/calculated/hepaper-a.json', 'a', ''],
+      ['hepassengerkm', 'api/data/clusters/calculated/hepassengerkm-a.json', 'a', ''],
+      ['heplastic', 'api/data/clusters/calculated/heplastic-a.json', 'a', ''],
+      ['hewater', 'api/data/clusters/calculated/hewater-a.json', 'a', ''],
 
       ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-b.json', 'b', ''],
       ['heelectricity', 'api/data/clusters/calculated/heelectricity-b.json', 'b', ''],
@@ -469,6 +475,12 @@ async def calculateCluster(
       ["hespacecooling", "api/data/clusters/calculated/hespacecooling-b.json", 'b', ''],
       ["hewaterheating", "api/data/clusters/calculated/hewaterheating-b.json", 'b', ''],
       ["hereslight", "api/data/clusters/calculated/hereslight-b.json", 'b', ''],
+      ['heair', 'api/data/clusters/calculated/heair-b.json', 'b', ''],
+      ['henfreightkm', 'api/data/clusters/calculated/henfreightkm-b.json', 'b', ''],
+      ['hepaper', 'api/data/clusters/calculated/hepaper-b.json', 'b', ''],
+      ['hepassengerkm', 'api/data/clusters/calculated/hepassengerkm-b.json', 'b', ''],
+      ['heplastic', 'api/data/clusters/calculated/heplastic-b.json', 'b', ''],
+      ['hewater', 'api/data/clusters/calculated/hewater-b.json', 'b', ''],
 
       # default metadata
       ['hepopulation', 'api/data/metadata/population.json', 'default', 'Core'],

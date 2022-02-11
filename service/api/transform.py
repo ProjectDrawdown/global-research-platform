@@ -158,6 +158,12 @@ legacyDataFiles = {
     ["hespacecooling", "api/data/clusters/hespacecooling.json"],
     ["hewaterheating", "api/data/clusters/hewaterheating.json"],
     ["hereslight", "api/data/clusters/hereslight.json"],
+    ["heair", "api/data/clusters/heair.json"],
+    ["henfreightkm", "api/data/clusters/henfreightkm.json"],
+    ["hepaper", "api/data/clusters/hepaper.json"],
+    ["hepassengerkm", "api/data/clusters/hepassengerkm.json"],
+    ["heplastic", "api/data/clusters/heplastic.json"],
+    ["hewater", "api/data/clusters/hewater.json"],
   ]
 }
 
