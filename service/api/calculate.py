@@ -454,6 +454,7 @@ async def calculateCluster(
   # TODO: no actual calculation is currently done, data is currently hardcoded
   mock_cluster_result = {
     'data': [
+      ['healthandeducation', 'api/data/clusters/calculated/healthandeducation-a.json', 'a', ''],
       ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-a.json', 'a', ''],
       ['heelectricity', 'api/data/clusters/calculated/heelectricity-a.json', 'a', ''],
       ["hecleancookstove", "api/data/clusters/calculated/hecleancookstove-a.json", 'a', ''],
@@ -468,6 +469,7 @@ async def calculateCluster(
       ['heplastic', 'api/data/clusters/calculated/heplastic-a.json', 'a', ''],
       ['hewater', 'api/data/clusters/calculated/hewater-a.json', 'a', ''],
 
+      ['healthandeducation', 'api/data/clusters/calculated/healthandeducation-b.json', 'b', ''],
       ['hespaceheating', 'api/data/clusters/calculated/hespaceheating-b.json', 'b', ''],
       ['heelectricity', 'api/data/clusters/calculated/heelectricity-b.json', 'b', ''],
       ["hecleancookstove", "api/data/clusters/calculated/hecleancookstove-b.json", 'b', ''],

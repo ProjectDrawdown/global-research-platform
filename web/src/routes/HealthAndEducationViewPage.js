@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useHistory, useLocation } from "react-router-dom"
-import { useDisclosure } from "@chakra-ui/react"
+import { useDisclosure, Grid, GridItem } from "@chakra-ui/react"
 import { useConfigContext } from "contexts/ConfigContext"
 import store from "redux/store"
 import { getPathByHash } from "util/component-utilities"
@@ -14,14 +14,22 @@ import {
   fetchWorkbookThunk,
   calculateMockThunk
 } from "redux/reducers/workbook/workbookSlice"
-import { useWorkbookIsFullyLoadedSelector } from "redux/selectors.js"
+import { 
+  useWorkbookIsFullyLoadedSelector,
+} from "redux/selectors.js"
+import {
+  BoundSelect,
+} from "components/forms/form-elements.js"
+import {
+  TechnologyCardGrid,
+} from "components/cards/TechnologyCards";
 import LoadingSpinner from "components/LoadingSpinner"
 import DashboardLayout from "parts/DashboardLayout"
 import SolutionHeader from "components/solution/SolutionHeader"
 import TabbedDatatable from "components/solution/TabbedDatatable"
 import WorkbookHeader from "components/workbook/header"
-import TamMix from "components/solution/TAMMix"
-import TamMixAssumption from "components/solution/TamMixAssumption"
+import TamMixCard from "components/solution/TAMMix"
+import TamMixAssumptionCard from "components/solution/TamMixAssumption"
 import ClusterResult from "components/solution/ClusterResult"
 import ClusterMarketChart from "components/charts/ClusterMarketChart"
 import BaseCard from "components/cards/BaseCard"
@@ -30,14 +38,19 @@ const HealthAndEducationViewPage = () => {
   const history = useHistory();
   const location = useLocation();
   const params = useParams();
-  const configState = useConfigContext();
+  // const configState = useConfigContext();
+  const {
+    settings: { technologyClusterMetadata, technologyMetadata, techMap }
+  } = useConfigContext();
+  const clusterKeys = Object.keys(technologyClusterMetadata)
 
-  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector("EMISSIONS ALLOCATIONS in LLDC", false);
+  // const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector("EMISSIONS ALLOCATIONS in LLDC", false);
+  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector("he_data_loaded", false);
 
-  const { name, sector } = configState.settings.technologyMetadata[
+  const { name, sector } = technologyClusterMetadata[
     params.technologyId
   ];
-  const color = configState.settings.techMap[sector];
+  const color = techMap[sector];
 
   const drawerPath = getPathByHash("drawer", location.hash);
   const modalPath = getPathByHash("modal", location.hash);
@@ -98,22 +111,117 @@ const HealthAndEducationViewPage = () => {
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
+        <SolutionCardsStack col={true} size="max">
+          <BaseCard
+            title="Clusters"
+            size="max"
+            color={color}>
+            <TechnologyCardGrid
+              cols={8}
+              technologyIDs={clusterKeys}
+              keyString="he-clusters-soln-"
+              sectorName=""
+              makeOnClickFn={technologyID => techSectorType => () => 
+                  history.push(`/workbook/${params.id}/cluster/${technologyID}`)
+                }
+              isSelectedFn={() => false}
+              isFeaturedFn={() => true}
+              isClusters>
+            </TechnologyCardGrid>
+          </BaseCard>
+        </SolutionCardsStack>
+
+        {/* For Summary Page */}
+        { 
+          params.technologyId === "healthandeducation" &&
+            <SolutionCardsStack margin={true} mb="0.75rem">
+              <SolutionCardsStack col={true} size="xs">
+                <BaseCard
+                  title="Population Data"
+                  size="max"
+                  color={color}>
+                    <Grid
+                      mb={3}
+                      gap={4}
+                      templateColumns="repeat(12, 1fr)">
+                      <GridItem colSpan={12}>
+                        <strong>Ref 1 Source</strong>
+                      </GridItem>
+                      <GridItem colSpan={12}>
+                        <BoundSelect
+                          activeTechnology="hepopulation"
+                          varpath={`population_set`}
+                          target="population"
+                          options={{
+                            Core: "Core",
+                            WPP2015: "WPP2015"
+                          }}
+                          size="sm"
+                        />
+                      </GridItem>
+                    </Grid>
+                </BaseCard>
+                <BaseCard
+                  title="Emission Data"
+                  size="max"
+                  color={color}>
+                    {/* // TODO: change this to emission */}
+                    <Grid
+                      mb={3}
+                      gap={4}
+                      templateColumns="repeat(12, 1fr)">
+                      <GridItem colSpan={12}>
+                        <strong>Ref 1 Source</strong>
+                      </GridItem>
+                      <GridItem colSpan={12}>
+                        <BoundSelect
+                          activeTechnology="hepopulation"
+                          varpath={`population_set`}
+                          target="population"
+                          options={{
+                            Core: "Core",
+                            WPP2015: "WPP2015"
+                          }}
+                          size="sm"
+                        />
+                      </GridItem>
+                    </Grid>
+                </BaseCard>
+              </SolutionCardsStack>
+              <SolutionCardsStack col={true} size="md">
+                <BaseCard
+                  title="GT-CO2-EQ Avoided"
+                  size="md"
+                  color={color}>
+                    {/*
+                      TODO: review how the data is going to be presented
+                        // copy from "Cluster Result for VIEW"
+                        // Able to open side drawer for chart
+                    */}
+                </BaseCard>
+              </SolutionCardsStack>
+
+              <SolutionCardsStack col={true} size="max">
+                {/*
+                  TODO: review how data is going to be presented
+                    // copy from ClusterMarketChart for View
+                */}
+              </SolutionCardsStack>
+            </SolutionCardsStack>
+        }
+        
         <SolutionCardsStack margin={true} mb="0.75rem">
           <SolutionCardsStack col={true} size="sm">
-            <BaseCard
+            <TamMixCard 
               size="xl"
               title="TAM Mix"
-              color={color}>
-              <TamMix />
-            </BaseCard>
+              color={color}/>
           </SolutionCardsStack>
           <SolutionCardsStack col={true} size="sm">
-            <BaseCard
+            <TamMixAssumptionCard 
               size="xl"
               title="Assumptions"
-              color={color}>
-              <TamMixAssumption />
-            </BaseCard>
+              color={color}/>
           </SolutionCardsStack>
           <SolutionCardsStack col={true} size="md">
             <ClusterResult 
@@ -128,11 +236,8 @@ const HealthAndEducationViewPage = () => {
           </SolutionCardsStack>
         </SolutionCardsStack>
         <SolutionCardsStack col={true} size="max">
-          <BaseCard
-            size="max">
-            <ClusterMarketChart
-              sourceListObjectpath="workbook.techData.data" />
-          </BaseCard>
+          <ClusterMarketChart
+            sourceListObjectpath="workbook.techData.data" />
         </SolutionCardsStack>
       </SolutionLayout>
     </DashboardLayout>

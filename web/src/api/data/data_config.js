@@ -140,9 +140,8 @@ const dataConfig = {
     "Oceans": [
       "bottomtrawling"
     ],
-    "Health and Education Clusters": [
-      "heelectricity",
-      "hespaceheating",
+    "Health and Education": [
+      "healthandeducation",
     ]
   },
   technologyMetadata: {
@@ -433,7 +432,18 @@ const dataConfig = {
       type: "Sink"
     },
     hybridcars: { name: "Hybrid Cars", sector: "Transport", type: "Source" },
-    // health and education
+    healthandeducation: {
+      name: "Health and Education",
+      sector: "Health and Education",
+      type: "HE"
+    }
+  },
+  technologyClusterMetadata: {
+    healthandeducation: {
+      name: "Summary Data",
+      sector: "Health and Education",
+      type: "HE"
+    },
     heelectricity: {
       name: "Electricity",
       sector: "Health and Education",
@@ -498,7 +508,7 @@ const dataConfig = {
       name: "Water",
       sector: "Health and Education",
       type: "HE"
-    },
+    }
   },
   technologyStaticMetaData: {
     hepopulation: {

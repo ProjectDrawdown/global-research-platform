@@ -8,6 +8,7 @@ import {
 import {
   BoundSelect,
 } from "components/forms/form-elements.js"
+import BaseCard from "components/cards/BaseCard"
 
 
 const StyledHeaderGridItem = styled(GridItem)`
@@ -98,20 +99,9 @@ const TamMixContent = ({
 }
 
 const TamMix = ({
-  activeTechnology
+  activeTechnology,
+  data
 }) => {
-  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}`, 'cluster', 0, false);
-  const keys = varValue ? Object.keys(varValue) : []
-
-  // loop through the selector to create the object
-  const data = []
-  keys.forEach((name) => {
-    if (name.includes("tam_mix_integration")) {
-      // getting the title
-      data.push(name.replace("tam_mix_integration_", ""))
-    }
-  })
-
   return (
     <Grid minW="100%">
       <GridItem px={3}>
@@ -130,15 +120,39 @@ const TamMix = ({
 }
 
 const TamMixSection = ({
+  size,
+  title,
   color
 }) => {
   const params = useParams();
   const activeTechnology = params.technologyId;
 
+  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}`, 'cluster', 0, false);
+  const keys = varValue ? Object.keys(varValue) : []
+
+  // loop through the selector to create the object
+  const data = []
+  keys.forEach((name) => {
+    if (name.includes("tam_mix_integration")) {
+      // getting the title
+      data.push(name.replace("tam_mix_integration_", ""))
+    }
+  })
+
+  if (data.length === 0) {
+    return <></>
+  }
+
   return (
-    <TamMix 
-      color={color}
-      activeTechnology={activeTechnology}/>
+    <BaseCard
+      size={size}
+      title={title}
+      color={color}>
+      <TamMix 
+        color={color}
+        data={data}
+        activeTechnology={activeTechnology}/>
+    </BaseCard>
   )
 }
 

@@ -222,7 +222,7 @@ export const Row = ({
 
   // Hide row if value does not exist
   const varValue = useStringVarpathSelector(varpathFull, inputProps.target || "scenario");
-  if (!varValue) {
+  if (varValue === undefined) {
     return <></>
   }
 

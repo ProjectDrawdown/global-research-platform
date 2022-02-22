@@ -175,11 +175,12 @@ export const TechnologyCardGrid = ({
   keyString,
   onClose,
   sectorName,
-  isEditingCards
+  isEditingCards,
+  isClusters = false
 }) => {
   const theme = useTheme();
   const {
-    settings: { technologyMetadata, technologyImages, techMap, iconMap }
+    settings: { technologyClusterMetadata, technologyMetadata, technologyImages, techMap, iconMap }
   } = useConfigContext();
   const color = theme.colors.brand[techMap[sectorName]]
     ? theme.colors.brand[techMap[sectorName]][900]
@@ -197,7 +198,7 @@ export const TechnologyCardGrid = ({
       <Wrap spacing={4} mx="auto" w="100%" mb={mb}>
         {children}
         {technologyIDs.map(technologyID => {
-          const techData = technologyMetadata[technologyID];
+          const techData = isClusters ? technologyClusterMetadata[technologyID]: technologyMetadata[technologyID];
           const techImgFilename = technologyImages[technologyID];
           const techSectorID = techMap[techData.sector];
           const techSectorType = techData.type;

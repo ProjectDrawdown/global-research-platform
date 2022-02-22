@@ -151,6 +151,7 @@ legacyDataFiles = {
     ["landfillmethane", "solution/landfillmethane/ac/PDS-0p2050-Optimum2020.json"],
   ],
   'clusters': [
+    ["healthandeducation", "api/data/clusters/healthandeducation.json"],
     ["heelectricity", "api/data/clusters/heelectricity.json"],
     ["hespaceheating", "api/data/clusters/hespaceheating.json"],
     ["hecleancookstove", "api/data/clusters/hecleancookstove.json"],

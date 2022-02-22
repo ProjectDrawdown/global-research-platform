@@ -173,6 +173,10 @@ const ClusterResult = ({
 
   const data = useObjectPathSelector('workbook.techData.data')
 
+  if (!data["EMISSIONS ALLOCATIONS in LLDC"] && !data["EMISSIONS ALLOCATIONS in MDC"]) {
+    return <></>
+  }
+
   const data_a = calculateSolution(startYearA, endYearA, data)
   const data_b = calculateSolution(startYearB, endYearB, data)
 

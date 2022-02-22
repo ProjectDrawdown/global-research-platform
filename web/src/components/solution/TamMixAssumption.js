@@ -1,8 +1,13 @@
 import { Grid, GridItem } from "@chakra-ui/react"
+import { useParams } from "react-router-dom"
+import {
+  useStringVarpathSelector
+} from "redux/selectors.js"
 import {
   SolutionCardsStack,
 } from "components/solution"
 import { Row } from "components/solution/row"
+import BaseCard from "components/cards/BaseCard"
 
 const TamResult = () => {
   return (
@@ -104,7 +109,6 @@ const TamResult = () => {
             varpath="indirect_emission_paper"
             dataType="numeric"
             chart={false}/>
-            
           </Grid>
         <SolutionCardsStack stack="sm" mb="0.75rem">
           <span>{' '}</span>
@@ -116,9 +120,29 @@ const TamResult = () => {
 
 
 const TamMixAssumption = ({
+  title,
+  size,
   color
 }) => {
-  return (<TamResult />)
+  const params = useParams();
+  const activeTechnology = params.technologyId;
+
+  const varValue = useStringVarpathSelector(`technologies.${activeTechnology}`, 'cluster', 0, false);
+  const keys = varValue ? Object.keys(varValue) : []
+
+  const data = keys.filter(k => !k.includes("tam_mix"))
+  
+  if (data.length === 0) {
+    return <></>
+  }
+
+  return (
+    <BaseCard
+    size={size}
+    title={title}
+    color={color}>
+        <TamResult />
+    </BaseCard>)
 }
 
 export default TamMixAssumption
