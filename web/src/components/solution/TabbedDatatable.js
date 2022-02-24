@@ -43,7 +43,9 @@ const Render = ({
     sourceListObjectpath,
     {}
   );
-  const allData = Object.keys(sourceObj)
+  const allData = Object.keys(sourceObj).filter(n => n !== "he_data_loaded")
+
+
 
   return(
     <Tabs 
@@ -52,7 +54,6 @@ const Render = ({
       <TabPanels maxWidth={"80%"}>
         {
           allData.map((tableName, i) => {
-            
             const fullTableName = sourceObj[tableName].name ? sourceObj[tableName].name : tableName
             return (
               <TabPanel

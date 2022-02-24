@@ -78,9 +78,9 @@ const HealthAndEducationViewPage = () => {
   // }
 
   const selectedPopulation = useStringVarpathSelector(
-      'technologies.hepopulation.population_set',
-      "population"
-    )
+    'technologies.hepopulation.population_set',
+    "population"
+  )
 
   return (
     <DashboardLayout showFooter={false}>

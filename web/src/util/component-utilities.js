@@ -23,7 +23,7 @@ export function getModalContent(children, path = "default") {
       !content &&
       comp.props &&
       (comp.props.path === path
-        ? (content = comp.props.children)
+        ? (content = comp.props.children.props.children || comp.props.children)
         : comp.props.children &&
           (content = getModalContent(comp.props.children, path)))
   );
