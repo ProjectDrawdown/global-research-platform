@@ -1,0 +1,10 @@
+{
+    "tam_mix_integration_conventional_plastic": "convention",
+  
+    "tam_mix_adoption_conventional_plastic": 99.35,
+  
+    "fixed_weighting_factor": 100,
+    "use_fixed_weight": true,
+    "impact_of_ed_attainment": 0.5,
+    "direct_emission_plastic": 2362804.88
+  }

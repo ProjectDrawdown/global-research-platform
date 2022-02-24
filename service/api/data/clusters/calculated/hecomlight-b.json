@@ -1,6 +1,7 @@
 {
   "name": "HE: Com Light",
   "data": {
+    "he_data_loaded": true,
     "EMISSIONS ALLOCATIONS in LLDC": {
       "data": {
         "Health and Education": {

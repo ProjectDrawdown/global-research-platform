@@ -151,6 +151,7 @@ legacyDataFiles = {
     ["landfillmethane", "solution/landfillmethane/ac/PDS-0p2050-Optimum2020.json"],
   ],
   'clusters': [
+    ["healthandeducation", "api/data/clusters/healthandeducation.json"],
     ["heelectricity", "api/data/clusters/heelectricity.json"],
     ["hespaceheating", "api/data/clusters/hespaceheating.json"],
     ["hecleancookstove", "api/data/clusters/hecleancookstove.json"],
@@ -158,6 +159,17 @@ legacyDataFiles = {
     ["hespacecooling", "api/data/clusters/hespacecooling.json"],
     ["hewaterheating", "api/data/clusters/hewaterheating.json"],
     ["hereslight", "api/data/clusters/hereslight.json"],
+    ["heair", "api/data/clusters/heair.json"],
+    ["henfreightkm", "api/data/clusters/henfreightkm.json"],
+    ["hepaper", "api/data/clusters/hepaper.json"],
+    ["hepassengerkm", "api/data/clusters/hepassengerkm.json"],
+    ["heplastic", "api/data/clusters/heplastic.json"],
+    ["hewater", "api/data/clusters/hewater.json"],
+  ],
+  'metadata': [
+    ['hepopulation', 'api/data/metadata/population.json', 'Core'],
+    ['hepopulation', 'api/data/metadata/population-b.json', 'WPP2015'],
+    ['heemissionfactor', 'api/data/metadata/emission.json', 'default']
   ]
 }
 
@@ -257,9 +269,19 @@ def transform():
     'technologies': {
       'hepopulation': {
         'population_set': 'Core'
+      },
+      'heemissionfactor': {
+        'emission_set': 'default'
       }
     }
   }
+  # TODO: Population and Emission Factor data is mocked, will need to retreive from proper source.
+  for [technology, filenameData, name] in legacyDataFiles['metadata']:
+    file_path = os.path.join(fileDir, filenameData)
+    with open(file_path) as f:
+      sample_cluster_data = json.load(f)
+      json_population_data['technologies'][technology][name] = sample_cluster_data
+
 
   return [json_projection_data, json_ref_data, json_cluster_data, json_population_data]
 

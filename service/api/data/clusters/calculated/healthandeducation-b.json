@@ -1,0 +1,73 @@
+{
+    "name": "HE: Summary data",
+    "data": {
+        "he_data_loaded": true,
+        "co2_summary": {
+            "data": {
+                "total": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ],
+                "LLDC": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ],
+                "MDC": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ],
+                "Combined": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ]
+            }
+        },
+        "cluster_summary": {
+            "data": {
+                "Electricity - LLDC": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ],
+                "Electricity - MDC": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ]
+            }
+        },
+        "co2_avoided": {
+            "data": {
+                "LLDC": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ],
+                "MDC": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ],
+                "AOFP": [
+                    {
+                        "year": "2014",
+                        "value": 0
+                    }
+                ]
+            }
+        }
+    },
+    "hash": null
+}

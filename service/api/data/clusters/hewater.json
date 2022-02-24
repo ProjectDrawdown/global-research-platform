@@ -1,0 +1,10 @@
+{
+  "tam_mix_integration_no_ALC_or_pressure_management": "convention",
+
+  "tam_mix_adoption_no_ALC_or_pressure_management": 85.00,
+
+  "fixed_weighting_factor": 0,
+  "use_fixed_weight": false,
+  "impact_of_ed_attainment": 0.5,
+  "Twh_per_water": 0.00127
+}

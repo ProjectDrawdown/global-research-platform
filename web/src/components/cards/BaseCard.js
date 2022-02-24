@@ -1,10 +1,29 @@
-import { useHistory } from "react-router-dom"
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons"
 import { 
   Card,
   CardBody,
   CardTitle,
   CardHeader
- } from "components/Card"
+} from "components/Card"
+
+const CardBodyWrapped = styled.div`
+  transition: height 1s ease-out;
+  width: 100%;
+
+  &.card__body {
+    &--hidden {
+      height: 0;
+      overflow: hidden;
+    }
+
+    &--expanded {
+      height: auto;
+    }
+  }
+`;
 
  const BaseCard = ({
    size,
@@ -13,9 +32,26 @@ import {
    path,
    pathType = "modal",
    title,
-   children
+   children,
+   isTogglable = false
  }) => {
+  const [expanded, setExpanded] = useState(!isTogglable ? true : false)
   const history = useHistory();
+
+  const onClick = isTogglable ?
+    () => setExpanded(!expanded)
+    :
+    () => history.push({ hash: `#${pathType}/${path}` })
+
+  let inlineIcon = icon;
+
+  if (isTogglable) {
+    if (expanded) {
+      inlineIcon = faChevronUp
+    } else {
+      inlineIcon = faChevronDown
+    }
+  }
 
   return (
     <Card size={size}>
@@ -23,11 +59,11 @@ import {
         title ?
         <CardHeader color={color}>
           {
-            icon ?
+            inlineIcon ?
               <CardTitle
-                icon={icon}
-                  onClick={() => history.push({ hash: `#${pathType}/${path}` })
-                }>
+                icon={inlineIcon}
+                onClick={onClick}
+              >
                   {title}
               </CardTitle>
             :
@@ -38,7 +74,9 @@ import {
         <></>
       }
       <CardBody>
-        {children}
+        <CardBodyWrapped className={`card__body--${expanded ? "expanded" : "hidden"}`}>
+          {children}
+        </CardBodyWrapped>
       </CardBody>
     </Card>
   )

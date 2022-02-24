@@ -1,0 +1,10 @@
+{
+    "tam_mix_integration_inefficient_ship": "convention",
+  
+    "tam_mix_adoption_inefficient_ship": 70.00,
+  
+    "fixed_weighting_factor": 0,
+    "use_fixed_weight": false,
+    "impact_of_ed_attainment": 0.5,
+    "fuel_unit_per_TWh_freight": 6128348.00000
+  }

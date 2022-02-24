@@ -1,0 +1,13 @@
+{
+    "tam_mix_integration_inefficient_single_and_small/medium_twin_aisle_aircraft": "convention",
+    "tam_mix_integration_inefficient_regional_jets_and_turboprop_aircraft": "convention",
+    "tam_mix_integration_inefficient_large_twin_aisle_aircraft": "convention",
+  
+    "tam_mix_adoption_inefficient_single_and_small/medium_twin_aisle_aircraft": 70.00,
+    "tam_mix_adoption_inefficient_regional_jets_and_turboprop_aircraft": 70.00,
+    "tam_mix_adoption_inefficient_large_twin_aisle_aircraft": 70.00,
+  
+    "fixed_weighting_factor": 0,
+    "use_fixed_weight": false,
+    "fuel_unit_per_TWh_air": 48159629.00000
+  }

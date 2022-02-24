@@ -1,17 +1,10 @@
 import styled from "styled-components"
 import { useHistory } from "react-router-dom"
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons"
 import { Grid, GridItem, Text, Center } from "@chakra-ui/react"
 import {
   useStringVarpathSelector,
   useObjectPathSelector
 } from "redux/selectors.js"
-import { 
-  Card,
-  CardBody,
-  CardTitle,
-  CardHeader
- } from "components/Card"
 
 const BoldText = styled(Text)`
   font-weight: bold;
@@ -99,32 +92,43 @@ const ResultContainer = ({ type, color, data }) => {
         </GridItem>
       </ResultContainerWrapper>
       <ResultContainerWrapper>
-        <>
-          <ResultDataContainer
-            color={primaryColor}
-            text="SOLUTION"
-          />
-          <ResultDataContainer
-            color={secondaryColor}
-            text="CONVENTIONAL"
-          />
-        </>
+        {
+          data[0][`${type.toLowerCase()}_solution`] && data[0][`${type.toLowerCase()}_conventional`] &&
+          <>
+            <ResultDataContainer
+              color={primaryColor}
+              text="SOLUTION"
+            />
+            <ResultDataContainer
+              color={secondaryColor}
+              text="CONVENTIONAL"
+            />
+          </>
+        }
       </ResultContainerWrapper>
       {
         data.map((result, i) => 
           <ResultContainerWrapper
             key={`result_${i}`}
           >
-            <>
+            {
+              result[`${type.toLowerCase()}_solution`] && result[`${type.toLowerCase()}_conventional`] ?
+              <>
+                <ResultDataContainer
+                  color={primaryColor}
+                  text={result[`${type.toLowerCase()}_solution`]}
+                />
+                <ResultDataContainer
+                  color={secondaryColor}
+                  text={result[`${type.toLowerCase()}_conventional`]}
+                />
+              </>
+              :
               <ResultDataContainer
                 color={primaryColor}
-                text={result[`${type.toLowerCase()}_solution`]}
+                text={result[`${type.toLowerCase()}`]}
               />
-              <ResultDataContainer
-                color={secondaryColor}
-                text={result[`${type.toLowerCase()}_conventional`]}
-              />
-            </>
+            }
           </ResultContainerWrapper>
         )
       }
@@ -148,6 +152,17 @@ const calculateSolution = (startYear, endYear, data) => {
   }
 }
 
+const calculateSolutionSummary = (startYear, endYear, data) => {
+  const lldc = generateValue(startYear, endYear, data["co2_summary"]["data"]["LLDC"])
+  const mdc = generateValue(startYear, endYear, data["co2_summary"]["data"]["MDC"])
+
+  return {
+    lldc,
+    mdc,
+    total: (parseFloat(lldc) + parseFloat(mdc)).toFixed(2)
+  }
+}
+
 const generateValue = (startYear, endYear, data) => {
   let result = 0;
 
@@ -163,7 +178,8 @@ const generateValue = (startYear, endYear, data) => {
 
 const ClusterResult = ({
   color,
-  path
+  path,
+  type = "cluster"
 }) => {
   const history = useHistory();
   const startYearA = useStringVarpathSelector(`report_start_year_a`, 'cluster');
@@ -172,49 +188,54 @@ const ClusterResult = ({
   const endYearB = useStringVarpathSelector(`report_end_year_b`, 'cluster');
 
   const data = useObjectPathSelector('workbook.techData.data')
+  let data_a
+  let data_b
 
-  const data_a = calculateSolution(startYearA, endYearA, data)
-  const data_b = calculateSolution(startYearB, endYearB, data)
+  if (type === "cluster") {
+    if (!data["EMISSIONS ALLOCATIONS in LLDC"] && !data["EMISSIONS ALLOCATIONS in MDC"]) {
+      return <></>
+    }
+  
+    data_a = calculateSolution(startYearA, endYearA, data)
+    data_b = calculateSolution(startYearB, endYearB, data)
+  } else {
+    if (!data["co2_summary"]) {
+      return <></>
+    }
+  
+    data_a = calculateSolutionSummary(startYearA, endYearA, data)
+    data_b = calculateSolutionSummary(startYearB, endYearB, data)
+  }
+
+  
 
   return (
-    <Card size="xl">
-      <CardHeader color={color}>
-        <CardTitle
-          icon={faQuestionCircle}
-            onClick={() => history.push({ hash: `#modal/${path}` })
-          }>
-            Result
-        </CardTitle>
-      </CardHeader>
-      <CardBody>
-        <Grid minW="100%">
-          <GridItem>
-            <ResultHeader
-              header_a={`${startYearA}-${endYearA}`}
-              header_b={`${startYearB}-${endYearB}`}
-            />
+    <Grid minW="100%">
+      <GridItem>
+        <ResultHeader
+          header_a={`${startYearA}-${endYearA}`}
+          header_b={`${startYearB}-${endYearB}`}
+        />
 
-            <ResultContainer
-              type="LLDC"
-              data={[data_a, data_b]}
-              color={color}
-            />
+        <ResultContainer
+          type="LLDC"
+          data={[data_a, data_b]}
+          color={color}
+        />
 
-            <ResultContainer
-              type="MDC"
-              data={[data_a, data_b]}
-              color={color}
-            />
+        <ResultContainer
+          type="MDC"
+          data={[data_a, data_b]}
+          color={color}
+        />
 
-            <ResultContainer
-              type="Total"
-              data={[data_a, data_b]}
-              color={color}
-            />
-          </GridItem>
-        </Grid>
-      </CardBody>
-    </Card>
+        <ResultContainer
+          type="Total"
+          data={[data_a, data_b]}
+          color={color}
+        />
+      </GridItem>
+    </Grid>
   )
 }
 

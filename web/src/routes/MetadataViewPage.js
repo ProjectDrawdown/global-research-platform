@@ -78,9 +78,9 @@ const HealthAndEducationViewPage = () => {
   // }
 
   const selectedPopulation = useStringVarpathSelector(
-      'technologies.hepopulation.population_set',
-      "population"
-    )
+    'technologies.hepopulation.population_set',
+    "population"
+  )
 
   return (
     <DashboardLayout showFooter={false}>
@@ -105,25 +105,25 @@ const HealthAndEducationViewPage = () => {
         </SolutionCardsStack>
         <SolutionCardsStack stack="max" mb="0.75rem">
           <Grid
-              mt={3}
-              mb={3}
-              gap={4}
-              templateColumns="repeat(12, 1fr)">
-              <GridItem colSpan={6}>
-                Population Data
-              </GridItem>
-              <GridItem colSpan={6}>
-                <BoundSelect
-                    varpath={`population_set`}
-                    target="population"
-                    options={{
-                      Core: "Core",
-                      WPP2015: "WPP2015"
-                    }}
-                    size="sm"
-                  />
-              </GridItem>
-            </Grid>
+            mt={3}
+            mb={3}
+            gap={4}
+            templateColumns="repeat(12, 1fr)">
+            <GridItem colSpan={6}>
+              Population Data
+            </GridItem>
+            <GridItem colSpan={6}>
+              <BoundSelect
+                varpath={`population_set`}
+                target="population"
+                options={{
+                  Core: "Core",
+                  WPP2015: "WPP2015"
+                }}
+                size="sm"
+              />
+            </GridItem>
+          </Grid>
         </SolutionCardsStack>
         <SolutionCardsStack stack="max" mb="0.75rem">
           <TabbedDatatable

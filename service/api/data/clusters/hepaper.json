@@ -1,0 +1,11 @@
+{
+  "tam_mix_integration_virgin_paper": "conventional",
+
+  "tam_mix_adoption_virgin_paper": 63.16,
+
+  "fixed_weighting_factor": 0,
+  "use_fixed_weight": false,
+  "impact_of_ed_attainment": 0.5,
+  "direct_emission_paper": 1546729,
+  "indirect_emission_paper": 353140.00
+}

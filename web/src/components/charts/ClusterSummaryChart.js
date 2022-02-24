@@ -5,43 +5,36 @@ import {
 } from "redux/selectors.js"
 import BaseCard from "components/cards/BaseCard"
 
-const generateAxis = (data, type) => {
+const generateAxis = (data) => {
   const axis = []
 
-  data[type].forEach((obj) => {
+  data.forEach((obj) => {
     axis.push({
       x: obj.year,
-      y: obj.value
+      y: obj.value.toFixed(2)
     })
   })
 
   return axis
 }
 
-// TODO: show legend with colors
-// TODO: figure out color and size
-const ClusterMarketChart = ({ sourceListObjectpath }) => {
+const ClusterSummaryChart = ({ sourceListObjectpath }) => {
   const sourceObj = useObjectPathSelector(
     sourceListObjectpath,
     {}
   );
 
-  if (!sourceObj["EMISSIONS ALLOCATIONS in LLDC"] && !sourceObj["EMISSIONS ALLOCATIONS in MDC"]) {
+  if (!sourceObj.data) {
     return <></>
   }
 
-  const lldc = sourceObj["EMISSIONS ALLOCATIONS in LLDC"]["data"]["Health and Education"]
-  const mdc = sourceObj["EMISSIONS ALLOCATIONS in MDC"]["data"]["Health and Education"]
-
-
-  const lldcConventional = generateAxis(lldc, "conventional")
-  const lldcSolution = generateAxis(lldc, "solution")
-
-  const mdcConventional = generateAxis(mdc, "conventional")
-  const mdcSolution = generateAxis(mdc, "solution")
+  const lldc = generateAxis(sourceObj.data.LLDC);
+  const mdc = generateAxis(sourceObj.data.MDC);
+  const aofp = generateAxis(sourceObj.data.AOFP);
 
   return (
     <BaseCard
+      title={"Total Gt CO2-eq Avoided from Population Change, by country development status*"}
       size="max">
       <Grid minW="100%">
         <GridItem>
@@ -77,23 +70,18 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
               fixLabelOverlap={true}
             />
             <VictoryArea
-              data={lldcConventional}
+              data={lldc}
               style={{ data: { fill: "#edf2f7" } }}
               interpolation="natural"
             />
             <VictoryArea
-              data={lldcSolution}
+              data={mdc}
               style={{ data: { fill: "#ffcdc2" } }}
               interpolation="natural"
             />
             <VictoryArea
-              data={mdcConventional}
+              data={aofp}
               style={{ data: { fill: "#ff8f75" } }}
-              interpolation="natural"
-            />
-            <VictoryArea
-              data={mdcSolution}
-              style={{ data: { fill: "#FF542E" } }}
               interpolation="natural"
             />
           </VictoryChart>
@@ -105,10 +93,9 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
             height={25}
             style={{ labels: {fontSize: 4 } }}
             data={[
-              { name: "LLDC in Conventional", symbol: { fill: "#edf2f7" } },
-              { name: "LLDC in Solution", symbol: { fill: "#ffcdc2" } },
-              { name: "MDC in Conventional", symbol: { fill: "#ff8f75" } },
-              { name: "MDC in Solution", symbol: { fill: "#FF542E" } }
+              { name: "Least & Less Developed Countries", symbol: { fill: "#edf2f7" } },
+              { name: "More Developed Countries", symbol: { fill: "#ffcdc2" } },
+              { name: "Air, Oceanic Freight and Plastic", symbol: { fill: "#ff8f75" } },
             ]}/>
         </GridItem>
       </Grid>
@@ -116,4 +103,4 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
   )
 }
 
-export default ClusterMarketChart
+export default ClusterSummaryChart

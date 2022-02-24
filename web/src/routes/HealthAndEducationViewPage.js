@@ -1,7 +1,8 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useHistory, useLocation } from "react-router-dom"
-import { useDisclosure } from "@chakra-ui/react"
+import { useDisclosure, Grid, GridItem } from "@chakra-ui/react"
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons"
 import { useConfigContext } from "contexts/ConfigContext"
 import store from "redux/store"
 import { getPathByHash } from "util/component-utilities"
@@ -14,30 +15,92 @@ import {
   fetchWorkbookThunk,
   calculateMockThunk
 } from "redux/reducers/workbook/workbookSlice"
-import { useWorkbookIsFullyLoadedSelector } from "redux/selectors.js"
+import { 
+  useWorkbookIsFullyLoadedSelector,
+  useStringVarpathSelector
+} from "redux/selectors.js"
+import {
+  BoundSelect,
+} from "components/forms/form-elements.js"
+import {
+  TechnologyCardGrid,
+} from "components/cards/TechnologyCards";
 import LoadingSpinner from "components/LoadingSpinner"
 import DashboardLayout from "parts/DashboardLayout"
+import { SolutionFormRegion } from "components/solution";
 import SolutionHeader from "components/solution/SolutionHeader"
 import TabbedDatatable from "components/solution/TabbedDatatable"
 import WorkbookHeader from "components/workbook/header"
-import TamMix from "components/solution/TAMMix"
-import TamMixAssumption from "components/solution/TamMixAssumption"
+import TamMixCard from "components/solution/TAMMix"
+import TamMixAssumptionCard from "components/solution/TamMixAssumption"
 import ClusterResult from "components/solution/ClusterResult"
 import ClusterMarketChart from "components/charts/ClusterMarketChart"
+import ClusterSummaryChart from "components/charts/ClusterSummaryChart"
 import BaseCard from "components/cards/BaseCard"
+import DrawerLinkCard from "components/cards/DrawerLinkCard";
+
+const EmissionDataSelector = () => (
+  <Grid
+    mb={3}
+    gap={4}
+    templateColumns="repeat(12, 1fr)">
+    <GridItem colSpan={12}>
+      <strong>Ref 1 Source</strong>
+    </GridItem>
+    <GridItem colSpan={12}>
+      <BoundSelect
+        activeTechnology="heemissionfactor"
+        varpath={`emission_set`}
+        target="population"
+        options={{
+          default: "default",
+        }}
+        size="sm"
+      />
+    </GridItem>
+  </Grid>
+)
+
+const PopulationSelector = () => (
+  <Grid
+    mb={3}
+    gap={4}
+    templateColumns="repeat(12, 1fr)">
+    <GridItem colSpan={12}>
+      <strong>Ref 1 Source</strong>
+    </GridItem>
+    <GridItem colSpan={12}>
+      <BoundSelect
+        activeTechnology="hepopulation"
+        varpath={`population_set`}
+        target="population"
+        options={{
+          Core: "Core",
+          WPP2015: "WPP2015"
+        }}
+        size="sm"
+      />
+    </GridItem>
+  </Grid>
+)
 
 const HealthAndEducationViewPage = () => {
   const history = useHistory();
   const location = useLocation();
   const params = useParams();
-  const configState = useConfigContext();
+  // const configState = useConfigContext();
+  const {
+    settings: { technologyClusterMetadata, technologyMetadata, techMap }
+  } = useConfigContext();
+  const clusterKeys = Object.keys(technologyClusterMetadata)
 
-  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector("EMISSIONS ALLOCATIONS in LLDC", false);
+  // const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector("EMISSIONS ALLOCATIONS in LLDC", false);
+  const workbookIsFullyLoaded = useWorkbookIsFullyLoadedSelector("he_data_loaded", false);
 
-  const { name, sector } = configState.settings.technologyMetadata[
+  const { name, sector } = technologyClusterMetadata[
     params.technologyId
   ];
-  const color = configState.settings.techMap[sector];
+  const color = techMap[sector];
 
   const drawerPath = getPathByHash("drawer", location.hash);
   const modalPath = getPathByHash("modal", location.hash);
@@ -51,6 +114,16 @@ const HealthAndEducationViewPage = () => {
     isOpen: !!modalPath,
     onClose: () => history.push({ hash: "" })
   });
+
+  const selectedPopulation = useStringVarpathSelector(
+    'technologies.hepopulation.population_set',
+    "population"
+  )
+
+  const selectedEmissionsFactor = useStringVarpathSelector(
+    'technologies.heemissionfactor.emission_set',
+    "population"
+  )
 
   useEffect(() => {
     store.dispatch(fetchWorkbookThunk(params.id));
@@ -98,42 +171,136 @@ const HealthAndEducationViewPage = () => {
             technologyId={params.technologyId}
           />
         </SolutionCardsStack>
-        <SolutionCardsStack margin={true} mb="0.75rem">
-          <SolutionCardsStack col={true} size="sm">
-            <BaseCard
-              size="xl"
-              title="TAM Mix"
-              color={color}>
-              <TamMix />
-            </BaseCard>
-          </SolutionCardsStack>
-          <SolutionCardsStack col={true} size="sm">
-            <BaseCard
-              size="xl"
-              title="Assumptions"
-              color={color}>
-              <TamMixAssumption />
-            </BaseCard>
-          </SolutionCardsStack>
-          <SolutionCardsStack col={true} size="md">
-            <ClusterResult 
-              path="heresult"
-              color={color}>
-                <TabbedDatatable
-                  color={color}
-                  title="Calculation Outputs and Integration Data Tables" 
-                  withTableTitle={false}
-                  sourceListObjectpath="workbook.techData.data" />
-            </ClusterResult>
-          </SolutionCardsStack>
-        </SolutionCardsStack>
         <SolutionCardsStack col={true} size="max">
           <BaseCard
-            size="max">
-            <ClusterMarketChart
-              sourceListObjectpath="workbook.techData.data" />
+            title="Clusters"
+            size="max"
+            color={color}
+            isTogglable>
+            <TechnologyCardGrid
+              cols={8}
+              technologyIDs={clusterKeys}
+              keyString="he-clusters-soln-"
+              sectorName=""
+              makeOnClickFn={technologyID => techSectorType => () => 
+                  history.push(`/workbook/${params.id}/cluster/${technologyID}`)
+                }
+              isSelectedFn={() => false}
+              isFeaturedFn={() => true}
+              isClusters>
+            </TechnologyCardGrid>
           </BaseCard>
         </SolutionCardsStack>
+
+        {/* For Summary Page 
+          TODO: map selected with the data mapping
+        */}
+        { 
+          params.technologyId === "healthandeducation" &&
+          <SolutionCardsStack col={true} size="max">
+            <SolutionCardsStack margin={true} mb="0.75rem">
+              <SolutionCardsStack col={true} size="sm">
+                <BaseCard
+                  title="Population Data"
+                  size="max"
+                  path="populationdata"
+                  icon={faQuestionCircle}
+                  color={color}>
+                    <PopulationSelector>
+                      <TabbedDatatable
+                          color={color}
+                          title="Population Data" 
+                          withTableTitle={false}
+                          sourceListObjectpath={`workbook.workbook.population.data.technologies.hepopulation.${selectedPopulation}.data`} />
+                    </PopulationSelector>
+                </BaseCard>
+                <BaseCard
+                  title="Emission Data"
+                  size="max"
+                  path="emissionfactor"
+                  icon={faQuestionCircle}
+                  color={color}>
+                    <EmissionDataSelector>
+                      <TabbedDatatable
+                          color={color}
+                          title="Emission Factor" 
+                          withTableTitle={false}
+                          sourceListObjectpath={`workbook.workbook.population.data.technologies.heemissionfactor.${selectedEmissionsFactor}.data`} />
+                    </EmissionDataSelector>
+                </BaseCard>
+              </SolutionCardsStack>
+              <SolutionCardsStack col={true} size="md">
+              <DrawerLinkCard
+                size="lg"
+                path="summary"
+                drawer={drawer}
+                title="GT-CO2-EQ Avoided"
+                color={color}
+              >
+                <ClusterResult
+                  title="GT-CO2-EQ Avoided"
+                  size="lg"
+                  type="summary"
+                  path="summary"
+                  pathType="drawer"
+                  color={color} />
+              </DrawerLinkCard>
+                
+              </SolutionCardsStack>
+            </SolutionCardsStack>
+            <SolutionCardsStack col={true} size="max">
+              <ClusterSummaryChart
+                sourceListObjectpath="workbook.techData.data.co2_avoided" />
+            </SolutionCardsStack>
+          </SolutionCardsStack>
+        }
+      
+      { 
+        params.technologyId !== "healthandeducation" &&
+          <SolutionCardsStack col={true} size="max">
+            <SolutionCardsStack margin={true} mb="0.75rem">
+              <SolutionCardsStack col={true} size="sm">
+                <TamMixCard 
+                  size="xl"
+                  title="TAM Mix"
+                  color={color}/>
+              </SolutionCardsStack>
+              <SolutionCardsStack col={true} size="sm">
+                <TamMixAssumptionCard 
+                  size="xl"
+                  title="Assumptions"
+                  color={color}/>
+              </SolutionCardsStack>
+              <SolutionCardsStack col={true} size="md">
+                <BaseCard
+                  path="heresult"
+                  title="Result"
+                  size="xl"
+                  icon={faQuestionCircle}
+                  color={color}>
+                  <ClusterResult
+                    path="heresult"
+                    color={color}>
+                      <TabbedDatatable
+                        color={color}
+                        title="Calculation Outputs and Integration Data Tables" 
+                        withTableTitle={false}
+                        sourceListObjectpath="workbook.techData.data" />
+                  </ClusterResult>
+                </BaseCard>
+              </SolutionCardsStack>
+            </SolutionCardsStack>
+            <SolutionCardsStack col={true} size="max">
+              <ClusterMarketChart
+                sourceListObjectpath="workbook.techData.data" />
+            </SolutionCardsStack>
+          </SolutionCardsStack>
+        }
+        <SolutionFormRegion
+          color={color}
+          drawer={drawer}
+          techData="workbook.techData.data"
+        />
       </SolutionLayout>
     </DashboardLayout>
   )

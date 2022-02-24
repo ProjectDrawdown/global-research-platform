@@ -25,6 +25,7 @@ import AdoptionForm, { AdoptionHeader } from "./Adoption";
 import EmissionForm, { EmissionHeader } from "./Emission";
 import FinanceForm, { FinanceHeader } from "./Finance";
 import RawDataForm, { RawDataHeader } from "./RawData";
+import ClusterSummary, { ClusterSummaryHeader } from "./ClusterSummary"
 import WorkbookFooter from "components/workbook/footer";
 import { Navigation } from "../../components/Navigation";
 // Legacy default export requirements
@@ -95,6 +96,7 @@ export const SolutionFormRegion = ({ color, drawer, techData }) => {
           {drawerPath === "emissions" && (<EmissionHeader />)}
           {drawerPath === "finances" && (<FinanceHeader />)}
           {drawerPath === "rawdata" && (<RawDataHeader />)}
+          {drawerPath === "summary" && (<ClusterSummaryHeader />)}
         </CardTitle>
       </CardHeader>
       <CardBody wrapper={true}>
@@ -104,6 +106,7 @@ export const SolutionFormRegion = ({ color, drawer, techData }) => {
           {drawerPath === "emissions" && (<EmissionForm techData={techData} color={color} />)}
           {drawerPath === "finances" && (<FinanceForm techData={techData} color={color} />)}
           {drawerPath === "rawdata" && (<RawDataForm technology={techData} color={color} />)}
+          {drawerPath === "summary" && (<ClusterSummary technology={techData}/>)}
         </Grid>
       </CardBody>
     </Card>
