@@ -73,7 +73,7 @@ const CardBodyWrapped = styled.div`
         :
         <></>
       }
-      <CardBody>
+      <CardBody wrapper={!expanded} isTogglable={isTogglable && !expanded}>
         <CardBodyWrapped className={`card__body--${expanded ? "expanded" : "hidden"}`}>
           {children}
         </CardBodyWrapped>

@@ -75,9 +75,9 @@ export const CardHeader = ({ children, color, invert = false }) => (
  *
  * This component expects children (MarketChart, EmissionInputs, etc), and styling options
  */
-export const CardBody = ({ children, wrapper = false, position, ...otherProps }) => (
+export const CardBody = ({ children, wrapper = false, position, isTogglable = false, ...otherProps }) => (
   <Box
-    p="3"
+    p={isTogglable ? 0 : 3}
     w="100%"
     d="flex"
     mt={wrapper ? 0 : 4}
