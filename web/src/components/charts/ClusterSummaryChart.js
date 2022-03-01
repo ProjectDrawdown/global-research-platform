@@ -1,4 +1,4 @@
-import { VictoryChart, VictoryArea, VictoryAxis, VictoryLegend } from "victory"
+import { VictoryChart, VictoryStack, VictoryArea, VictoryAxis, VictoryLegend } from "victory"
 import { Grid, GridItem } from "@chakra-ui/react"
 import {
   useObjectPathSelector,
@@ -11,7 +11,7 @@ const generateAxis = (data) => {
   data.forEach((obj) => {
     axis.push({
       x: obj.year,
-      y: obj.value.toFixed(2)
+      y: obj.value
     })
   })
 
@@ -69,21 +69,26 @@ const ClusterSummaryChart = ({ sourceListObjectpath }) => {
               label="TWh"
               fixLabelOverlap={true}
             />
-            <VictoryArea
-              data={lldc}
-              style={{ data: { fill: "#edf2f7" } }}
-              interpolation="natural"
-            />
-            <VictoryArea
-              data={mdc}
-              style={{ data: { fill: "#ffcdc2" } }}
-              interpolation="natural"
-            />
-            <VictoryArea
-              data={aofp}
-              style={{ data: { fill: "#ff8f75" } }}
-              interpolation="natural"
-            />
+            <VictoryStack>
+              <VictoryArea
+                data={lldc}
+                style={{ data: { fill: "#edf2f7" } }}
+                interpolation="natural"
+              />
+
+              <VictoryArea
+                data={mdc}
+                style={{ data: { fill: "#ffcdc2" } }}
+                interpolation="natural"
+              />
+
+              <VictoryArea
+                data={aofp}
+                style={{ data: { fill: "#ff8f75" } }}
+                interpolation="natural"
+              />
+            </VictoryStack>
+            
           </VictoryChart>
         </GridItem>
         <GridItem>

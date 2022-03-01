@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import { useHistory } from "react-router-dom"
 import { Grid, GridItem, Text, Center } from "@chakra-ui/react"
 import {
   useStringVarpathSelector,
@@ -40,12 +39,12 @@ const ResultHeader = ({
   )
 }
 
-const ResultContainerWrapper = ({ children }) => {
+const ResultContainerWrapper = ({ children, rows }) => {
   return (
     <GridItem 
       colSpan={3}>
       <Grid
-        templateRows="repeat(2, 1fr)">
+        templateRows={`repeat(${rows}, 1fr)`}>
           {children}
       </Grid>
     </GridItem>
@@ -69,7 +68,7 @@ const ResultDataContainer = ({
   )
 }
 
-const ResultContainer = ({ type, color, data }) => {
+const ResultContainer = ({ type, color, data, rows }) => {
   const primaryColor = `brand.${color}.100`
   const secondaryColor = `brand.${color}.400`
 
@@ -79,7 +78,7 @@ const ResultContainer = ({ type, color, data }) => {
       mt={3}
       mb={8}
       templateColumns="repeat(12, 1fr)">
-      <ResultContainerWrapper>
+      <ResultContainerWrapper rows={rows}>
         <GridItem rowStart={1}>
           <Center>
             <BoldText
@@ -91,7 +90,7 @@ const ResultContainer = ({ type, color, data }) => {
           </Center>
         </GridItem>
       </ResultContainerWrapper>
-      <ResultContainerWrapper>
+      <ResultContainerWrapper rows={rows}>
         {
           data[0][`${type.toLowerCase()}_solution`] && data[0][`${type.toLowerCase()}_conventional`] &&
           <>
@@ -109,6 +108,7 @@ const ResultContainer = ({ type, color, data }) => {
       {
         data.map((result, i) => 
           <ResultContainerWrapper
+            rows={rows}
             key={`result_${i}`}
           >
             {
@@ -181,7 +181,6 @@ const ClusterResult = ({
   path,
   type = "cluster"
 }) => {
-  const history = useHistory();
   const startYearA = useStringVarpathSelector(`report_start_year_a`, 'cluster');
   const endYearA = useStringVarpathSelector(`report_end_year_a`, 'cluster');
   const startYearB = useStringVarpathSelector(`report_start_year_b`, 'cluster');
@@ -190,6 +189,7 @@ const ClusterResult = ({
   const data = useObjectPathSelector('workbook.techData.data')
   let data_a
   let data_b
+  let rows = 2
 
   if (type === "cluster") {
     if (!data["EMISSIONS ALLOCATIONS in LLDC"] && !data["EMISSIONS ALLOCATIONS in MDC"]) {
@@ -205,6 +205,7 @@ const ClusterResult = ({
   
     data_a = calculateSolutionSummary(startYearA, endYearA, data)
     data_b = calculateSolutionSummary(startYearB, endYearB, data)
+    rows = 1
   }
 
   
@@ -221,18 +222,21 @@ const ClusterResult = ({
           type="LLDC"
           data={[data_a, data_b]}
           color={color}
+          rows={rows}
         />
 
         <ResultContainer
           type="MDC"
           data={[data_a, data_b]}
           color={color}
+          rows={rows}
         />
 
         <ResultContainer
           type="Total"
           data={[data_a, data_b]}
           color={color}
+          rows={rows}
         />
       </GridItem>
     </Grid>

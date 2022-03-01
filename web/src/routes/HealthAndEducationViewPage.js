@@ -214,6 +214,8 @@ const HealthAndEducationViewPage = () => {
                           sourceListObjectpath={`workbook.workbook.population.data.technologies.hepopulation.${selectedPopulation}.data`} />
                     </PopulationSelector>
                 </BaseCard>
+              </SolutionCardsStack>
+              <SolutionCardsStack col={true} size="sm">
                 <BaseCard
                   title="Emission Data"
                   size="max"
@@ -229,9 +231,9 @@ const HealthAndEducationViewPage = () => {
                     </EmissionDataSelector>
                 </BaseCard>
               </SolutionCardsStack>
-              <SolutionCardsStack col={true} size="md">
+              <SolutionCardsStack col={true} size="lg">
               <DrawerLinkCard
-                size="lg"
+                size="full"
                 path="summary"
                 drawer={drawer}
                 title="GT-CO2-EQ Avoided"
