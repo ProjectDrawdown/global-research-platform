@@ -285,7 +285,7 @@ const HealthAndEducationViewPage = () => {
                     color={color}>
                       <TabbedDatatable
                         color={color}
-                        title="Calculation Outputs and Integration Data Tables" 
+                        title="Total Emissions Avoided due to Health & Education (Million Metric Tons CO2)" 
                         withTableTitle={false}
                         sourceListObjectpath="workbook.techData.data" />
                   </ClusterResult>
