@@ -10,6 +10,10 @@ const BoldText = styled(Text)`
     font-weight: bold;
 `
 
+const ResultWrapper = styled.div`
+  padding-bottom: 0.25rem
+`
+
 export const ClusterSummaryHeader = () => (
     <span>Gt-CO2-eq Avoided</span>
 )
@@ -37,15 +41,15 @@ const ResultHeader = ({
         mt={3}
         mb={3}
         templateColumns="repeat(12, 1fr)">
-          <GridItem colSpan={4}>
+          <GridItem colSpan={6}>
             <BoldText>CLUSTERS</BoldText>
           </GridItem>
-          <GridItem colSpan={4}>
+          <GridItem colSpan={3}>
             <GridItem borderBottom="1px" borderColor="gray.200">
               <Text>{header_a}</Text>
             </GridItem>
           </GridItem>
-          <GridItem colSpan={4}>
+          <GridItem colSpan={3}>
             <GridItem borderBottom="1px" borderColor="gray.200">
               <Text>{header_b}</Text>
             </GridItem>
@@ -65,7 +69,7 @@ const ResultBody = ({
         templateColumns="repeat(12, 1fr)">
             {
                 data.map((d, index) => (
-                    <React.Fragment key={`cs_${index}`}>
+                    <ResultWrapper key={`cs_${index}`}>
                         <GridItem colSpan={4}>
                             <BoldText>{d.name}</BoldText>
                         </GridItem>
@@ -75,12 +79,60 @@ const ResultBody = ({
                         <GridItem colSpan={4}>
                             <Text>{d.data_a}</Text>
                         </GridItem>
-                    </React.Fragment>
+                    </ResultWrapper>
                 ))
             }
           
       </Grid>
     )
+}
+
+const ResultBodyV2 = ({
+  data
+}) => {
+  const clusters = Object.keys(data);
+
+  return (
+    <React.Fragment>
+      {
+        clusters.map((d, index) => (
+          <Grid
+            w="100%"
+            mt={3}
+            mb={3}
+            templateColumns="repeat(12, 1fr)"> 
+            <GridItem colSpan={3}>
+              <BoldText>{d}</BoldText>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <GridItem>
+                <Text>LLDC</Text>
+              </GridItem>
+              <GridItem>
+                <Text>MDC</Text>
+              </GridItem>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <GridItem>
+                <Text>{data[d]["LLDC"]?.data_a}</Text>
+              </GridItem>
+              <GridItem>
+                <Text>{data[d]["LLDC"]?.data_b}</Text>
+              </GridItem>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <GridItem>
+                <Text>{data[d]["MDC"]?.data_a}</Text>
+              </GridItem>
+              <GridItem>
+                <Text>{data[d]["MDC"]?.data_b}</Text>
+              </GridItem>
+            </GridItem>
+          </Grid>
+        ))
+      }
+    </React.Fragment>
+  )
 }
 
 const ClusterSummary = ({
@@ -103,6 +155,7 @@ const ClusterSummary = ({
     const allData = sourceObj.cluster_summary.data || {}
     const clusters = Object.keys(allData);
     const results = []
+    const resultMerged = {}
 
     clusters.forEach(c => {
       results.push({
@@ -110,6 +163,19 @@ const ClusterSummary = ({
         data_a: generateValue(startYearA, endYearA, allData[c]),
         data_b: generateValue(startYearB, endYearB, allData[c])
       })
+    })
+
+    results.forEach(c => {
+      const name = c.name.split(" - ")
+
+      if (!resultMerged[name[0]]) {
+        resultMerged[name[0]] = {}
+      }
+
+      resultMerged[name[0]][name[1]] = {
+        data_a: c.data_a,
+        data_b: c.data_b
+      }
     })
 
     return (
@@ -120,8 +186,8 @@ const ClusterSummary = ({
             header_b={`${startYearB}-${endYearB}`}
           />
 
-          <ResultBody
-            data={results}
+          <ResultBodyV2
+            data={resultMerged}
           />
         </GridItem>
       </Grid>

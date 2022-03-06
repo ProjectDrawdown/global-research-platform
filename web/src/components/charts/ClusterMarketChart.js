@@ -1,17 +1,25 @@
-import { VictoryChart, VictoryArea, VictoryAxis, VictoryLegend } from "victory"
+import { 
+  VictoryChart,
+  VictoryStack,
+  VictoryArea,
+  VictoryAxis,
+  VictoryLegend,
+  VictoryTooltip,
+  VictoryVoronoiContainer
+} from "victory"
 import { Grid, GridItem } from "@chakra-ui/react"
 import {
   useObjectPathSelector,
 } from "redux/selectors.js"
-import BaseCard from "components/cards/BaseCard"
 
-const generateAxis = (data, type) => {
+const generateAxis = (data, type, label) => {
   const axis = []
 
   data[type].forEach((obj) => {
     axis.push({
       x: obj.year,
-      y: obj.value
+      y: obj.value,
+      l: label
     })
   })
 
@@ -34,20 +42,31 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
   const mdc = sourceObj["EMISSIONS ALLOCATIONS in MDC"]["data"]["Health and Education"]
 
 
-  const lldcConventional = generateAxis(lldc, "conventional")
-  const lldcSolution = generateAxis(lldc, "solution")
-
-  const mdcConventional = generateAxis(mdc, "conventional")
-  const mdcSolution = generateAxis(mdc, "solution")
+  const lldcConventional = generateAxis(lldc, "conventional", "LLDC")
+  const mdcConventional = generateAxis(mdc, "conventional", "MDC")
 
   return (
-    <BaseCard
-      size="max">
       <Grid minW="100%">
         <GridItem>
           <VictoryChart
             height={150}
             padding={{ left: 60, right: 20, bottom: 30, top: 10 }}
+            containerComponent={
+              <VictoryVoronoiContainer voronoiDimension="x"
+                labels={({ datum }) => `${datum.l}: ${datum.y.toFixed(2)} Million Metric Tons CO2`}
+                labelComponent={
+                  <VictoryTooltip
+                    center={{ x: 225, y: 30 }}
+                    style={{fontSize: '6px'}}
+                    cornerRadius={1}
+                    flyoutStyle={{
+                      fill: "white",
+                      strokeWidth: 0.5
+                    }}
+                  />
+                }
+              />
+            }
             >
             <VictoryAxis
               tickFormat={(v) => v.toString()}
@@ -73,46 +92,38 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
                 ticks: { stroke: "#bababa", size: 2, verticalAnchor: "middle" },
                 grid: { stroke: "#f2f2f2", strokeWidth: 0.5 }
               }}
-              label="TWh"
+              label="Culmulative Million Metric Tons CO2"
               fixLabelOverlap={true}
             />
-            <VictoryArea
-              data={lldcConventional}
-              style={{ data: { fill: "#edf2f7" } }}
-              interpolation="natural"
-            />
-            <VictoryArea
-              data={lldcSolution}
-              style={{ data: { fill: "#ffcdc2" } }}
-              interpolation="natural"
-            />
-            <VictoryArea
-              data={mdcConventional}
-              style={{ data: { fill: "#ff8f75" } }}
-              interpolation="natural"
-            />
-            <VictoryArea
-              data={mdcSolution}
-              style={{ data: { fill: "#FF542E" } }}
-              interpolation="natural"
-            />
+
+            <VictoryStack>
+              <VictoryArea
+                data={mdcConventional}
+                style={{ data: { fill: "#ff8f75" } }}
+                interpolation="natural"
+              />
+
+              <VictoryArea
+                data={lldcConventional}
+                style={{ data: { fill: "#edf2f7" } }}
+                interpolation="natural"
+              />
+            </VictoryStack>
+            
           </VictoryChart>
         </GridItem>
         <GridItem>
           <VictoryLegend
-            x={125} y={5}
+            x={175} y={5}
             orientation="horizontal"
             height={25}
             style={{ labels: {fontSize: 4 } }}
             data={[
               { name: "LLDC in Conventional", symbol: { fill: "#edf2f7" } },
-              { name: "LLDC in Solution", symbol: { fill: "#ffcdc2" } },
               { name: "MDC in Conventional", symbol: { fill: "#ff8f75" } },
-              { name: "MDC in Solution", symbol: { fill: "#FF542E" } }
             ]}/>
         </GridItem>
       </Grid>
-    </BaseCard>
   )
 }
 

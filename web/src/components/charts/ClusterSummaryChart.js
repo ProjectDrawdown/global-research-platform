@@ -1,17 +1,25 @@
-import { VictoryChart, VictoryStack, VictoryArea, VictoryAxis, VictoryLegend } from "victory"
+import { 
+  VictoryChart,
+  VictoryStack,
+  VictoryArea,
+  VictoryAxis,
+  VictoryLegend,
+  VictoryTooltip,
+  VictoryVoronoiContainer
+} from "victory"
 import { Grid, GridItem } from "@chakra-ui/react"
 import {
   useObjectPathSelector,
 } from "redux/selectors.js"
-import BaseCard from "components/cards/BaseCard"
 
-const generateAxis = (data) => {
+const generateAxis = (data, label) => {
   const axis = []
 
   data.forEach((obj) => {
     axis.push({
       x: obj.year,
-      y: obj.value
+      y: obj.value,
+      l: label
     })
   })
 
@@ -28,19 +36,32 @@ const ClusterSummaryChart = ({ sourceListObjectpath }) => {
     return <></>
   }
 
-  const lldc = generateAxis(sourceObj.data.LLDC);
-  const mdc = generateAxis(sourceObj.data.MDC);
-  const aofp = generateAxis(sourceObj.data.AOFP);
+  const lldc = generateAxis(sourceObj.data.LLDC, "LLDC");
+  const mdc = generateAxis(sourceObj.data.MDC, "MDC");
+  const aofp = generateAxis(sourceObj.data.AOFP, "AOFP");
 
   return (
-    <BaseCard
-      title={"Total Gt CO2-eq Avoided from Population Change, by country development status*"}
-      size="max">
       <Grid minW="100%">
         <GridItem>
           <VictoryChart
             height={150}
             padding={{ left: 60, right: 20, bottom: 30, top: 10 }}
+            containerComponent={
+              <VictoryVoronoiContainer voronoiDimension="x"
+                labels={({ datum }) => `${datum.l}: ${datum.y.toFixed(2)} Gt CO2-eq`}
+                labelComponent={
+                  <VictoryTooltip
+                    center={{ x: 225, y: 30 }}
+                    style={{fontSize: '6px'}}
+                    cornerRadius={1}
+                    flyoutStyle={{
+                      fill: "white",
+                      strokeWidth: 0.5
+                    }}
+                  />
+                }
+              />
+            }
             >
             <VictoryAxis
               tickFormat={(v) => v.toString()}
@@ -66,7 +87,7 @@ const ClusterSummaryChart = ({ sourceListObjectpath }) => {
                 ticks: { stroke: "#bababa", size: 2, verticalAnchor: "middle" },
                 grid: { stroke: "#f2f2f2", strokeWidth: 0.5 }
               }}
-              label="TWh"
+              label="Culmulative Gt CO2-eq"
               fixLabelOverlap={true}
             />
             <VictoryStack>
@@ -104,7 +125,6 @@ const ClusterSummaryChart = ({ sourceListObjectpath }) => {
             ]}/>
         </GridItem>
       </Grid>
-    </BaseCard>
   )
 }
 

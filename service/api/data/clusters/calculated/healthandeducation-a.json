@@ -390,7 +390,7 @@
         "cluster_summary": {
             "data":
             {
-              "Electricity- LLDC": [
+              "Electricity - LLDC": [
                 {
                   "year": "2014",
                   "value": 0
@@ -580,7 +580,7 @@
                   "value": 1381.44606845828
                 }
               ],
-              "Electricity- MDC": [
+              "Electricity - MDC": [
                 {
                   "year": "2014",
                   "value": 0
