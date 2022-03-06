@@ -251,8 +251,13 @@ const HealthAndEducationViewPage = () => {
               </SolutionCardsStack>
             </SolutionCardsStack>
             <SolutionCardsStack col={true} size="max">
-              <ClusterSummaryChart
-                sourceListObjectpath="workbook.techData.data.co2_avoided" />
+              <BaseCard
+                title="Total Gt CO2-eq Avoided from Population Growth, by country development status*"
+                size="max"
+                color={color}>
+                <ClusterSummaryChart
+                  sourceListObjectpath="workbook.techData.data.co2_avoided" />
+              </BaseCard>
             </SolutionCardsStack>
           </SolutionCardsStack>
         }
@@ -293,8 +298,22 @@ const HealthAndEducationViewPage = () => {
               </SolutionCardsStack>
             </SolutionCardsStack>
             <SolutionCardsStack col={true} size="max">
-              <ClusterMarketChart
-                sourceListObjectpath="workbook.techData.data" />
+              <BaseCard
+                path="heresult"
+                title="Total Emissions Avoided due to Health & Education (Million Metric Tons CO2)"
+                size="max"
+                icon={faQuestionCircle}
+                color={color}>
+                <ClusterMarketChart
+                  path="heresult"
+                  sourceListObjectpath="workbook.techData.data">
+                    <TabbedDatatable
+                        color={color}
+                        title="Total Emissions Avoided due to Health & Education (Million Metric Tons CO2)" 
+                        withTableTitle={false}
+                        sourceListObjectpath="workbook.techData.data" />
+                </ClusterMarketChart>
+              </BaseCard>
             </SolutionCardsStack>
           </SolutionCardsStack>
         }

@@ -11,7 +11,6 @@ import { Grid, GridItem } from "@chakra-ui/react"
 import {
   useObjectPathSelector,
 } from "redux/selectors.js"
-import BaseCard from "components/cards/BaseCard"
 
 const generateAxis = (data, type, label) => {
   const axis = []
@@ -47,8 +46,6 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
   const mdcConventional = generateAxis(mdc, "conventional", "MDC")
 
   return (
-    <BaseCard
-      size="max">
       <Grid minW="100%">
         <GridItem>
           <VictoryChart
@@ -127,7 +124,6 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
             ]}/>
         </GridItem>
       </Grid>
-    </BaseCard>
   )
 }
 
