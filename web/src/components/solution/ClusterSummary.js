@@ -106,26 +106,26 @@ const ResultBodyV2 = ({
             </GridItem>
             <GridItem colSpan={3}>
               <GridItem>
-                <Text>LLDC</Text>
+                <Center>LLDC</Center>
               </GridItem>
               <GridItem>
-                <Text>MDC</Text>
-              </GridItem>
-            </GridItem>
-            <GridItem colSpan={3}>
-              <GridItem>
-                <Text>{data[d]["LLDC"]?.data_a}</Text>
-              </GridItem>
-              <GridItem>
-                <Text>{data[d]["LLDC"]?.data_b}</Text>
+                <Center>MDC</Center>
               </GridItem>
             </GridItem>
             <GridItem colSpan={3}>
               <GridItem>
-                <Text>{data[d]["MDC"]?.data_a}</Text>
+                <Text>{data[d]["LLDC"]?.data_a || "-"}</Text>
               </GridItem>
               <GridItem>
-                <Text>{data[d]["MDC"]?.data_b}</Text>
+                <Text>{data[d]["MDC"]?.data_a || "-"}</Text>
+              </GridItem>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <GridItem>
+                <Text>{data[d]["LLDC"]?.data_b || "-"}</Text>
+              </GridItem>
+              <GridItem>
+                <Text>{data[d]["MDC"]?.data_b || "-"}</Text>
               </GridItem>
             </GridItem>
           </Grid>
@@ -156,6 +156,11 @@ const ClusterSummary = ({
     const clusters = Object.keys(allData);
     const results = []
     const resultMerged = {}
+    const resultPlastic = {
+      name: "non-differential",
+      data_a: 0,
+      data_b: 0
+    }
 
     clusters.forEach(c => {
       results.push({
@@ -166,17 +171,28 @@ const ClusterSummary = ({
     })
 
     results.forEach(c => {
-      const name = c.name.split(" - ")
+      const clusterData = c.name.split("-")
+      const name = clusterData[0].trim();
+      const type = clusterData[1].trim();
 
-      if (!resultMerged[name[0]]) {
-        resultMerged[name[0]] = {}
+      // Edge case for plastic
+      if (name === "Plastics MMT") {
+        resultPlastic.data_a = c.data_a;
+        resultPlastic.data_b = c.data_b;
+        return;
+      };
+
+      if (!resultMerged[name]) {
+        resultMerged[name] = {}
       }
 
-      resultMerged[name[0]][name[1]] = {
+      resultMerged[name][type] = {
         data_a: c.data_a,
         data_b: c.data_b
       }
     })
+
+    console.log(resultPlastic);
 
     return (
       <Grid minW="100%">
@@ -189,6 +205,31 @@ const ClusterSummary = ({
           <ResultBodyV2
             data={resultMerged}
           />
+
+          <Grid
+            w="100%"
+            mt={3}
+            mb={3}
+            templateColumns="repeat(12, 1fr)"> 
+            <GridItem colSpan={3}>
+              <BoldText>{resultPlastic.name}</BoldText>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <GridItem>
+                <Center>All</Center>
+              </GridItem>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <GridItem>
+                <Text>{resultPlastic.data_a || "-"}</Text>
+              </GridItem>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <GridItem>
+                <Text>{resultPlastic.data_b || "-"}</Text>
+              </GridItem>
+            </GridItem>
+          </Grid>
         </GridItem>
       </Grid>
     )
