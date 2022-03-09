@@ -215,4 +215,3 @@ Huge thanks to Beni Bienz of The Climate Foundation for his work in implementing
 ## Contact
 
 David Brooks (david@colab.coop) is currently the technical point of contact for this project.
-
