@@ -11,6 +11,7 @@ import { Grid, GridItem } from "@chakra-ui/react"
 import {
   useObjectPathSelector,
 } from "redux/selectors.js"
+import colors from "theme/colors"
 
 const generateAxis = (data, label) => {
   const axis = []
@@ -38,7 +39,7 @@ const ClusterSummaryChart = ({ sourceListObjectpath }) => {
 
   const lldc = generateAxis(sourceObj.data.LLDC, "LLDC");
   const mdc = generateAxis(sourceObj.data.MDC, "MDC");
-  const aofp = generateAxis(sourceObj.data.AOFP, "AOFP");
+  const aofp = generateAxis(sourceObj.data.AOFP, "Non-differential");
 
   return (
       <Grid minW="100%">
@@ -93,19 +94,19 @@ const ClusterSummaryChart = ({ sourceListObjectpath }) => {
             <VictoryStack>
               <VictoryArea
                 data={lldc}
-                style={{ data: { fill: "#edf2f7" } }}
+                style={{ data: { fill: colors.brand.health[700] } }}
                 interpolation="natural"
               />
 
               <VictoryArea
                 data={mdc}
-                style={{ data: { fill: "#ffcdc2" } }}
+                style={{ data: { fill: colors.brand.health[500] } }}
                 interpolation="natural"
               />
 
               <VictoryArea
                 data={aofp}
-                style={{ data: { fill: "#ff8f75" } }}
+                style={{ data: { fill: colors.brand.health[300] } }}
                 interpolation="natural"
               />
             </VictoryStack>
@@ -119,9 +120,9 @@ const ClusterSummaryChart = ({ sourceListObjectpath }) => {
             height={25}
             style={{ labels: {fontSize: 4 } }}
             data={[
-              { name: "Least & Less Developed Countries", symbol: { fill: "#edf2f7" } },
-              { name: "More Developed Countries", symbol: { fill: "#ffcdc2" } },
-              { name: "Air, Oceanic Freight and Plastic", symbol: { fill: "#ff8f75" } },
+              { name: "Least & Less Developed Countries", symbol: { fill: colors.brand.health[700] } },
+              { name: "More Developed Countries", symbol: { fill: colors.brand.health[500] } },
+              { name: "Non-differential", symbol: { fill: colors.brand.health[300] } },
             ]}/>
         </GridItem>
       </Grid>

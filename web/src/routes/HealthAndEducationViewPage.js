@@ -281,7 +281,7 @@ const HealthAndEducationViewPage = () => {
               <SolutionCardsStack col={true} size="md">
                 <BaseCard
                   path="heresult"
-                  title="Result"
+                  title="Result (Million Metric Tons CO2-eq)"
                   size="xl"
                   icon={faQuestionCircle}
                   color={color}>
@@ -290,7 +290,7 @@ const HealthAndEducationViewPage = () => {
                     color={color}>
                       <TabbedDatatable
                         color={color}
-                        title="Total Emissions Avoided due to Health & Education (Million Metric Tons CO2)" 
+                        title="Total Emissions Avoided due to Health & Education (Million Metric Tons CO2-eq)" 
                         withTableTitle={false}
                         sourceListObjectpath="workbook.techData.data" />
                   </ClusterResult>
@@ -300,7 +300,7 @@ const HealthAndEducationViewPage = () => {
             <SolutionCardsStack col={true} size="max">
               <BaseCard
                 path="heresult"
-                title="Total Emissions Avoided due to Health & Education (Million Metric Tons CO2)"
+                title="Total Emissions Avoided due to Health & Education (Million Metric Tons CO2-eq)"
                 size="max"
                 icon={faQuestionCircle}
                 color={color}>

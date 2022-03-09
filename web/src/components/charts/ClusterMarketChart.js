@@ -11,6 +11,7 @@ import { Grid, GridItem } from "@chakra-ui/react"
 import {
   useObjectPathSelector,
 } from "redux/selectors.js"
+import colors from "theme/colors"
 
 const generateAxis = (data, type, label) => {
   const axis = []
@@ -53,7 +54,7 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
             padding={{ left: 60, right: 20, bottom: 30, top: 10 }}
             containerComponent={
               <VictoryVoronoiContainer voronoiDimension="x"
-                labels={({ datum }) => `${datum.l}: ${datum.y.toFixed(2)} Million Metric Tons CO2`}
+                labels={({ datum }) => `${datum.l}: ${datum.y.toFixed(2)} -eq`}
                 labelComponent={
                   <VictoryTooltip
                     center={{ x: 225, y: 30 }}
@@ -92,20 +93,20 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
                 ticks: { stroke: "#bababa", size: 2, verticalAnchor: "middle" },
                 grid: { stroke: "#f2f2f2", strokeWidth: 0.5 }
               }}
-              label="Culmulative Million Metric Tons CO2"
+              label="Culmulative Million Metric Tons CO2-eq"
               fixLabelOverlap={true}
             />
 
             <VictoryStack>
               <VictoryArea
                 data={mdcConventional}
-                style={{ data: { fill: "#ff8f75" } }}
+                style={{ data: { fill: colors.brand.health[700] } }}
                 interpolation="natural"
               />
 
               <VictoryArea
                 data={lldcConventional}
-                style={{ data: { fill: "#edf2f7" } }}
+                style={{ data: { fill: colors.brand.health[500] } }}
                 interpolation="natural"
               />
             </VictoryStack>
@@ -119,8 +120,8 @@ const ClusterMarketChart = ({ sourceListObjectpath }) => {
             height={25}
             style={{ labels: {fontSize: 4 } }}
             data={[
-              { name: "LLDC in Conventional", symbol: { fill: "#edf2f7" } },
-              { name: "MDC in Conventional", symbol: { fill: "#ff8f75" } },
+              { name: "LLDC in Conventional", symbol: { fill: colors.brand.health[700] } },
+              { name: "MDC in Conventional", symbol: { fill: colors.brand.health[500] } },
             ]}/>
         </GridItem>
       </Grid>
